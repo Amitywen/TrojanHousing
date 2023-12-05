@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create New Player</title>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const newPlayerForm = document.getElementById('newplayer');
+
+                newPlayerForm.addEventListener('submit', async (event) => {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    // Perform your client-side validation here
+                    const fnameInput = document.getElementById('fname');
+                    const lnameInput = document.getElementById('lname');
+                    const initialBalanceInput = document.getElementById('initial_balance');
+
+                    // Example validation: Check if the First Name input is empty
+                    if (fnameInput.value.trim() === '') {
+                        alert('First Name cannot be empty.');
+                        return;
+                    }
+
+                    // Construct the request body
+                    const requestBody = {
+                        fname: fnameInput.value,
+                        lname: lnameInput.value,
+                        handed: document.getElementById('handed').value,
+                        initial_balance_usd_cents: initialBalanceInput.value,
+                        redirect: '/players.html',
+                    };
+
+                    // Send the data to the server using fetch
+                    try {
+                        const response = await fetch('/api/player', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestBody),
+                        });
+
+                        if (response.ok) {
+                            // Form submission successful, you can redirect the user
+                            window.location.href = '/players.html';
+                        } else {
+                            const errorData = await response.json();
+                            alert(`Server Error: ${errorData.message}`);
+                        }
+                    } catch (error) {
+                        alert('An error occurred while communicating with the server.');
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Create New Player</h1>
+        <form id="newplayer" action="/api/player" method="POST">
+            <label for="fname">First Name:</label>
+            <input type="text" id="fname" name="fname" placeholder="Letters only" required>
+            <br>
+
+            <label for="lname">Last Name:</label>
+            <input type="text" id="lname" name="lname" placeholder="Letters only" required>
+            <br>
+
+            <label for="handed">Handedness:</label>
+            <select id="handed" name="handed">
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="ambi">Ambidextrous</option>
+            </select>
+            <br>
+
+            <label for="initial_balance">Initial Balance (USD Cents):</label>
+            <input type="number" id="initial_balance" placeholder="Numbers only" name="initial_balance_usd_cents" required>
+            <br>
+
+            <input type="hidden" name="redirect" value="/players.html">
+
+            <button type="submit">Create Player</button>
+        </form>
+    </body>
+</html>

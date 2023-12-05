@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Dashboard</title>
+
+    <script>
+        const POLL_INTERVAL_SEC = 10;
+        document.addEventListener('DOMContentLoaded', async () => {
+            const updateDashboard = () => {
+                fetch('/api/dashboard/player')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the dashboard with the new data
+                        document.querySelector('#total-players').textContent = `Total number of players: ${data.totalPlayers}`;
+                        document.querySelector('#active-players').textContent = `Number of active players: ${data.activePlayers}`;
+                        document.querySelector('#inactive-players').textContent = `Number of inactive players: ${data.inactivePlayers}`;
+                        document.querySelector('#average-balance').textContent = `Average current balance of all players: $${data.averageBalance}`;
+                    });
+            };
+        
+            // Initial updateDashboard then periodically
+            updateDashboard();
+            setInterval(updateDashboard, POLL_INTERVAL_SEC * 1000); //1000
+        });
+    </script>  
+</head>
+    
+<body>
+    <h1>Player Dashboard</h1>
+    <!-- <p>Total number of players: <%= totalPlayers %> -->
+    <p><span id="total-players"></span></p>
+    <p><span id="active-players"></span></p>
+    <p><span id="inactive-players"></span></p>
+    <p><span id="average-balance"></span></p>
+    <!-- <p>Number of active players: <%= activePlayers %></p>
+    <p>Number of inactive players: <%= inactivePlayers %></p>
+    <p>Average current balance of all players: $<%= averageBalance %></p> -->
+</body>
+
+</html>
