@@ -11,69 +11,35 @@ const path = require('path');
 const express = require('express');
 
 const app = express();
-app.set('view engine', 'ejs');
+
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(cors());
+
 app.use(express.json());
 const PORT = 3000;
-
-
-//coppied from handout, in case there is no ./config/mongo.json file
+// Default configuration, in case there is no ./config/mongo.json file
 const defaultConfig  = {
-            host: "localhost",
-            port: "27017",
-            db:   "ee547_hw",
-            opts: {
-              useUnifiedTopology: true
-        }
+  host: "localhost",
+  port: "27017",
+  db:   "ee547_hw"
+  // Removed useUnifiedTopology option as it's deprecated
 }
-  
-  let dbConfig;
-  try {
-    dbConfig = JSON.parse(fs.readFileSync(path.join(__dirname, './config/mongo.json'), 'utf-8'));
-    
-  
-    if (typeof dbConfig.host !== 'string' || !dbConfig.host) {
-      throw new Error('invalid host');
-    }
-  
-    if (typeof dbConfig.port !== 'string' || !dbConfig.port) {
-      throw new Error('invalid port');
-    }
-  
-    if (typeof dbConfig.db !== 'string' || !dbConfig.db) {
-      throw new Error('invalid db');
-    }
-  
-    if (typeof dbConfig.opts.useUnifiedTopology !== 'boolean' || !dbConfig.opts.useUnifiedTopology) {
-      throw new Error('invalid UT');
-    }
-  
-  } catch (error) {
-    //Check if invalid JSON, exit with 2
-    if (error instanceof SyntaxError) {
-      console.error("Invalid JSON.");
-      process.exit(2);
-    }
-    console.warn("Config File Failed", error.message);
-    dbConfig = defaultConfig;
-  }
 
-  
-  // Connect to MongoDB, inspiration from Discussion code
-  const uri = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.db}`;
-  const client = new MongoClient(uri, dbConfig.opts);
+let dbConfig = defaultConfig;
 
-    
-  client.connect(err => {
-    if (err) {
+// Connect to MongoDB
+const uri = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.db}`;
+const client = new MongoClient(uri);
+
+client.connect(err => {
+  if (err) {
       console.error("Failed to connect to MongoDB:", err);
-      //exit as accoridng to handout
+      // Exit according to handout
       process.exit(5);  
-    } else {
+  } else {
       console.log("Successfully connected to MongoDB");
-    }
-  });
+  }
+});
+
 
 
   app.get('/ping', (req, res) => {
@@ -81,14 +47,17 @@ const defaultConfig  = {
     res.status(204).end();
   });
 
-  app.get('/api/students', async (req, res) => {
+  app.get('/api/student', async (req, res) => {
+    console.log("Fetching all students...");
     try {
         const studentCollection = client.db(dbConfig.db).collection("students");
 
         const students = await studentCollection.find({}).toArray();
         if (students) {
+            console.log(`Fetched ${students.length} students`);
             res.status(200).json(students);
         } else {
+            console.log("No students found");
             res.status(404).json({ message: "No students found" });
         }
     } catch (err) {
@@ -97,14 +66,18 @@ const defaultConfig  = {
     }
 });
 
+
 app.get('/api/landlords', async (req, res) => {
+  console.log("Fetching all landlords...");
   try {
       const landlordCollection = client.db(dbConfig.db).collection("landlords");
 
       const landlords = await landlordCollection.find({}).toArray();
       if (landlords) {
+          console.log(`Fetched ${landlords.length} landlords`);
           res.status(200).json(landlords);
       } else {
+          console.log("No landlords found");
           res.status(404).json({ message: "No landlords found" });
       }
   } catch (err) {
@@ -116,6 +89,7 @@ app.get('/api/landlords', async (req, res) => {
 
 
   app.post('/api/student', async (req, res) => {
+    console.log("Creating new student...");
     const { fname, lname, email, password } = req.body;
 
     const invalidFields = [];
@@ -151,17 +125,20 @@ app.get('/api/landlords', async (req, res) => {
 
         const result = await studentCollection.insertOne(newStudent);
         if (result.insertedId) {
-            res.status(201).json({ message: "Student added successfully" });
-        } else {
-            throw new Error("Failed to add student");
-        }
-    } catch (err) {
-        console.error("Failed to add student:", err);
-        res.status(500).json({ error: "Internal server error" });
-    }
+          console.log(`Student created successfully with ID: ${result.insertedId}`);
+          res.status(201).json({ message: "Student added successfully" });
+      } else {
+          console.log("Failed to add student: No ID returned");
+          throw new Error("Failed to add student");
+      }
+  } catch (err) {
+      console.error("Failed to add student:", err);
+      res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post('/api/landlord', async (req, res) => {
+  console.log("Creating new landlord...");
   const { fname, lname, email, password, companyName } = req.body;
 
   const invalidFields = [];
@@ -199,13 +176,31 @@ app.post('/api/landlord', async (req, res) => {
 
       const result = await landlordCollection.insertOne(newLandlord);
       if (result.insertedId) {
-          res.status(201).json({ message: "Landlord added successfully" });
-      } else {
-          throw new Error("Failed to add landlord");
-      }
-  } catch (err) {
-      console.error("Failed to add landlord:", err);
-      res.status(500).json({ error: "Internal server error" });
-  }
+        console.log(`Landlord created successfully with ID: ${result.insertedId}`);
+        res.status(201).json({ message: "Landlord added successfully" });
+    } else {
+        console.log("Failed to add landlord: No ID returned");
+        throw new Error("Failed to add landlord");
+    }
+} catch (err) {
+    console.error("Failed to add landlord:", err);
+    res.status(500).json({ error: "Internal server error" });
+}
 });
 
+
+//error handler from demo handout
+app.use((err,req,res,next) => {
+  console.error(err);
+
+  if(res.headersSent){
+    return next(err);
+  }
+
+  res.writeHead(500,{'Content-Type': 'text/plain'});
+  res.write(`${err.message}`);
+  res.end();
+});
+
+app.listen(PORT);
+console.log(`Server started, port ${PORT}`);
