@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: rgb(255, 255, 255,1);
+            /* background-image: url('../pic/USC_background.jpg');  */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* opacity: 1; will change the word, not the background */
+        }
+        /* .body:before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+            background-image: url('../pic/USC_background.jpg');
+            background-repeat: no-repeat;
+            background-position: 50% 0;
+            background-size: cover;
+        } */
+        /* .bg {
+            opacity: 0.6;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto;
+        } */
+        .container {
+            text-align: center;
+            width: 800px;
+            height: 200px;
+            /* border: 1px solid #ccc; */
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .info {
+            flex: 1;
+            padding: 10px;
+        }
+        .links {
+            margin-top: 20px;
+        }
+        #studentCount { /* Targeting the span for Student count */
+            font-size: 100px; /* Adjust the font size as needed */
+        }
+        #landlordCount { /* Targeting the span for Student count */
+            font-size: 100px; /* Adjust the font size as needed */
+        }
+        .update-info {
+            width: 100%;
+            text-align: center;
+        }
+        #updateInfo {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="info">
+            <h2>Student Users</h2>
+            <!-- <p>Number of Student Users: <span id="studentCount">0</span></p> -->
+            <p><span id="studentCount">0</span></p>
+        </div>
+        <div class="info">
+            <h2>Landlord Users</h2>
+            <!-- <p>Number of Landlord Users: <span id="landlordCount">0</span></p> -->
+            <p><span id="landlordCount">0</span></p>
+        </div>
+    </div>
+
+    <div class="update-info">
+        <h2>System Update</h2>
+        <p id="updateInfo">System Update: No information available</p>
+    </div>
+
+    <div class="links">
+        <a href="login.html">LogIn</a> | <a href="signup.html">Sign Up</a>
+    </div>
+
+    <script>
+        // You can use JavaScript to update the counts and system information dynamically
+        // For example:
+        // Replace the '0' with actual counts fetched from your system
+        document.getElementById('studentCount').innerText = '10'; // Replace with actual student count
+        document.getElementById('landlordCount').innerText = '7'; // Replace with actual landlord count
+
+        // Replace the system update information dynamically
+        document.getElementById('updateInfo').innerText = 'System Update: January 12, 2023'; // Replace with actual update information
+    </script>
+</body>
+</html>
