@@ -90,7 +90,7 @@ app.get('/api/landlords', async (req, res) => {
 
   app.post('/api/student', async (req, res) => {
     console.log("Creating new student...");
-    const { fname, lname, email, password } = req.body;
+    const { username,fname, lname, email, password } = req.body;
 
     const invalidFields = [];
 
@@ -117,6 +117,7 @@ app.get('/api/landlords', async (req, res) => {
         const newStudent = {
             _id: new ObjectId(),
             created_at: new Date(),
+            username,
             fname,
             lname,
             email,
@@ -139,7 +140,7 @@ app.get('/api/landlords', async (req, res) => {
 
 app.post('/api/landlord', async (req, res) => {
   console.log("Creating new landlord...");
-  const { fname, lname, email, password, companyName } = req.body;
+  const { fname, username,lname, email, password, companyName } = req.body;
 
   const invalidFields = [];
 
@@ -167,6 +168,7 @@ app.post('/api/landlord', async (req, res) => {
       const newLandlord = {
           _id: new ObjectId(),
           created_at: new Date(),
+          username,
           fname,
           lname,
           email,
