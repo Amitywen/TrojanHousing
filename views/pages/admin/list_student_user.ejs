@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player List</title>
+    <title>user List</title>
     <style>
          #search-box {
             padding: 5px;
@@ -21,78 +21,85 @@
 
 <body>
     <h1>Current Student User List</h1>
-    <div>
+    <!-- <div>
         <label for="search-box">Search: </label>
         <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
-    </div>
+    </div> -->
 
-    <% if (student_users.length > 0) { %>
-        <table id="student-list">
+    <% if (users && users.length > 0) { %>
+        <table id="user-list">
             <thread>
                 <th style="padding-right: 10px">#</th>
                 <th style="padding-right: 10px">ID</th>
                 <th style="padding-right: 10px">User Name</th>
                 <th style="padding-right: 10px">First Name</th>
                 <th style="padding-right: 10px">Last Name</th>
-             
                 <th style="padding-right: 10px">Email</th>
                 <th>    </th>
             </thread>
             <% let rowCount = 1; %>
-            <% players.forEach(player => { %>
-                <tr name="player-list">
+            <% users.forEach(user => { %>
+                <tr name="user">
                     <td style="padding-right: 10px"><%=  rowCount %></td> 
-                    <td style="padding-right: 10px"><%= student_user.id %></td>
-                    <td style="padding-right: 10px"><%= student_user.username %></td>
-                    <td style="padding-right: 10px"><%= student_user.fname %></td>
-                    <td style="padding-right: 10px"><%= student_user.lname %></td>
-                    <td style="padding-right: 10px"><%= student_user.email %></td>
+                    <td style="padding-right: 10px"><%= user.id %></td>
+                    <td style="padding-right: 10px"><%= user.username %></td>
+                    <td style="padding-right: 10px"><%= user.fname %></td>
+                    <td style="padding-right: 10px"><%= user.lname %></td>
+                    <td style="padding-right: 10px"><%= user.email %></td>
                     
-                    <td><a href="/player/<%= player.pid %>/edit.html">Edit</a></td>//need to modify after getting the bakend endpoints
+                    
+                    <td><a href="/user/<%= user.pid %>/edit.html">Edit</a></td>//need to modify after getting the bakend endpoints
+                    <td><a href="/user/<%= user.pid %>/edit.html">Delete</a></td>//need to modify after getting the bakend endpoints
                 </tr>
                 <% rowCount++; %>
             <% }); %>
         </table>
     <% } else { %>
-        <p>No players available.</p>
+        <p>No student user available.</p>
     <% } %>
 
-    <a href="/player/create.html">Create New Player</a>
+    <a href="/user/create.html">Create New Student User</a>
 
     <script>
         // Add any additional client-side scripts if needed
         document.getElementById('search-box').addEventListener('keyup', (event) => {
         const searchQuery = event.target.value;
         console.log('searchQuery is: ',searchQuery)
-        return fetch(`/api/player?q=${encodeURIComponent(searchQuery)};fname,lname`, {
+        // return fetch(`/api/user?q=${encodeURIComponent(searchQuery)};fname,lname`, {
+        //   method: 'GET'
+        // })
+        return fetch(`/api/student`, {
           method: 'GET'
         })
         .then(r => r.json())
-        .then(replacePlayerList);  // defined below
+        .then(replaceUserList);  // defined below
       });
 
-      function replacePlayerList(players) {
-    console.log('new player list is: ', players);
-
+      function replaceUserList(users) {
+    // console.log('new user list is: ', users);
+        if(!users){
+            return;
+        }
     // Get the existing table body
-    const tableBody = document.querySelector('#player-table tbody');
+    const tableBody = document.querySelector('#user-table tbody');
 
     // Clear the existing table body content
     tableBody.innerHTML = '';
 
-    // Add new rows based on the updated player list
-    players.forEach((player, index) => {
+    // Add new rows based on the updated user list
+    users.forEach((user, index) => {
         const newRow = tableBody.insertRow(index);
-        newRow.setAttribute('name', 'player-list');
+        newRow.setAttribute('name', 'user-list');
 
         const cells = [
             index + 1,
-            player.pid,
-            player.name,
-            player.handed,
-            player.balance_usd_cents,
-            player.is_active,
-            `<a href="/player/${player.pid}/edit.html">Edit</a>`
+            user.id,
+            user.userName,
+            user.fname,
+            user.lname,
+            user.email,
+           
+            `<a href="/user/${user.id}/edit.html">Edit</a>`
         ];
 
         cells.forEach((cellContent, cellIndex) => {
