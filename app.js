@@ -60,10 +60,27 @@ client.connect(err => {
     try {
         const studentCollection = client.db(dbConfig.db).collection("students");
 
-        const students = await studentCollection.find({}).toArray();
+        // const students = await studentCollection.find({}).toArray();
+        const students=[
+          { id:"1",
+            fname:"Donna",
+          lname:"Zhou",
+        userName:"donna",
+      email:"1usc.edu",
+    password:"12345678"},
+    {id:"2",
+    fname:"Donna",
+          lname:"Zhou",
+        userName:"donna",
+      email:"2@usc.edu",
+    password:"12345678"}
+        ];
         if (students) {
             console.log(`Fetched ${students.length} students`);
+            
+            console.log(students);
             res.status(200).json(students);
+            console.log("test students:",students)
         } else {
             console.log("No students found");
             res.status(404).json({ message: "No students found" });
@@ -198,8 +215,30 @@ app.post('/api/landlord', async (req, res) => {
 }
 });
 
-/** admin frontend endpoints as below */
- /********************* create student user from admin side ****************************************************** */
+//*************    front end endpoints as below    ************************************************/ 
+/********************** list student users  ***************************************************** */
+app.get('/admin/students.html', async (req, res) => {
+  try {
+   let students = 
+    // Set the content type to HTML
+    res.status(200).set('Content-Type', 'text/html');
+
+    // use async/await instead of callbacks
+    const render = util.promisify(res.render).bind(res);
+
+    // Assuming you have a layout.ejs file in the 'views' directory
+    res.render('layout.ejs', {
+      body: await render('pages/admin/list_student_user.ejs',students)
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/********************* create student user from admin side ****************************************************** */
  app.get('/admin/students/create.html', async (req, res) => {
     try {
      
@@ -221,7 +260,7 @@ app.post('/api/landlord', async (req, res) => {
     }
   });
 
-  /*************    front end endpoints as below    ************************************************/ 
+  
   /*****************  trojan home page  ********************************************************** */
   app.get('/trojanhousing/home.html',async(req,res)=>{
     res.status(200).json({message: "home page"});
@@ -326,3 +365,5 @@ console.log(`To create student user: http://localhost:3000/admin/students/create
 console.log(`To create landlord user: http://localhost:3000/admin/landlords/create.html`);
 console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
 console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
+console.log(`To signup as student user: http://localhost:3000/admin/students.html`);
+
