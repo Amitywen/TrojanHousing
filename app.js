@@ -321,6 +321,75 @@ app.post('/api/apply', async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+// Purpose: Delete a student record
+// Input Parameters: studentId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with studentId (e.g., /api/student/STUDENT_ID)
+// Example Return: Redirect to '/student' or error message
+app.delete('/api/student/:pid', async(req, res) => {
+    console.log('DELETE /student/:pid');
+    // Same as other endpoints, information grab ported to mongodb
+    const studentId =req.params.pid;
+    const studentCollection = client.db(dbConfig.db).collection("student");
+   
+
+    let student = await studentCollection.find({ _id: new ObjectId(student)}).toArray();
+   //check mongo return, if player found
+    if (student.length === 0) {
+      res.status(404).send({ error: "Player not found" });
+      return;
+      }
+  // taken from POST/student, changed just to deleteOne
+    try {
+      const result = await studentCollection.deleteOne({_id: new ObjectId(student) });
+      
+      if (result) {
+          res.redirect(303, '/student');
+          console.log(`student deleted with Id:${studentId}`)
+      } else {
+          console.error("No result returned");
+          return res.status(500).send({ error: "No result returned" });
+      }
+  } catch (err) {
+      console.error("Failed to delete player:", err);
+      return res.status(500).send({ error: "Failed to delete player" });
+  }
+  });
+// Purpose: Delete a landlord record
+// Input Parameters: landlordId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with landlordId (e.g., /api/landlord/LANDLORD_ID)
+// Example Return: Redirect to '/landlord' or error message
+  app.delete('/api/landlord/:pid', async(req, res) => {
+    console.log('DELETE /landlord/:pid');
+    // Same as other endpoints, information grab ported to mongodb
+    const landlordId =req.params.pid;
+    const landlordCollection = client.db(dbConfig.db).collection("landlord");
+   
+
+    let landlord = await landlordCollection.find({ _id: new ObjectId(landlord)}).toArray();
+   //check mongo return, if player found
+    if (landlord.length === 0) {
+      res.status(404).send({ error: "Player not found" });
+      return;
+      }
+  // taken from POST/landlord, changed just to deleteOne
+    try {
+      const result = await landlordCollection.deleteOne({_id: new ObjectId(landlord) });
+      
+      if (result) {
+          res.redirect(303, '/landlord');
+          console.log(`landlord deleted with Id:${landlordId}`)
+      } else {
+          console.error("No result returned");
+          return res.status(500).send({ error: "No result returned" });
+      }
+  } catch (err) {
+      console.error("Failed to delete player:", err);
+      return res.status(500).send({ error: "Failed to delete player" });
+  }
+  });
 //TODO
 //Needs to be debugged
 /// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
