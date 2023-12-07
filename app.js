@@ -327,69 +327,94 @@ app.post('/api/apply', async (req, res) => {
 // Return Format: JSON object with success or error message
 // Example Input: URL with studentId (e.g., /api/student/STUDENT_ID)
 // Example Return: Redirect to '/student' or error message
-app.delete('/api/student/:pid', async(req, res) => {
-    console.log('DELETE /student/:pid');
-    // Same as other endpoints, information grab ported to mongodb
-    const studentId =req.params.pid;
-    const studentCollection = client.db(dbConfig.db).collection("student");
-   
+app.delete('/api/student/:id', async (req, res) => {
+    console.log('DELETE /student/:id');
+    const studentId = req.params.id;
 
-    let student = await studentCollection.find({ _id: new ObjectId(student)}).toArray();
-   //check mongo return, if player found
-    if (student.length === 0) {
-      res.status(404).send({ error: "Player not found" });
-      return;
-      }
-  // taken from POST/student, changed just to deleteOne
     try {
-      const result = await studentCollection.deleteOne({_id: new ObjectId(student) });
-      
-      if (result) {
-          res.redirect(303, '/student');
-          console.log(`student deleted with Id:${studentId}`)
-      } else {
-          console.error("No result returned");
-          return res.status(500).send({ error: "No result returned" });
-      }
-  } catch (err) {
-      console.error("Failed to delete player:", err);
-      return res.status(500).send({ error: "Failed to delete player" });
-  }
-  });
+        const result = await deleteFromDb(studentId, "student");
+        res.redirect(303, '/student');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({ error: err.message });
+    }
+});
 // Purpose: Delete a landlord record
 // Input Parameters: landlordId as a URL parameter
 // Return Format: JSON object with success or error message
-// Example Input: URL with landlordId (e.g., /api/landlord/LANDLORD_ID)
+// Example Input: URL with landlordId (e.g., /api/landlord/landlord_ID)
 // Example Return: Redirect to '/landlord' or error message
-  app.delete('/api/landlord/:pid', async(req, res) => {
-    console.log('DELETE /landlord/:pid');
-    // Same as other endpoints, information grab ported to mongodb
-    const landlordId =req.params.pid;
-    const landlordCollection = client.db(dbConfig.db).collection("landlord");
-   
+app.delete('/api/landlord/:id', async (req, res) => {
+    console.log('DELETE /landlord/:id');
+    const landlordId = req.params.id;
 
-    let landlord = await landlordCollection.find({ _id: new ObjectId(landlord)}).toArray();
-   //check mongo return, if player found
-    if (landlord.length === 0) {
-      res.status(404).send({ error: "Player not found" });
-      return;
-      }
-  // taken from POST/landlord, changed just to deleteOne
     try {
-      const result = await landlordCollection.deleteOne({_id: new ObjectId(landlord) });
-      
-      if (result) {
-          res.redirect(303, '/landlord');
-          console.log(`landlord deleted with Id:${landlordId}`)
-      } else {
-          console.error("No result returned");
-          return res.status(500).send({ error: "No result returned" });
-      }
-  } catch (err) {
-      console.error("Failed to delete player:", err);
-      return res.status(500).send({ error: "Failed to delete player" });
-  }
-  });
+        const result = await deleteFromDb(landlordId, "landlord");
+        res.redirect(303, '/landlord');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({ error: err.message });
+    }
+});
+// Purpose: Delete a property record
+// Input Parameters: propertyId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with propertyId (e.g., /api/property/property_ID)
+// Example Return: Redirect to '/property' or error message
+app.delete('/api/property/:id', async (req, res) => {
+    console.log('DELETE /property/:id');
+    const propertyId = req.params.id;
+
+    try {
+        const result = await deleteFromDb(propertyId, "property");
+        res.redirect(303, '/property');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({ error: err.message });
+    }
+});
+// Purpose: Delete a application record
+// Input Parameters: applicationId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with applicationId (e.g., /api/application/application_ID)
+// Example Return: Redirect to '/application' or error message
+app.delete('/api/application/:id', async (req, res) => {
+    console.log('DELETE /application/:id');
+    const applicationId = req.params.id;
+
+    try {
+        const result = await deleteFromDb(applicationId, "application");
+        res.redirect(303, '/application');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({ error: err.message });
+    }
+});
+//code taken from Will's homework to make a function that limits the copy and pasting to make more modular. 
+async function deleteFromDb(id, collectionName) {
+    //grab the data's collection
+    const collection = client.db(dbConfig.db).collection(collectionName);
+    let data = await collection.find({ _id: new ObjectId(id) }).toArray();
+
+    //make sure it exists
+    if (data.length === 0) {
+        throw new Error(`${collectionName} not found`);
+    }
+    //delete
+    try {
+        const result = await collection.deleteOne({ _id: new ObjectId(id) });
+        if (result.deletedCount === 0) {
+            throw new Error("no result returned");
+        }
+        console.log(`data deleted with Id: ${id}`);
+        return result;
+    } catch (err) {
+        throw new Error(`Failed to delete ${collectionName}: ${err.message}`);
+    }
+}
+
+
+
 //TODO
 //Needs to be debugged
 /// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
