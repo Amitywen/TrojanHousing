@@ -63,6 +63,40 @@ client.connect(err => {
     console.log("GET /ping")
     res.status(204).send( "pinged");
   });
+
+// GET /api/login
+// Purpose: Authenticate users by username, password, and role.
+// Input Parameters: 'username', 'password', 'role' (query string).
+// Functionality: Validates role, fetches user from database, checks credentials.
+// Return Format: JSON object with login success status.
+// Example Input: /api/login?username=user&password=pass&role=student
+// Example Return: { loginSuccess: true } or { loginSuccess: false }
+// Error Handling: Returns error messages for invalid role, unsuccessful login, or server issues.
+  app.get('/api/login', async (req, res) => {
+    //taken and changed slightly from Will's Homeworks
+   console.log("GET /api/login");
+   try {
+        const { username, password,role } = req.query;
+       //grab all the students and put them in an array
+       if(role === "student" || role === "landlord" || role === "admin"){
+        return res.status(404).json({ message: "role not found" });
+       }
+       const collection = client.db(dbConfig.db).collection(role);
+       const data = await studentCollection.find({}).toArray();
+       const user = await collection.findOne({ username: username, password: password});
+       //if recieved respond the array, otherwise send that there were no students
+       if (user) {
+        console.log(`login sucess for user: ${username}`);
+        res.status(200).json({ loginSuccess: true });
+    } else {
+        console.log(`login failed for username: ${username} and that password combination`);
+        res.status(200).json({ loginSuccess: false });
+    }
+   } catch (err) {
+       console.error("failed to work through login:", err);
+       res.status(500).json({ error: "Internal server error" });
+   }
+});
 //DONE
 // Purpose: Retrieve all students from the database
 // Input Parameters: None
@@ -646,6 +680,7 @@ app.post('/api/property/:id', async(req, res) => {
   });
 
 
+  
 //Done
 //Needs to be debugged
 /// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
