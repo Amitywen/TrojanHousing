@@ -220,7 +220,31 @@ app.post('/api/landlord', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-  /*****************  create landlord user from admin side  ********************************************************** */
+
+  /*************    front end endpoints as below    ************************************************/ 
+  /*****************  trojan home page  ********************************************************** */
+  app.get('/trojanhousing/home.html',async(req,res)=>{
+    res.status(200).json({message: "home page"});
+  })
+  /*****************  trojan about us  ********************************************************** */
+  app.get('/trojanhousing/about.html',async(req,res)=>{
+    try {
+      // Set the content type to HTML
+      res.status(200).set('Content-Type', 'text/html');
+  
+      // use async/await instead of callbacks
+      const render = util.promisify(res.render).bind(res);
+      res.render('layout.ejs', {
+        body: await render('pages/trojanhousing/about.ejs')
+      });
+      res.end();
+  
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  })
+  /*******************  create landlord user from admin side  ********************************************************************************** */
   app.get('/admin/landlords/create.html', async (req, res) => {
     try {
      
@@ -230,7 +254,6 @@ app.post('/api/landlord', async (req, res) => {
       // use async/await instead of callbacks
       const render = util.promisify(res.render).bind(res);
   
-      // Assuming you have a layout.ejs file in the 'views' directory
       res.render('layout.ejs', {
         body: await render('pages/admin/create_landlord_user.ejs')
       });

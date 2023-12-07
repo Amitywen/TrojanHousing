@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student User</title>
+    <link rel="icon" type="image/x-icon" href="/images/trojan-icon.ico">
+    
+    <style>
+        .error-message{
+            color: red;
+            margin-bottom: 10px
+        }
+        .admin-form {
+            width: 800px; /* Adjust the width as needed */
+            height: 450px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page-title{           
+            /* margin-top: 20px; */
+            font-size: 20px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .admin-page-subtitle{           
+            /* margin-top: 20px; */
+            font-size: 15px; /* Increase the font size */
+            color: rgb(255,0,0); /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .input-bar{
+            width: 200px; /* Adjust the width as needed */
+        }
+        .form-submit-button{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC-comic.jpeg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+
+        .display-box {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        #display-box-verti{
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #display-box-hori{
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+        }
+        
+
+        .bio-box {
+            background-color:rgba(243, 239, 235, 0.8);
+            width: 20vw;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5%;
+            text-align: center;
+        }
+
+        .bio-box img {
+            width: 80%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        #block-text {
+            width: 40%;
+            margin: 0 auto; /* Center the block horizontally */
+            padding: 20px;
+            font-size:large;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+ <div class="whole-page-background-image">
+<div class="whole-page-background-color">
+    <div class="page-title">
+        <br>
+        <h1>About Us</h1>
+    </div>
+    <div class="display-box" id="display-box-verti">
+        <h2 style="color: #990000; font-size: 30px; margin-top: 2px;">Our Motivation</h2><br>
+        <p id="block-text">
+            As a student at the University of Southern California, 
+            finding suitable accommodation can sometimes be challenging, 
+            particularly for non-local students new to the USC area, 
+            due to a lack of reliable information sources.
+            Our goal is to extend a helping hand to every Trojan 
+            in search of a comfortable home while at school. 
+            Creating a seamless and enjoyable experience for all members of the Trojan community.
+        </p>
+    </div>
+    <div class="display-box" id="display-box-hori">
+        <div class="bio-box">
+            <img src="person1.jpg" alt="Person 1">
+            <h2>Person 1</h2>
+            <p>Description of Person 1.</p>
+        </div>
+        <div class="bio-box">
+            <img src="person2.jpg" alt="Person 2">
+            <h2>Qingyu Zhou</h2>
+            <p>Description of Person 2.</p>
+        </div>
+        <div class="bio-box">
+            <img src="person3.jpg" alt="Person 3">
+            <h2>Person 3</h2>
+            <p>Description of Person 3.</p>
+        </div>
+    </div>
+ </div>
+</div>
+
+
+
+
+
+</body>
+</html>

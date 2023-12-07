@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player List</title>
+    <style>
+         #search-box {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #search-button {
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+    <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
+</head>
+
+<body>
+    <h1>Current Student User List</h1>
+    <div>
+        <label for="search-box">Search: </label>
+        <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
+    </div>
+
+    <% if (student_users.length > 0) { %>
+        <table id="student-list">
+            <thread>
+                <th style="padding-right: 10px">#</th>
+                <th style="padding-right: 10px">ID</th>
+                <th style="padding-right: 10px">User Name</th>
+                <th style="padding-right: 10px">First Name</th>
+                <th style="padding-right: 10px">Last Name</th>
+             
+                <th style="padding-right: 10px">Email</th>
+                <th>    </th>
+            </thread>
+            <% let rowCount = 1; %>
+            <% players.forEach(player => { %>
+                <tr name="player-list">
+                    <td style="padding-right: 10px"><%=  rowCount %></td> 
+                    <td style="padding-right: 10px"><%= student_user.id %></td>
+                    <td style="padding-right: 10px"><%= student_user.username %></td>
+                    <td style="padding-right: 10px"><%= student_user.fname %></td>
+                    <td style="padding-right: 10px"><%= student_user.lname %></td>
+                    <td style="padding-right: 10px"><%= student_user.email %></td>
+                    
+                    <td><a href="/player/<%= player.pid %>/edit.html">Edit</a></td>//need to modify after getting the bakend endpoints
+                </tr>
+                <% rowCount++; %>
+            <% }); %>
+        </table>
+    <% } else { %>
+        <p>No players available.</p>
+    <% } %>
+
+    <a href="/player/create.html">Create New Player</a>
+
+    <script>
+        // Add any additional client-side scripts if needed
+        document.getElementById('search-box').addEventListener('keyup', (event) => {
+        const searchQuery = event.target.value;
+        console.log('searchQuery is: ',searchQuery)
+        return fetch(`/api/player?q=${encodeURIComponent(searchQuery)};fname,lname`, {
+          method: 'GET'
+        })
+        .then(r => r.json())
+        .then(replacePlayerList);  // defined below
+      });
+
+      function replacePlayerList(players) {
+    console.log('new player list is: ', players);
+
+    // Get the existing table body
+    const tableBody = document.querySelector('#player-table tbody');
+
+    // Clear the existing table body content
+    tableBody.innerHTML = '';
+
+    // Add new rows based on the updated player list
+    players.forEach((player, index) => {
+        const newRow = tableBody.insertRow(index);
+        newRow.setAttribute('name', 'player-list');
+
+        const cells = [
+            index + 1,
+            player.pid,
+            player.name,
+            player.handed,
+            player.balance_usd_cents,
+            player.is_active,
+            `<a href="/player/${player.pid}/edit.html">Edit</a>`
+        ];
+
+        cells.forEach((cellContent, cellIndex) => {
+            const newCell = newRow.insertCell(cellIndex);
+            newCell.innerHTML = cellContent;
+            newCell.style.paddingRight = '10px';
+        });
+    });
+}
+
+    </script>
+</body>
+
+</html>
