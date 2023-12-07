@@ -7,12 +7,20 @@ const { ObjectId } = require('mongodb');
 
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 
 const express = require('express');
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
+// Assuming you have configured your view engine and views directory
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 
 app.use(express.json());
 const PORT = 3000;
@@ -190,7 +198,50 @@ app.post('/api/landlord', async (req, res) => {
 }
 });
 
-
+/** admin frontend endpoints as below */
+ /*************************************************************************** */
+ app.get('/students/create.html', async (req, res) => {
+    try {
+     
+      // Set the content type to HTML
+      res.status(200).set('Content-Type', 'text/html');
+  
+      // use async/await instead of callbacks
+      const render = util.promisify(res.render).bind(res);
+  
+      // Assuming you have a layout.ejs file in the 'views' directory
+      res.render('layout.ejs', {
+        body: await render('pages/admin/create_student_user.ejs')
+      });
+      res.end();
+  
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  /*************************************************************************** */
+  app.get('/landlords/create.html', async (req, res) => {
+    try {
+     
+      // Set the content type to HTML
+      res.status(200).set('Content-Type', 'text/html');
+  
+      // use async/await instead of callbacks
+      const render = util.promisify(res.render).bind(res);
+  
+      // Assuming you have a layout.ejs file in the 'views' directory
+      res.render('layout.ejs', {
+        body: await render('pages/admin/create_landlord_user.ejs')
+      });
+      res.end();
+  
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  /** admin frontend endpoints as above */
 //error handler from demo handout
 app.use((err,req,res,next) => {
   console.error(err);
@@ -206,3 +257,5 @@ app.use((err,req,res,next) => {
 
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
+console.log(`To create student user: http://localhost:3000/students/create.html`);
+console.log(`To create landlord user: http://localhost:3000/landlords/create.html`);
