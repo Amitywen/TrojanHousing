@@ -30,7 +30,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 15px;
         }
         .info {
             padding: 10px;
@@ -51,7 +51,7 @@
             padding: 0 50px;
             /* font-family: Arial, sans-serif; */
         }
-        #studentCount, #landlordCount {
+        #studentCount, #landlordCount, #propertyCount{
             font-size: 100px; /* Adjust the font size as needed */
         }
         .links {
@@ -65,13 +65,20 @@
         <div class="container">
             <div class="info">
                 <h2>Student Users</h2>
-                <p><span id="studentCount">10</span></p>
+                <p><span id="studentCount"></span></p>
             </div>
         </div>
         <div class="container">
             <div class="info">
                 <h2>Landlord Users</h2>
-                <p><span id="landlordCount">7</span></p>
+                <p><span id="landlordCount"></span></p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="info">
+                <h2> # of Properties</h2>
+                <p><span id="propertyCount"></span></p>
             </div>
         </div>
     </div>
@@ -84,16 +91,36 @@
             <h1>Join today</h1>
             <!-- Content for the right column goes here -->
             <div class="links">
-                <a href="login.html">LogIn</a> | <a href="signup.html">Sign Up</a>
+                <a href="/api/Login.html">LogIn</a> | <a href="/api/signup.html">Sign Up</a>
             </div>
     </div>
 
-    <!-- Your script or JavaScript here -->
+
     <script>
-        // JavaScript to update the counts dynamically
-        // Replace the '10' and '7' with actual counts fetched from your system
         document.getElementById('studentCount').innerText = '10'; // Replace with actual student count
         document.getElementById('landlordCount').innerText = '7'; // Replace with actual landlord count
-    </script>
+        document.getElementById('propertyCount').innerText = '100'; // Replace with actual landlord count
+
+        const POLL_INTERVAL_SEC = 10;
+        document.addEventListener('DOMContentLoaded', async () => {
+            const updateDashboard = () => {
+                fetch('/api/homepage')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the dashboard with the new data
+                        document.querySelector('#studentCount').textContent = data.studentCount;
+                        document.querySelector('#landlordCount').textContent = data.landlordCount;
+                        document.querySelector('#propertyCount').textContent = data.propertyCount;
+                    });
+            };
+        
+            // Initial updateDashboard then periodically
+            updateDashboard();
+            setInterval(updateDashboard, POLL_INTERVAL_SEC * 1000); //1000
+        });
+    </script>  
+
+    <!-- Your script or JavaScript here -->
+
 </body>
 </html>
