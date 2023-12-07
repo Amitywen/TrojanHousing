@@ -254,7 +254,7 @@ app.post('/api/property', async (req, res) => {
             location,
             securityDeposit: securityDeposit || null, 
             summary: summary || [],  
-            status: false,              
+            taken: false,              
             applicationIds: []                    
         };
         //insert new property
@@ -413,6 +413,237 @@ async function deleteFromDb(id, collectionName) {
     }
 }
 
+// Purpose: Update student details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for student not found, invalid fields, or update failure.
+// Example Input: /api/student/student_ID with updated details in body.
+// Example Return: Success message with studentId or error message.
+app.post('/api/student/:id', async(req, res) => {
+    //modified endpoint from Will's hoemwork to fit 
+    console.log('POST /student/:id');
+   
+    //grab current player data ported to MongoDB 
+    const studentId = req.params.id;
+    const studentCollection = client.db(dbConfig.db).collection("student");
+
+    let student = await studentCollection.findOne({ _id: new ObjectId(studentId) });
+   // console.log("Player data fetched:", playersData);
+  //check mongo return, if player found
+    if (student.length === 0) {
+        return res.status(404).send({ error: "Player not found" });
+      }
+      //Ported for ease of understanding
+      student = student[0];    
+ 
+      const { username, fname, lname, password } = req.body;
+    
+  
+    //check each for correct formatting
+    const invalidFields = [];
+  
+    //push to invalidFields array if incorrect formattign
+    if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
+    if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
+    if (password && password.length < 8) invalidFields.push('password');
+  
+    
+  //if invalidFields has anything, report error.
+  
+    if (invalidFields.length) {
+      return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
+    }
+
+    if (username) student.username = username;
+    if (fname) student.fname = fname;
+    if (lname) student.lname = lname;
+    if (password) student.password = password;
+  try {
+    const result = await studentCollection.updateOne({ _id: new ObjectId(studentId) }, { $set: student });
+      //console.log("Player data updated:", result);
+      if (result && result.modifiedCount) {
+          res.status(202).send(`sucessfully modified student with id:${studentId}`);
+      } else {
+          console.error("failed to modify student");
+          return res.status(500).send({ error: "failed to modify student" });
+      }
+  } catch (err) {
+      console.error("Failed to update player:", err);
+      return res.status(500).send({ error: "Failed to update player" });
+  }
+  
+  
+  });
+
+// POST /api/landlord/:id
+// Purpose: Update landlord details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for landlord not found, invalid fields, or update failure.
+// Example Input: /api/landlord/landlord_ID with updated details in body.
+// Example Return: Success message with landlordId or error message.
+
+app.post('/api/landlord/:id', async(req, res) => {
+    //modified endpoint from Will's hoemwork to fit 
+    console.log('POST /landlord/:id');
+   
+    //grab current player data ported to MongoDB 
+    const landlordId = req.params.id;
+    const landlordCollection = client.db(dbConfig.db).collection("landlord");
+
+    let landlord = await landlordCollection.findOne({ _id: new ObjectId(landlordId) });
+   // console.log("Player data fetched:", playersData);
+  //check mongo return, if player found
+    if (landlord.length === 0) {
+        return res.status(404).send({ error: "Player not found" });
+      }
+      //Ported for ease of understanding
+      landlord = landlord[0];    
+ 
+      const { username, fname, lname, password } = req.body;
+    
+  
+    //check each for correct formatting
+    const invalidFields = [];
+  
+    //push to invalidFields array if incorrect formattign
+    if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
+    if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
+    if (password && password.length < 8) invalidFields.push('password');
+  
+    
+  //if invalidFields has anything, report error.
+  
+    if (invalidFields.length) {
+      return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
+    }
+    if (username) landlord.username = username;
+    if (fname) landlord.fname = fname;
+    if (lname) landlord.lname = lname;
+    if (password) landlord.password = password;
+  try {
+    const result = await landlordCollection.updateOne({ _id: new ObjectId(landlordId) }, { $set: landlord });
+      //console.log("Player data updated:", result);
+      if (result && result.modifiedCount) {
+          res.status(202).send(`sucessfully modified landlord with id:${landlordId}`);
+      } else {
+          console.error("failed to modify landlord");
+          return res.status(500).send({ error: "failed to modify landlord" });
+      }
+  } catch (err) {
+      console.error("Failed to update player:", err);
+      return res.status(500).send({ error: "Failed to update player" });
+  }
+  
+  
+  });
+// POST /api/application/:id
+// Purpose: Update application details in the database.
+// Input Parameters: 'id' as a URL parameter; 'studentId', 'propertyId', 'accepted' in request body.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for application not found or update failure.
+// Example Input: /api/application/application_ID with updated details in body.
+// Example Return: Success message with applicationId or error message.
+app.post('/api/application/:id', async(req, res) => {
+    //modified endpoint from Will's hoemwork to fit 
+    console.log('POST /application/:id');
+   
+    //grab current player data ported to MongoDB 
+    const applicationId = req.params.id;
+    const applicationCollection = client.db(dbConfig.db).collection("application");
+
+    let application = await applicationCollection.findOne({ _id: new ObjectId(applicationId) });
+   // console.log("Player data fetched:", playersData);
+  //check mongo return, if player found
+    if (application.length === 0) {
+        return res.status(404).send({ error: "Player not found" });
+      }
+      //Ported for ease of understanding
+      application = application[0];    
+ 
+      const { studentId, propertyId, accepted } = req.body;
+
+
+   
+
+    if (studentId) application.studentId = new ObjectId(studentId);
+    if (propertyId) application.propertyId = new ObjectId(propertyId);
+    if (accepted !== undefined) application.accepted = accepted;
+
+  try {
+    const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
+      //console.log("Player data updated:", result);
+      if (result && result.modifiedCount) {
+          res.status(202).send(`sucessfully modified application with id:${applicationId}`);
+      } else {
+          console.error("failed to modify application");
+          return res.status(500).send({ error: "failed to modify application" });
+      }
+  } catch (err) {
+      console.error("Failed to update player:", err);
+      return res.status(500).send({ error: "Failed to update player" });
+  }
+  
+  
+  });
+
+// POST /api/property/:id
+// Purpose: Update property details in the database.
+// Input Parameters: 'id' as a URL parameter; 'landlordId', 'address', 'numberOfRooms', 'rent', 'nickname', 'location', 'securityDeposit', 'summary', 'taken' in request body.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for property not found or update failure.
+// Example Input: /api/property/property_ID with updated details in body.
+// Example Return: Success message with propertyId or error message.
+app.post('/api/property/:id', async(req, res) => {
+    //modified endpoint from Will's hoemwork to fit 
+    console.log('POST /property/:id');
+   
+    //grab current player data ported to MongoDB 
+    const propertyId = req.params.id;
+    const propertyCollection = client.db(dbConfig.db).collection("property");
+
+    let property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
+   // console.log("Player data fetched:", playersData);
+  //check mongo return, if player found
+    if (property.length === 0) {
+        return res.status(404).send({ error: "Player not found" });
+      }
+      //Ported for ease of understanding
+      property = property[0];    
+      const { landlordId, address, numberOfRooms, rent, nickname, location, securityDeposit, summary, taken } = req.body;
+
+   
+
+      if (landlordId) property.landlordId = new ObjectId(landlordId);
+      if (address) property.address = address;
+      if (numberOfRooms) property.numberOfRooms = numberOfRooms;
+      if (rent) property.rent = rent;
+      if (nickname) property.nickname = nickname;
+      if (location) property.location = location;
+      if (securityDeposit) property.securityDeposit = securityDeposit;
+      if (summary) property.summary = summary;
+      if (taken !== undefined) property.taken = taken;
+  
+  
+    
+  try {
+    const result = await propertyCollection.updateOne({ _id: new ObjectId(propertyId) }, { $set: property });
+      //console.log("Player data updated:", result);
+      if (result && result.modifiedCount) {
+          res.status(202).send(`sucessfully modified property with id:${propertyId}`);
+      } else {
+          console.error("failed to modify property");
+          return res.status(500).send({ error: "failed to modify property" });
+      }
+  } catch (err) {
+      console.error("Failed to update player:", err);
+      return res.status(500).send({ error: "Failed to update player" });
+  }
+  
+  
+  });
 
 
 //Done
