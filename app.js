@@ -199,8 +199,8 @@ app.post('/api/landlord', async (req, res) => {
 });
 
 /** admin frontend endpoints as below */
- /*************************************************************************** */
- app.get('/students/create.html', async (req, res) => {
+ /********************* create student user from admin side ****************************************************** */
+ app.get('/admin/students/create.html', async (req, res) => {
     try {
      
       // Set the content type to HTML
@@ -220,8 +220,8 @@ app.post('/api/landlord', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-  /*************************************************************************** */
-  app.get('/landlords/create.html', async (req, res) => {
+  /*****************  create landlord user from admin side  ********************************************************** */
+  app.get('/admin/landlords/create.html', async (req, res) => {
     try {
      
       // Set the content type to HTML
@@ -241,6 +241,48 @@ app.post('/api/landlord', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+/********************* signup as student user from user side ****************************************************** */
+ app.get('/users/students/signup.html', async (req, res) => {
+  try {
+   
+    // Set the content type to HTML
+    res.status(200).set('Content-Type', 'text/html');
+
+    // use async/await instead of callbacks
+    const render = util.promisify(res.render).bind(res);
+
+    // Assuming you have a layout.ejs file in the 'views' directory
+    res.render('layout.ejs', {
+      body: await render('pages/admin/signup_student_user.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/********************* signup as landlord user from user side ****************************************************** */
+app.get('/users/landlords/signup.html', async (req, res) => {
+  try {
+   
+    // Set the content type to HTML
+    res.status(200).set('Content-Type', 'text/html');
+
+    // use async/await instead of callbacks
+    const render = util.promisify(res.render).bind(res);
+
+    // Assuming you have a layout.ejs file in the 'views' directory
+    res.render('layout.ejs', {
+      body: await render('pages/admin/signup_landlord_user.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
   /** admin frontend endpoints as above */
 //error handler from demo handout
 app.use((err,req,res,next) => {
@@ -257,5 +299,7 @@ app.use((err,req,res,next) => {
 
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
-console.log(`To create student user: http://localhost:3000/students/create.html`);
-console.log(`To create landlord user: http://localhost:3000/landlords/create.html`);
+console.log(`To create student user: http://localhost:3000/admin/students/create.html`);
+console.log(`To create landlord user: http://localhost:3000/admin/landlords/create.html`);
+console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
+console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
