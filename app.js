@@ -3,7 +3,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 //const cors = require('cors');
-
+const axios = require('axios');
 
 const fs = require('fs');
 const path = require('path');
@@ -418,24 +418,39 @@ app.get('/api/property/application/:propertyId', async (req, res) => {
 /********************** list student users  ***************************************************** */
 app.get('/admin/students.html', async (req, res) => {
   try {
-   let students = 
+    // Use async/await for the fetch operation
+    const response = await fetch('/api/student', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      // Handle non-successful responses (e.g., 404, 500)
+      throw new Error(`Failed to fetch students: ${response.statusText}`);
+    }
+
+    // Parse JSON from the response
+    const students = await response.json();
+
+    console.log("students:", students);
+
     // Set the content type to HTML
     res.status(200).set('Content-Type', 'text/html');
 
-    // use async/await instead of callbacks
+    // Use async/await instead of callbacks
     const render = util.promisify(res.render).bind(res);
 
     // Assuming you have a layout.ejs file in the 'views' directory
-    res.render('layout.ejs', {
-      body: await render('pages/admin/list_student_user.ejs',students)
-    });
-    res.end();
+    // res.render('layout.ejs', {
+    //   body: await render('pages/admin/list_student_user.ejs', { students }),
+    // });
 
+    res.end();
   } catch (error) {
-    console.error('Error rendering page:', error);
+    console.error('Error rendering page:', error.message);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 /********************* create student user from admin side ****************************************************** */
  app.get('/admin/students/create.html', async (req, res) => {

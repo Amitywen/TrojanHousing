@@ -26,7 +26,7 @@
         <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
     </div> -->
 
-    <% if (user && users.length > 0) { %>
+    <% if (users && users.length > 0) { %>
         <table id="user-list">
             <thread>
                 <th style="padding-right: 10px">#</th>
@@ -41,7 +41,7 @@
             <% users.forEach(user => { %>
                 <tr name="user">
                     <td style="padding-right: 10px"><%=  rowCount %></td> 
-                    <td style="padding-right: 10px"><%= user._id %></td>
+                    <td style="padding-right: 10px"><%= user.id %></td>
                     <td style="padding-right: 10px"><%= user.username %></td>
                     <td style="padding-right: 10px"><%= user.fname %></td>
                     <td style="padding-right: 10px"><%= user.lname %></td>
