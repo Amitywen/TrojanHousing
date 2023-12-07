@@ -2,22 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <title>HomePage</title> -->
+    <link rel="icon" type="image/x-icon" href="/public/images/trojan-icon.ico">
     <style>
-        .top-bar {
-            width: 100%;
-            background-color:#990000;
-            color:#FFCC00;
-            padding: 10px 0;
-            font-family: 'Palatino', 'Palatino Linotype', serif; /* Font stack including Palatino */
-            text-align: center;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Palatino', 'Palatino Linotype', serif;
         }
 
+        .top-bar {
+            width: 100%;
+            background-color: #990000;
+            color: #FFCC00;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            margin-left: 30px;
+            width: 30px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+        }
+
+        .nav-bar {
+            display: flex;
+        }
+
+        .nav-bar a {
+            color: #FFCC00;
+            text-decoration: none;
+            margin: 0 15px;
+        }
     </style>
 </head>
-<body>
+<body style="display:flexbox">
     <div class="top-bar">
-        <h1>Trojan Housing</h1>
+        <div class="logo">
+            <!-- Replace "/public/images/trojan-icon.ico" with the actual path to your icon image -->
+            <a  href="/trojanhousing/about.html">
+                <!-- <a  href="/trojanhousing/home.html"> -->
+                <img src="/images/trojan-icon.ico" alt="Trojan Icon">
+            </a>
+            
+        </div>
+        <!-- <div><h1>Trojan Housing</h1></div> -->
+        <div class="nav-bar" >
+            <a href="/trojanhousing/home.html">Home</a>
+            <a href="/trojanhousing/about.html">About Us</a>
+            <a href="/users/students/signup.html">Student Sign up</a>
+            <a href="#">Student Log in</a>
+            <a href="/users/landlords/signup.html">Landlord Join</a>
+            <a href="#">Landlord Log in</a>
+            <!-- Add more navigation links as needed -->
+        </div>
     </div>
 </body>
 </html>

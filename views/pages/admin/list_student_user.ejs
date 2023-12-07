@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user List</title>
+    <style>
+         #search-box {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #search-button {
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+    <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
+</head>
+
+<body>
+    <h1>Current Student User List</h1>
+    <!-- <div>
+        <label for="search-box">Search: </label>
+        <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
+    </div> -->
+
+    <% if (users && users.length > 0) { %>
+        <table id="user-list">
+            <thread>
+                <th style="padding-right: 10px">#</th>
+                <th style="padding-right: 10px">ID</th>
+                <th style="padding-right: 10px">User Name</th>
+                <th style="padding-right: 10px">First Name</th>
+                <th style="padding-right: 10px">Last Name</th>
+                <th style="padding-right: 10px">Email</th>
+                <th>    </th>
+            </thread>
+            <% let rowCount = 1; %>
+            <% users.forEach(user => { %>
+                <tr name="user">
+                    <td style="padding-right: 10px"><%=  rowCount %></td> 
+                    <td style="padding-right: 10px"><%= user.id %></td>
+                    <td style="padding-right: 10px"><%= user.username %></td>
+                    <td style="padding-right: 10px"><%= user.fname %></td>
+                    <td style="padding-right: 10px"><%= user.lname %></td>
+                    <td style="padding-right: 10px"><%= user.email %></td>
+                    
+                    
+                    <td><a href="/user/<%= user.pid %>/edit.html">Edit</a></td>//need to modify after getting the bakend endpoints
+                    <td><a href="/user/<%= user.pid %>/edit.html">Delete</a></td>//need to modify after getting the bakend endpoints
+                </tr>
+                <% rowCount++; %>
+            <% }); %>
+        </table>
+    <% } else { %>
+        <p>No student user available.</p>
+    <% } %>
+
+    <a href="/user/create.html">Create New Student User</a>
+
+    <script>
+        // Add any additional client-side scripts if needed
+        document.getElementById('search-box').addEventListener('keyup', (event) => {
+        const searchQuery = event.target.value;
+        console.log('searchQuery is: ',searchQuery)
+        // return fetch(`/api/user?q=${encodeURIComponent(searchQuery)};fname,lname`, {
+        //   method: 'GET'
+        // })
+        return fetch(`/api/student`, {
+          method: 'GET'
+        })
+        .then(r => r.json())
+        .then(replaceUserList);  // defined below
+      });
+
+      function replaceUserList(users) {
+    // console.log('new user list is: ', users);
+        if(!users){
+            return;
+        }
+    // Get the existing table body
+    const tableBody = document.querySelector('#user-table tbody');
+
+    // Clear the existing table body content
+    tableBody.innerHTML = '';
+
+    // Add new rows based on the updated user list
+    users.forEach((user, index) => {
+        const newRow = tableBody.insertRow(index);
+        newRow.setAttribute('name', 'user-list');
+
+        const cells = [
+            index + 1,
+            user.id,
+            user.userName,
+            user.fname,
+            user.lname,
+            user.email,
+           
+            `<a href="/user/${user.id}/edit.html">Edit</a>`
+        ];
+
+        cells.forEach((cellContent, cellIndex) => {
+            const newCell = newRow.insertCell(cellIndex);
+            newCell.innerHTML = cellContent;
+            newCell.style.paddingRight = '10px';
+        });
+    });
+}
+
+    </script>
+</body>
+
+</html>

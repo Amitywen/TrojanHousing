@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create landlord User</title>
+    <link rel="icon" type="image/x-icon" href="/images/trojan-icon.ico">
+    <style>
+        .error-message{
+            color: red;
+            margin-bottom: 10px
+        }
+        .admin-form {
+            width: 800px; /* Adjust the width as needed */
+            height: 450px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .admin-page-subtitle{           
+            /* margin-top: 20px; */
+            font-size: 15px; /* Increase the font size */
+            color: rgb(255,0,0); /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .input-bar{
+            width: 200px; /* Adjust the width as needed */
+        }
+        .form-submit-button{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC_Village.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+ <div class="whole-page-background-image">
+<div class="whole-page-background-color">
+    <h1 class="admin-page-title"><br>Landlord Sign Up</h1>
+    <h2 class="admin-page-subtitle">Welcome to Trojan Housing Family</h2>
+<div class="admin-form">
+    
+    <form id="student-form" >
+        <div id="message-box" class="error-message"></div><br>
+        <label for="email">Email:</label>
+        <input class="input-bar" type="text" id="email" name="email" required>
+        <div id="email-error" class="error-message"></div><br>
+    
+        <label for="username">User Name:</label>
+        <input class="input-bar" type="text" id="username" name="username" required>
+        <div id="username-error" class="error-message"></div><br>
+    
+        <label for="fname">First Name:</label>
+        <input class="input-bar" type="text" id="fname" name="fname" required>
+        <div id="fname-error" class="error-message"></div><br>
+    
+        <label for="lname">Last Name:</label>
+        <input class="input-bar" type="text" id="lname" name="lname" required>
+        <div id="lname-error" class="error-message"></div><br>
+
+        <label for="companyName">Company Name:</label>
+        <input class="input-bar" type="text" id="companyName" name="companyName" required>
+        <div id="companyName-error" class="error-message"></div><br>
+    
+        <label for="password">Set Password:</label>
+        <input class="input-bar" type="password" id="password" name="password" required>
+        <div id="password-error" class="error-message"></div><br>
+    
+        <label for="re-password">Re-enter Password:</label>
+        <input class="input-bar" type="password" id="re-password" name="repassword" required>
+        <div id="re-password-error" class="error-message"></div><br>
+    
+        <!-- Button should be inside the form -->
+        <button class="form-submit-button" type="submit">Submit</button>
+    </form>
+   
+</div>
+ </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('student-form');
+
+        form.addEventListener('submit', async (event) => {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Generate JSON body
+            const formData = new FormData(form);
+            const inputObj = {};
+            await formData.forEach((value, key) => {
+                inputObj[key] = value;
+            });
+            console.log("inputObj0: ",inputObj);
+
+            // Perform client-side validation
+            // const invalidFieldMessage = ;
+            if(validateForm(inputObj)){
+                console.log("Input Validation Not Passing");
+                return;
+            }
+            else{
+                try {
+                    delete inputObj.repassword;
+                    const response = await fetch('/api/landlord', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(inputObj),
+                    });
+                    // Check if the response is successful
+                    const responseMsg = await response.json();
+                    if (response.ok) {
+                        //printing operation success to web page
+                        document.getElementById('message-box').innerText = responseMsg.message;
+                    } else {
+                       
+                        // Display server errors to the user using the flash message box
+                        document.getElementById('message-box').innerText = responseMsg.error;
+                    }
+                } catch (error) {
+                    console.error('Error during fetch:', error);
+                    document.getElementById('message-box').innerText = 'An unexpected error occurred.';
+                }
+            }
+        });
+    });
+
+    function validateForm(inputObj) {
+        let errorFlag = false;//true if error occurs
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(inputObj.fname.trim() === '' || !/^[a-zA-Z]+$/.test(inputObj.fname)){
+            document.getElementById('fname-error').innerHTML = "Invalid First Name Input";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('fname-error').innerHTML = '';
+        }
+
+        if(inputObj.lname.trim() === '' || !/^[a-zA-Z]+$/.test(inputObj.lname)){
+            document.getElementById('lname-error').innerHTML = "Invalid Last Name Input";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('lname-error').innerHTML = '';
+        }
+
+        if(inputObj.email.trim() === '' || !emailRegex.test(inputObj.email)){
+            document.getElementById('email-error').innerHTML = "Please Use Your USC Email Address";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('email-error').innerHTML = '';
+        }
+        if(inputObj.companyName.trim() === ''){
+            document.getElementById('companyName-error').innerHTML = "Please type your company name";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('companyName-error').innerHTML = '';
+        }
+
+        if(inputObj.password.trim() === '' || inputObj.password.length < 8){
+            document.getElementById('password-error').innerHTML = "Password must be at least 8-character long";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('password-error').innerHTML = '';
+        }
+
+        if(inputObj.repassword.trim() === '' || inputObj.repassword !== inputObj.password){
+            document.getElementById('re-password-error').innerHTML = "Re-enter Password Not Match";
+            errorFlag = true;
+            
+        }else{
+            document.getElementById('re-password-error').innerHTML = '';
+            
+        }
+        return errorFlag;
+    }   
+</script>
+
+</body>
+</html>
