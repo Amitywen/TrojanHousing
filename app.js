@@ -78,11 +78,12 @@ client.connect(err => {
    try {
         const { username, password,role } = req.query;
        //grab all the students and put them in an array
-       if(role === "student" || role === "landlord" || role === "admin"){
+       console.log(role);
+       if(!(role == "student" || role =="landlord" || role == "admin")){
         return res.status(404).json({ message: "role not found" });
        }
        const collection = client.db(dbConfig.db).collection(role);
-       const data = await studentCollection.find({}).toArray();
+       const data = await collection.find({}).toArray();
        const user = await collection.findOne({ username: username, password: password});
        //if recieved respond the array, otherwise send that there were no students
        if (user) {
