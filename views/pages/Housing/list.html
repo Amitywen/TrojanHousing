@@ -13,41 +13,68 @@
         td, th {
             vertical-align: middle;
         }
+        .selection{
+          display: flex;
+            flex-direction:row;
+            justify-content: left;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            font-family:'Courier New', Courier, monospace ;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Housing List</h1>
+    <!-- <h1>Housing List</h1> -->
     <% if (players.length === 0) { %>
         <p>No players available.</p>
     <% } else { %>
-        <input id="search-box" type="text" placeholder="Search by name">
-        <select id="is_active">
-            <option value="*">All Players</option>
-            <option value="true">Active Players</option>
-            <option value="false">Inactive Players</option>
-        </select>
+        <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
+        <div class = selection>
+          <h4>Avaliable</h4>
+          <select id="is_active">
+            <option value="*">All Housing</option>
+            <option value="true">Avaliable Housing</option>
+            <!-- <option value="false">Unavaliable Housing</option> -->
+        </select><br></br>
+        <h4>Location</h4>
+        <select id="Location">
+          <option value="*">All Housing</option>
+          <option value="true">Avaliable Housing</option>
+          <!-- <option value="false">Unavaliable Housing</option> -->
+        </select><br></br>
+
+        <h4>House type</h4>
+        <select id="Housetype">
+          <option value="*">All Housing</option>
+          <option value="true">Avaliable Housing</option>
+          <!-- <option value="false">Unavaliable Housing</option> -->
+        </select><br></br>
+
+        </div>
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>id</th>
-                    <th>Name</th>
-                    <th>Handed</th>
-                    <th>Balance (USD)</th>
-                    <th>Active</th>
-                    <th>Actions</th>
+                    <th>Price</th>
+                    <th>Location</th>
+                    <th>House type</th>
+                    <th>Price (USD)</th>
+                    <th>Avaliable</th>
+                    <th>Apply</th>
                 </tr>
             </thead>
-            <tbody class="player-list">
-                <% players.forEach((player, index) => { %>
+            <tbody class="housing-list">
+                <% housings.forEach((unit, index) => { %>
                     <tr>
-                        <td><%= index + 1 %></td>
-                        <td><%= player.pid %></td>
-                        <td><%= player.name %></td>
-                        <td><%= player.handed %></td>
-                        <td><%= player.balance_usd_cents %></td>
-                        <td><%= player.is_active ? 'Yes' : 'No' %></td>
-                        <td><a href="/player/<%= player.pid %>/edit.html">Edit</a></td>
+                        <td><%= unit.pid %></td>
+                        <td><%= unit.price %></td>
+                        <td><%= unit.location %></td>
+                        <td><%= unit.housetype %></td>
+                        <td><%= unit.price %></td>
+                        <td><%= unit.is_active ? 'Yes' : 'No' %></td>
+                        <td><a href="/player/<%= player.pid %>/edit.html">Apply</a></td>
                     </tr>
                 <% }) %>
             </tbody>
@@ -55,17 +82,17 @@
     <% } %>
 
     <script>
-        document.getElementById('search-box').addEventListener('keyup', (event) => {
-            const searchQuery = event.target.value +';fname,lname'
-            return fetch(`/api/player?q=${encodeURIComponent(searchQuery)}`, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(replacePlayerList)
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-        });
+        // document.getElementById('search-box').addEventListener('keyup', (event) => {
+        //     const searchQuery = event.target.value +';fname,lname'
+        //     return fetch(`/api/player?q=${encodeURIComponent(searchQuery)}`, {
+        //         method: 'GET'
+        //     })
+        //     .then(response => response.json())
+        //     .then(replacePlayerList)
+        //     .catch(error => {
+        //         console.error('Error fetching data:', error);
+        //     });
+        // });
 
         document.getElementById('is_active').addEventListener('change', (event) => {
             const selectedValue = event.target.value;
