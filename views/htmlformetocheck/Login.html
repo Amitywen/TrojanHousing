@@ -47,7 +47,7 @@
 
             <label for="student"><input type="radio" name="role" id="student" value="student"> Student</label>
             <label for="landlord"><input type="radio" name="role" id="landlord" value="landlord"> Landlord</label>
-            <label for="administrator"><input type="radio" name="role" id="administrator" value="administrator"> Admin</label><br></br>
+            <label for="administrator"><input type="radio" name="role" id="admin" value="admin"> Admin</label><br></br>
 
             <div class = enter>
                 <input type="text" id="username" placeholder="Username" required>
@@ -72,11 +72,24 @@
                 return; // Stop form submission if validation fails
             }
 
+            let apiUrl = '/api/login'
+            apiUrl += `?username=${username}`;
+            apiUrl += `&password=${password}`;
+            apiUrl += `&role=${role}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(Jumping)
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
             // Perform basic validation (you can add more robust validation)
-            if (username === 'user' && password === 'password') {
-                window.location.href = 'homepage.html';
-            } else {
-                alert('Login failed. Invalid username or password.');
+            function Jumping(answer){
+                if (answer) {
+                    window.location.href = 'homepage.html';
+                } else {
+                    alert('Login failed. Invalid username or password.');
+                }
             }
         });
     </script>
