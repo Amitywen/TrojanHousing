@@ -415,7 +415,7 @@ async function deleteFromDb(id, collectionName) {
 
 
 
-//TODO
+//Done
 //Needs to be debugged
 /// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
 // Input Parameters: Optional query parameters propertyId and/or landlordId
@@ -427,7 +427,7 @@ app.get('/api/property', async (req, res) => {
     //can take propertyiD or landlord ID
     //framework based off will's homework
     const { propertyId, landlordId } = req.query;
-    if(propertyID && landlordID){
+    if(propertyId && landlordId){
         return res.status(422).json({ error: "must only search property or landlordid" });
     }
 
