@@ -1,0 +1,2 @@
+USC color: https://identity.usc.edu/identity/color/
+font type: https://blog.hubspot.com/website/web-safe-html-css-fonts

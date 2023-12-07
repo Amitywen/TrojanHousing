@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<head>
+    <html lang="en">
+    <meta charset="UTF-8">
+    <title>LogIn</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            /* font-family: Arial, sans-serif; */
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .login-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left; /* Align text to the left */
+        }
+        .login-container h2 {
+            margin: 10px; /* Reset default margin */
+        }
+        .login-container form input {
+            margin: 5px 0;
+        }
+        .enter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+
+            <label for="student"><input type="radio" name="role" id="student" value="student"> Student</label>
+            <label for="landlord"><input type="radio" name="role" id="landlord" value="landlord"> Landlord</label>
+            <label for="administrator"><input type="radio" name="role" id="administrator" value="administrator"> Admin</label><br></br>
+
+            <div class = enter>
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required><br></br>
+
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var role = document.querySelector('input[name="role"]:checked').value;
+
+            // Check if the username contains only letters
+            if (!/^[a-zA-Z]+$/.test(username)) {
+                alert('Username should only contain letters.');
+                return; // Stop form submission if validation fails
+            }
+
+            // Perform basic validation (you can add more robust validation)
+            if (username === 'user' && password === 'password') {
+                window.location.href = 'homepage.html';
+            } else {
+                alert('Login failed. Invalid username or password.');
+            }
+        });
+    </script>
+</body>
+</html>
