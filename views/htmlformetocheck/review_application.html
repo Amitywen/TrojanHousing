@@ -84,6 +84,7 @@
                     setTimeout(() => {
                         location.reload();
                     }, 100);
+                    window.location.href = '/api/property/application/${applicationID}';
                 } else {
                     console.error(`Failed to delete landlord with ID ${userId}`);
                     document.getElementById('error-message').innerText = `Failed to accept Application: ${applicationID}`;
