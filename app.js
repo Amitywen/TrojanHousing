@@ -179,7 +179,7 @@ app.get('/api/landlord/one', async (req, res) => {
 
      if (landlords) {
          console.log(`got ${landlords.length} landlord`);
-         res.status(200).json(landlords._id);
+         res.status(200).json(landlords);
          console.log("test landlords:",landlords)
      } else {
          console.log("landlords not found");
