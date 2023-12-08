@@ -328,7 +328,7 @@ app.post('/api/property', async (req, res) => {
 // Return Format: JSON object with success message or error message
 // Example Input: {"studentId":"STUDENT_ID","propertyId":"PROPERTY_ID"}
 // Example Return: {"message": "app created"}
-app.post('/api/apply', async (req, res) => {
+app.post('/api/application', async (req, res) => {
     console.log("post /api/apply.");
     const { studentId, propertyId } = req.body;
     //framework taken from wills homework
