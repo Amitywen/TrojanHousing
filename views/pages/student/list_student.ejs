@@ -17,6 +17,17 @@
             height: 100vh; /* Adjust as needed */
             font-family: 'Courier New', Courier, monospace;
         }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
 
         table {
             border-collapse: separate;
@@ -48,8 +59,7 @@
 </head>
 
 <body>
-        <h1>Housing List</h1>
-        
+        <h1 class="admin-page-title"><br>Housing List</h1>
         <% if (Housinglist.length === 0) { %>
             <p>No property available.</p>
         <% } else { %>
@@ -76,8 +86,8 @@
                             <th>PropertyId</th>
                             <th>Address</th>
                             <th># of room</th>
-                            <th>nickname</th>
                             <th>Rent(USD)</th>
+                            <th>nickname</th>
                             <th>Location</th>
                             <th>securityDeposit(USD)</th>
                             <th>Apply</th>
@@ -93,7 +103,7 @@
                                 <td><%= unit.nickname %></td>
                                 <td><%= unit.location %></td>
                                 <td><%= unit.securityDeposit %></td>
-                                <td><a href="/users/<%= unit.pid %>/review_application.html">Apply</a></td>
+                                <td><a href="/student/<%= unit._id %>/apply.html">Apply</a></td>
                             </tr>
                         <% }) %>
                     </tbody>
@@ -103,10 +113,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
-            console.log( Housinglist)
+            const housingList = document.querySelector('.housing-list');
+            console.log( housingList)
         });
-
-        document.getElementById('location').addEventListener('change', (event) => {
+         //functionality doesn't work yet
+        document.getElementById('Location').addEventListener('change', (event) => {
+            
             const houseType = document.getElementById('Housetype').value;
 
             const selectedValue = event.target.value;
@@ -124,7 +136,7 @@
                     console.error('Error fetching data:', error);
                 });
         });
-
+         //functionality doesn't work yet
         document.getElementById('nickname').addEventListener('keyup', (event) => {
             const searchQuery = event.target.value
             return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
@@ -165,13 +177,11 @@
                 houseRow.innerHTML = `
                     <td>${unit.address}</td>
                     <td>${unit.numberOfRooms}</td>
-                    <td>${unit.rent}</td>
                     <td>${unit.nickname}</td>
+                    <td>${unit.rent}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
-                    <td>${unit.taken}</td>
-                    <td><a href="/users/${unit.pid}/modify_property.html">Edit</a></td>
-                    <td><a href="/users/${unit.pid}/review_application.html">Review</a></td>
+                    <td><a href="/student/${unit.pid}/apply.html">Apply</a></td>
                 `;
                 housingList.appendChild(houseRow);
             });

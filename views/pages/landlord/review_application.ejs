@@ -1,30 +1,4 @@
-<!-- app.get('/api/property/application/:propertyId', async (req, res) => {
-    console.log("GET /api/property/application/:propertyId");
-    const propertyId = req.params.propertyId;
-    //missing property id
-    if (!propertyId) {
-        return res.status(400).json({ error: "Missing propertyId" });
-    }
-  
-    try {
-        //gets all applications
-        const applicationCollection = client.db(dbConfig.db).collection("application");
-        // gets all the applicaitons for a specifc property
-        const application = await applicationCollection.find({ propertyId: new ObjectId(propertyId) }).toArray();
-        if (application.length > 0) {
-            
-            console.log(`num applications:  ${application.length} for propertyId: ${propertyId}`);
-            res.status(200).json(application);
-        } else {
-            console.log(`no apps found for propertyid: ${propertyId}`);
-            res.status(404).json({ message: "no applications found for given propertyID" });
-        }
-    } catch (err) {
-        console.error(`failed to get applications for ${propertyId}:`, err);
-        res.status(500).json({ error: "Internal server error" });
-    }
-  });
-   -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,9 +6,31 @@
   <meta charset="UTF-8">
   <title>Property Applications</title>
   <!-- Add any necessary styles or scripts here -->
+  <style>
+    .whole-page-background-image{
+       height: 80vh;
+       width: 100vw;
+       background-image: url('/images/USC_Village.jpg');
+       /* background-color: rgba(255,255,255,0.5); */
+       background-size: cover;
+       background-position: center;
+       background-repeat: no-repeat;
+   }
+   .whole-page-background-color{
+       height: 80vh;
+       width: 100vw;
+       /* background-image: url('/images/USC_great_lawn.jpg'); */
+       background-color: rgba(255,255,255,0.6);
+       background-size: cover;
+       background-position: center;
+       background-repeat: no-repeat;
+   }
+</style>
 </head>
 <body>
-  <h1>Applications for Property ID: <%= propertyId %></h1>
+    <div class="whole-page-background-color">
+        <!-- <h1 class="admin-page-title">A Landlord User List</h1> -->
+  <h1 class="admin-page-title">Applications for Property ID: <%= propertyId %></h1>
   
   <% if (applications.length > 0) { %>
     <ul>
@@ -50,7 +46,8 @@
   <% } else { %>
     <p>No applications found for this property ID.</p>
   <% } %>
-
+</div>
+</div>
   <!-- Add any additional content or scripts here -->
 </body>
 </html>

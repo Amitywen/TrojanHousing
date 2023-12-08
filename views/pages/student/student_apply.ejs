@@ -20,40 +20,40 @@ and enter the studentID and submit it -->
     <title>APPLY</title>
     <link rel="stylesheet" href="/styles.css">
     <script>
-        function showing(property){
-            const Housinglist = document.querySelector('.property');
-            Housinglist.innerHTML = ''; // Clear the existing content
-            // console.log(65730bdc3f2ef4e7c7e38df8)
+        // function showing(property){
+        //     const Housinglist = document.querySelector('.property');
+        //     Housinglist.innerHTML = ''; // Clear the existing content
+        //     // console.log(65730bdc3f2ef4e7c7e38df8)
             
-            const houseRow = document.createElement('tr');
-            houseRow.innerHTML = `
-                <td>${property.landlordId}</td>
-                <td>${property.address}</td>
-                <td>${property.numberOfRooms}</td>
-                <td>${property.rent}</td>
-                <td>${property.securityDeposit}</td>
-                <td>${property.summary}/td>
-                <td>${property.location}</td>
-            `;
-            Housinglist.appendChild(houseRow);
-        }
+        //     const houseRow = document.createElement('tr');
+        //     houseRow.innerHTML = `
+        //         <td>${property.landlordId}</td>
+        //         <td>${property.address}</td>
+        //         <td>${property.numberOfRooms}</td>
+        //         <td>${property.rent}</td>
+        //         <td>${property.securityDeposit}</td>
+        //         <td>${property.summary}/td>
+        //         <td>${property.location}</td>
+        //     `;
+        //     Housinglist.appendChild(houseRow);
+        // }
 
         document.addEventListener('DOMContentLoaded', async() => {
             const url = new URL(window.location.href)
             const propertyId = url.pathname.split('/')[2];
             console.log(propertyId)
 
-            try{                    
-                fetch(`/api/property?propertyId=${propertyId}`)
-                .then(response => response.json())
-                .then(showing)
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-                ;
-                }catch (error) {
-                    alert('An error occurred while communicating with the server.');
-                }
+            // try{                    
+            //     fetch(`/api/property?propertyId=${propertyId}`)
+            //     .then(response => response.json())
+            //     .then(showing)
+            //     .catch(error => {
+            //         console.error('Error fetching data:', error);
+            //     });
+            //     ;
+            //     }catch (error) {
+            //         alert('An error occurred while communicating with the server.');
+            //     }
 
             ApplyForm.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent the default form submission
@@ -114,13 +114,17 @@ and enter the studentID and submit it -->
                         </tr>
                     </thead>
                     <tbody class="property">
-                            <!-- <td><%- landlordId %></td>
-                            <td><%- address %></td>
-                            <td><%- numberOfRooms %></td>
-                            <td><%- rent %></td>
-                            <td><%- securityDeposit %></td>
-                            <td><%- summary %></td>
-                            <td><%- location %></td> -->
+                        <% property.forEach((unit) => { %>
+                            <tr>
+                                <td><%= unit._id %></td>
+                                <td><%= unit.address %></td>
+                                <td><%= unit.numberOfRooms %></td>
+                                <td><%= unit.rent %></td>
+                                <td><%= unit.securityDeposit %></td>
+                                <td><%= unit.summary %></td>
+                                <td><%= unit.location %></td>
+                            </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </div>

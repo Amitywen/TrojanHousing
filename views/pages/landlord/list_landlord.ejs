@@ -1,53 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!-- Your existing meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APPLY</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', async() => {
+            const url = new URL(window.location.href)
+            const propertyId = url.pathname.split('/')[2];
+            console.log(propertyId)
+
+            ApplyForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Perform your client-side validation here
+                // const propertyId = document.getElementById('propertyId');
+                const url = new URL(window.location.href)
+                const propertyId = url.pathname.split('/')[2];
+                const studentId = document.getElementById('studentId');
+
+                // Construct the request body
+                const requestBody = {
+                    propertyId: propertyId.value,
+                    studentId: studentId.value,
+                };
+
+                // Send the data to the server using fetch
+                try {
+                    const response = await fetch(`/api/application`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    });
+
+                    if (response.ok) {
+                        // Form submission successful, you can redirect the user
+                        window.location.href = '/student/list_property.html';
+                        // checknig the the href is right or not.
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Server Error: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    alert('An error occurred while communicating with the server.');
+                }
+            });
+        });
+    </script>
     <style>
-        /* Your existing CSS styles */
-        .container {
+         .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC_Village.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .admin-list {
+            width: 1200px; /* Adjust the width as needed */
+            height: 800px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
             display: flex;
             justify-content: center;
-            /* align-items: center; */
-            height: 100vh; /* Adjust as needed */
-            font-family: 'Courier New', Courier, monospace;
+            align-items: top;
+        }
+         #search-box {
+            padding: 5px;
+            font-size: 16px;
         }
 
-        table {
-            border-collapse: separate;
-            border-spacing: center;
-            margin-top: 20px; /* Adjust top margin as needed */
-            width:100%
+        #search-button {
+            padding: 5px;
+            font-size: 16px;
         }
-
-        td, th {
-            vertical-align: middle;
-        }
-
-        .selection {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
+        .styled-table {
+            border-collapse: collapse;
             width: 100%;
-            height: 100%;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 10px;
         }
 
-        .selection select {
-            margin-left: 20px;
-            margin-right: 20px;
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
         }
+
+        .styled-table th {
+            background-color: #f2f2f2;
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .error-message{           
+            /* margin-top: 20px; */
+            font-size: 15px; /* Increase the font size */
+            color: rgb(255,0,0); /* Set a specific text color */
+            text-align: center; /* Center the text */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .admin-list {
+            width: 1200px; /* Adjust the width as needed */
+            height: 800px; /* Fixed height to prevent stretching */
+            overflow-y: auto; /* Add a scrollbar if the content overflows vertically */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            flex-direction: column; /* Stack child elements vertically */
+            justify-content: flex-start; /* Align child elements to the start of the container */
+            align-items: center; /* Center child elements horizontally */
+        }
+        .admin-button{
+            width: 200px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+        }
+
+
+       
     </style>
+    <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
 </head>
 
 <body>
-        <h1>Housing List</h1>
-        
-        <% if (Housinglist.length === 0) { %>
-            <p>No property available.</p>
-        <% } else { %>
-            <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
+    <div class="whole-page-background-color">
+
+        <div class="admin-list">
             <div class = selection>
                 <h4>Location:</h4>
                 <select id="Location">
@@ -62,22 +177,23 @@
                 <!-- <option value="false">Unavaliable Housing</option> -->
                 </select><br></br>
             </div>
-    
-            <div class="container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>PropertyId</th>
-                            <th>Address</th>
-                            <th># of room</th>
-                            <th>nickname</th>
-                            <th>Rent(USD)</th>
-                            <th>Location</th>
-                            <th>securityDeposit(USD)</th>
-                            <th>Apply</th>
-                        </tr>
-                    </thead>
-                    <tbody class="housing-list">
+        <% if (Housinglist && Housinglist.length > 0) { %>
+            <table id="user-list" class="styled-table">
+                
+                <thread>
+                    <th>PropertyId</th>
+                    <th>Address</th>
+                    <th># of room</th>
+                    <th>Rent(USD)</th>
+                    <th>nickname</th>
+                    <th>Location</th>
+                    <th>securityDeposit(USD)</th>
+                    <th>Taken</th>
+                    <th>Modiy</th>
+                    <th>Review Application</th>
+                </thread>
+                <% Housinglist.forEach(user => { %>
+                    <tr name="user" style="height: 20px">
                         <% Housinglist.forEach((unit) => { %>
                             <tr>
                                 <td><%= unit._id %></td>
@@ -87,20 +203,31 @@
                                 <td><%= unit.nickname %></td>
                                 <td><%= unit.location %></td>
                                 <td><%= unit.securityDeposit %></td>
-                                <td><a href="/users/<%= unit.pid %>/review_application.html">Apply</a></td>
+                                <td><%= unit.taken %></td>
+                                <td><a href="/users/<%= unit._id %>/modify_property">Edit</a></td>
+                                <td><a href="/property/<%= unit._id %>/applications">Review</a></td>
                             </tr>
                         <% }) %>
-                    </tbody>
-                </table>
-            </div>
+                        <!-- <td style="padding-right: 10px"><a href="/user/<%= user.id %>/edit.html">Edit</a></td> -->
+                        <!-- <td><button class="deleteButton" data-student-id="<%= user._id %>">Delete</button></td> -->
+                    </tr>
+                <% }); %>
+            </table>
+        <% } else { %>
+            <p>No property available.</p>
         <% } %>
+        <!-- create new user link button -->
+        <!-- <button class="admin-button"><a href="/admin/students/create.html">Create New Student User</a></button> -->
 
+        </div>
+        <a href=/users/landlords/createproperty.html>Create New Property</a>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
             console.log( Housinglist)
         });
-
-        document.getElementById('location').addEventListener('change', (event) => {
+        //functionality doesn't work yet
+        document.getElementById('Location').addEventListener('change', (event) => {
             const houseType = document.getElementById('Housetype').value;
 
             const selectedValue = event.target.value;
@@ -118,7 +245,7 @@
                     console.error('Error fetching data:', error);
                 });
         });
-
+    //functionality doesn't work yet
         document.getElementById('nickname').addEventListener('keyup', (event) => {
             const searchQuery = event.target.value
             return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
@@ -164,13 +291,13 @@
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
                     <td>${unit.taken}</td>
-                    <td><a href="/users/${unit.pid}/modify_property.html">Edit</a></td>
-                    <td><a href="/users/${unit.pid}/review_application.html">Review</a></td>
+                    <td><a href="/users/${unit._id}/modify_property">Edit</a></td>
+                    <td><a href="/property/${unit._id}/applications">Review</a></td>
                 `;
                 housingList.appendChild(houseRow);
             });
         }
     </script>
-    <a href=/users/landlords/createproperty.html">Create New Property</a>
 </body>
+
 </html>

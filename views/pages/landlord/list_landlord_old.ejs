@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing meta tags -->
+    <style>
+        /* Your existing CSS styles */
+        .container {
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            height: 100vh; /* Adjust as needed */
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: center;
+            margin-top: 20px; /* Adjust top margin as needed */
+            width:100%
+        }
+
+        td, th {
+            vertical-align: middle;
+        }
+
+        .selection {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 10px;
+        }
+
+        .selection select {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+        <h1>Lanlord_Housing List</h1>
+        
+        <% if (Housinglist.length === 0) { %>
+            <p>No property available.</p>
+        <% } else { %>
+            <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
+            <div class = selection>
+                <h4>Location:</h4>
+                <select id="Location">
+                    <option value="downtown">Downtown</option>
+                    <option value="ktown">Ktown</option>
+                    <option value="UPS">UPS area</option>
+                <!-- <option value="false">Unavaliable Housing</option> -->
+                </select><br></br>
+                
+                <h4>nickname:</h4>
+                <input id="nickname" type="text" placeholder="Search by nickname">
+                <!-- <option value="false">Unavaliable Housing</option> -->
+                </select><br></br>
+            </div>
+    
+            <div class="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PropertyId</th>
+                            <th>Address</th>
+                            <th># of room</th>
+                            <th>nickname</th>
+                            <th>Rent(USD)</th>
+                            <th>Location</th>
+                            <th>securityDeposit(USD)</th>
+                            <th>Apply</th>
+                        </tr>
+                    </thead>
+                    <tbody class="housing-list">
+                        <% Housinglist.forEach((unit) => { %>
+                            <tr>
+                                <td><%= unit._id %></td>
+                                <td><%= unit.address %></td>
+                                <td><%= unit.numberOfRooms %></td>
+                                <td><%= unit.rent %></td>
+                                <td><%= unit.nickname %></td>
+                                <td><%= unit.location %></td>
+                                <td><%= unit.securityDeposit %></td>
+                                <td><a href="/users/<%= unit.pid %>/review_application.html">Apply</a></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async() => {
+            console.log( Housinglist)
+        });
+        //functionality doesn't work yet
+        document.getElementById('Location').addEventListener('change', (event) => {
+            const houseType = document.getElementById('Housetype').value;
+
+            const selectedValue = event.target.value;
+            let apiUrl = '/api/property';
+            apiUrl += `?location=${selectedValue}`;
+
+            if (houseType !== '*') {
+                apiUrl += `&houseType=${houseType}`;
+            }
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(replaceHousingList)
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    //functionality doesn't work yet
+        document.getElementById('nickname').addEventListener('keyup', (event) => {
+            const searchQuery = event.target.value
+            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(replaceHousingList)
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        });
+
+        // document.getElementById('houseType').addEventListener('change', (event) => {
+        //     const location = document.getElementById('Location').value;
+
+        //     const selectedValue = event.target.value;
+        //     let apiUrl = '/api/property';
+        //     apiUrl += `?houseType=${selectedValue}`;
+
+        //     if (location !== '*') {
+        //     apiUrl += `&location=${location}`;
+        //     }
+
+        //     fetch(apiUrl)
+        //         .then(response => response.json())
+        //         .then(replaceHousingList)
+        //         .catch(error => {
+        //             console.error('Error fetching data:', error);
+        //         });
+        // });
+
+        function replaceHousingList(housing) {
+            const housingList = document.querySelector('.housing-list');
+            housingList.innerHTML = ''; // Clear the existing content
+            console.log('Received data:', housing); // Log received data
+            housing.forEach((unit) => {
+                const houseRow = document.createElement('tr');
+                houseRow.innerHTML = `
+                    <td>${unit.address}</td>
+                    <td>${unit.numberOfRooms}</td>
+                    <td>${unit.rent}</td>
+                    <td>${unit.nickname}</td>
+                    <td>${unit.location}</td>
+                    <td>${unit.securityDeposit}</td>
+                    <td>${unit.taken}</td>
+                    <td><a href="/users/${unit.pid}/modify_property.html">Edit</a></td>
+                    <td><a href="/users/${unit.pid}/review_application.html">Review</a></td>
+                `;
+                housingList.appendChild(houseRow);
+            });
+        }
+    </script>
+    <a href=/users/landlords/createproperty.html">Create New Property</a>
+</body>
+</html>

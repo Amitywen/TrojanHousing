@@ -4,17 +4,8 @@
     <meta charset="UTF-8">
     <title>LogIn</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            /* font-family: Arial, sans-serif; */
-            font-family: 'Courier New', Courier, monospace;
-        }
         .login-container {
-            border: 1px solid #ccc;
+            /* border: 1px solid #ccc;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -22,11 +13,52 @@
             width: 300px;
             display: flex;
             flex-direction: column;
+            align-items: center; */
+            /* text-align: left; Align text to the left */
+            width: 800px; /* Adjust the width as needed */
+            height: 450px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
             align-items: center;
-            text-align: left; /* Align text to the left */
+
         }
+        .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC-Gold-Shield-scaled-1.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.7);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
         .login-container h2 {
             margin: 10px; /* Reset default margin */
+                        /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
         }
         .login-container form input {
             margin: 5px 0;
@@ -37,12 +69,40 @@
             align-items: center;
             margin: 10px;
         }
+        .form-submit-button{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+
+
     </style>
 </head>
 
 <body>
+    <!-- <h2>Login</h2> -->
+    <div class="whole-page-background-image">
+    <div class="whole-page-background-color">
+        <h1 class="admin-page-title"><br>Sign In</h1>
+    <!-- <h2 class="admin-page-subtitle">Welcome to Trojan Housing Family</h2> -->
     <div class="login-container">
-        <h2>Login</h2>
+        <!-- <h2>Login</h2> -->
         <form id="loginForm">
 
             <label for="student"><input type="radio" name="role" id="student" value="student"> Student</label>
@@ -57,7 +117,8 @@
             </div>
         </form>
     </div>
-
+</div>
+</div>
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
@@ -86,6 +147,15 @@
             // Perform basic validation (you can add more robust validation)
             function Jumping(answer){
                 if (answer) {
+                    var role = document.querySelector('input[name="role"]:checked').value;
+                    if(role == "student"){
+                        window.location.href = '/api/student/list_property.html'
+                    }else if(role =="landlord"){
+                        var ID = document.getElementById('username').value;
+                        window.location.href = 'users/${ID}/list_property.html'
+                    }else if(role == "admin"){
+                        window.location.href = '/admin/students.html'
+                    }
                     window.location.href = 'homepage.html';
                 } else {
                     alert('Login failed. Invalid username or password.');
