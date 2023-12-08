@@ -173,18 +173,18 @@ app.get('/api/homeinfo', async (req, res) => {
  }
 });
 // DONE
-// GET /api/application/:id
+// GET /api/application/:studentId
 // Purpose: Retrieve application details for a specific student based on their ID.
 // Input Parameters: studentId (as part of the URL path)
 // Return Format: JSON object containing the application details of the specified student, or an error message if not found.
 // Example Return: [{ "applicationId": "12345", "studentId": "67890", "propertyId": "54321", "status": "pending" }]
-app.get('/api/application/:id', async (req, res) => {
+app.get('/api/application/:studentId', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
- console.log("GET /api/application/:id");
+ console.log("GET /api/application/:studentId");
  try {
      //grab all the students and put them in an array
 
-     const studentId = req.params.id;
+     const studentId = req.params.studentId;
      const applicationCollection = client.db(dbConfig.db).collection("application");
 
      console.log(await applicationCollection.find({}).toArray());
