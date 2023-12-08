@@ -794,7 +794,7 @@ app.get('/api/property/application/:propertyId', async (req, res) => {
 
 //*************    front end endpoints as below    ************************************************/ 
 /********************** list student users  ***************************************************** */
-/**   */
+/** by Qingyu */
 app.get('/admin/students.html', async (req, res) => {
   try {
     // Use async/await for the fetch operation
@@ -806,7 +806,7 @@ app.get('/admin/students.html', async (req, res) => {
       throw new Error(`Failed to fetch students: ${response.statusText}`);
     }
     const users= await response.json();
-    console.log("students:", users);
+    // console.log("students:", users);
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
@@ -819,10 +819,36 @@ app.get('/admin/students.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+/********************** list landlord users  ***************************************************** */
+/** by Qingyu */
+app.get('/admin/landlords.html', async (req, res) => {
+  try {
+    // Use async/await for the fetch operation
+    const response = await fetch('http://localhost:3000/api/landlord', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch students: ${response.statusText}`);
+    }
+    const users= await response.json();
+    // console.log("students:", users);
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/admin/list_landlord_user.ejs', { users }),
+    });
+
+    res.end();
+  } catch (error) {
+    console.error('Error rendering page:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 /********************* create student user from admin side ****************************************************** */
-/**   */ 
+/** by Qingyu */ 
 app.get('/admin/students/create.html', async (req, res) => {
     try {
       res.status(200).set('Content-Type', 'text/html');
@@ -838,12 +864,23 @@ app.get('/admin/students/create.html', async (req, res) => {
     }
   });  
   /*****************  trojan home page  ********************************************************** */
-  /**   */
-  // app.get('/trojanhousing/home.html',async(req,res)=>{
-  //   res.status(200).json({message: "home page"});
-  // })
+  /** by Qingyu  */
+  app.get('/trojanhousing/home.html',async(req,res)=>{
+    try {
+      res.status(200).set('Content-Type', 'text/html');
+      const render = util.promisify(res.render).bind(res);
+      res.render('layout.ejs', {
+        body: await render('pages/trojanhousing/home.ejs')
+      });
+      res.end();
+  
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  })
   /*****************  trojan about us  ********************************************************** */
-  /**   */
+  /** by Qingyu  */
   app.get('/trojanhousing/about.html',async(req,res)=>{
     try {
       res.status(200).set('Content-Type', 'text/html');
@@ -920,6 +957,51 @@ app.use((err,req,res,next) => {
   res.write(`${err.message}`);
   res.end();
 });
+/********************* signup as landlord user from user side ****************************************************** */
+/**   */
+app.get('/users/landlords/signup.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/admin/signup_landlord_user.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/**************************** admin manager board ************************************************************* */
+app.get('/admin/managerboard.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/admin/manager_board.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/** ***********************admin frontend endpoints as above ****************************/
+
+//error handler from demo handout
+app.use((err,req,res,next) => {
+  console.error(err);
+
+  if(res.headersSent){
+    return next(err);
+  }
+
+  res.writeHead(500,{'Content-Type': 'text/plain'});
+  res.write(`${err.message}`);
+  res.end();
+});
 
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
@@ -927,5 +1009,5 @@ console.log(`To create student user: http://localhost:3000/admin/students/create
 console.log(`To create landlord user: http://localhost:3000/admin/landlords/create.html`);
 console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
 console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
-console.log(`To signup as student user: http://localhost:3000/admin/students.html`);
-
+console.log(`To look up all student user as manager: http://localhost:3000/admin/students.html`);
+console.log(`To look up all student user as manager: http://localhost:3000/admin/landlords.html`);

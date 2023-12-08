@@ -111,16 +111,15 @@
 
        
     </style>
-    <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
 </head>
 
 <body>
     <div class="whole-page-background-color">
-   <h1 class="admin-page-title">Current Student User List</h1>
-     <button class="admin-button" id="manager-board-button"><a href="/admin/managerboard.html"></a>Back to Manager Board</button>
+   <h1 class="admin-page-title">Current Landlord User List</h1>
+     <a href="/admin/managerboard.html"><button class="admin-button" id="manager-board-button">Back to Manager Board</button></a>
         <div id="error-message" class="error-message"></div>
-     <!-- <div> 
-      <label for="search-box">Search: </label>
+     <div> 
+      <!-- <label for="search-box">Search: </label>
         <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
     </div>  -->
     <div class="admin-list">
@@ -128,11 +127,12 @@
         <table id="user-list" class="styled-table">
             <thread>
                 <th style="padding-right: 15px">#</th>
-                <th style="padding-right: 15px">ID</th>
+                <th style="padding-right: 20px">ID</th>
                 <th style="padding-right: 15px">User Name</th>
                 <th style="padding-right: 15px">First Name</th>
                 <th style="padding-right: 15px">Last Name</th>
                 <th style="padding-right: 15px">Email</th>
+                <th style="padding-right: 15px">Company Name</th>
                 <!-- <th style="padding-right: 15px"></th> -->
                 <th style="padding-right: 15px"></th>
             </thread>
@@ -140,29 +140,30 @@
             <% users.forEach(user => { %>
                 <tr name="user" style="height: 20px">
                     <td style="padding-right: 15px"><%=  rowCount %></td> 
-                    <td style="padding-right: 15px"><%= user._id %></td>
+                    <td style="padding-right: 20px"><%= user._id %></td>
                     <td style="padding-right: 15px"><%= user.username %></td>
                     <td style="padding-right: 15px"><%= user.fname %></td>
                     <td style="padding-right: 15px"><%= user.lname %></td>
                     <td style="padding-right: 15px"><%= user.email %></td>
+                    <td style="padding-right: 15px"><%= user.companyName %></td>
                     
                     
                     <!-- <td style="padding-right: 10px"><a href="/user/<%= user.id %>/edit.html">Edit</a></td> -->
-                    <td><button class="deleteButton" data-student-id="<%= user._id %>">Delete</button></td>
+                    <td><button class="deleteButton" data-user-id="<%= user._id %>">Delete</button></td>
                 </tr>
                 <% rowCount++; %>
             <% }); %>
         </table>
     <% } else { %>
-        <p>No student user available.</p>
+        <p>No landlord user available.</p>
     <% } %>
-    <!-- create new user link button -->
-    <button class="admin-button"><a href="/admin/students/create.html">Create New Student User</a></button>
-
+        <!-- create new user link button -->
+    <button class="admin-button"><a href="/admin/landlords/create.html">Create New landlord User</a></button>
+      
     </div>
     </div>
     <script>
-    
+        
     //     document.getElementById('search-box').addEventListener('keyup', (event) => {
     //     const searchQuery = event.target.value;
     //     console.log('searchQuery is: ',searchQuery)
@@ -192,10 +193,11 @@
     //     const cells = [
     //         index + 1,
     //         user.id,
-    //         user.userName,
+    //         user.username,
     //         user.fname,
     //         user.lname,
     //         user.email,
+    //         user.companyName
            
     //         `<a href="/user/${user.id}/edit.html">Edit</a>`
     //     ];
@@ -213,11 +215,11 @@
     // Add event listener for each delete button of each student user
     deleteButtons.forEach(button => {
         button.addEventListener('click', async () => {
-            const studentId = button.getAttribute('data-student-id');
+            const userId = button.getAttribute('data-user-id');
             console.log("test delete button");
 
             try {
-                const response = await fetch(`/api/student/${studentId}`, {
+                const response = await fetch(`/api/landlord/${userId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -225,14 +227,14 @@
                 });
 
                 if (response.ok) {
-                    console.log(`Student with ID ${studentId} deleted successfully`);
-                    document.getElementById('error-message').innerText = `Student User with ID ${studentId} deleted successfully`;
+                    console.log(`Landlord with ID ${userId} deleted successfully`);
+                    document.getElementById('error-message').innerText = `Landlord User with ID ${userId} deleted successfully`;
                     setTimeout(() => {
                         location.reload();
-                    }, 80);
+                    }, 100);
                 } else {
-                    console.error(`Failed to delete student with ID ${studentId}`);
-                    document.getElementById('error-message').innerText = `Failed to delete student with ID ${studentId}`;
+                    console.error(`Failed to delete landlord with ID ${userId}`);
+                    document.getElementById('error-message').innerText = `Failed to delete landlord with ID ${userId}`;
                 }
             } catch (error) {
                 console.error('Error:', error);

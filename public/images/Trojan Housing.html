@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://localhost:3000/trojanhousing/about.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <title>Trojan Housing</title>
+     <!-- <link rel="stylesheet" href="/css/site.css"> -->
+     <link rel="icon" type="image/x-icon" href="./Trojan Housing_files/trojan-icon.ico">
+     <!-- <script src="/js/site.js"></script> -->
+   </head>
+   <body style="display:flexbox" data-new-gr-c-s-check-loaded="14.1145.0" data-gr-ext-installed="">
+     
+
+
+    
+    <link rel="icon" type="image/x-icon" href="http://localhost:3000/public/images/trojan-icon.ico">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Palatino', 'Palatino Linotype', serif;
+        }
+
+        .top-bar {
+            width: 100%;
+            background-color: #990000;
+            color: #FFCC00;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            margin-left: 30px;
+            width: 30px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+        }
+
+        .nav-bar {
+            display: flex;
+        }
+
+        .nav-bar a {
+            color: #FFCC00;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+    </style>
+
+
+    <div class="top-bar">
+        <div class="logo"> 
+            <!-- Replace "/public/images/trojan-icon.ico" with the actual path to your icon image -->
+            <a href="http://localhost:3000/trojanhousing/home.html">
+                <!-- <a  href="/trojanhousing/home.html"> -->
+                <img src="./Trojan Housing_files/trojan-icon.ico" alt="Trojan Icon">
+               
+            </a>
+            <div class="nav-bar" id="left-top-bar">
+                <a href="http://localhost:3000/trojanhousing/home.html">Home</a>
+                <a href="http://localhost:3000/admin/managerboard.html">Manager board</a>
+                <!-- Add more navigation links as needed -->
+            </div>
+        </div>
+        
+        <!-- <div><h1>Trojan Housing</h1></div> -->
+        <div class="nav-bar">
+            
+            <a href="http://localhost:3000/trojanhousing/about.html">About Us</a>
+            <a href="http://localhost:3000/users/students/signup.html">Student Sign up</a>
+            <a href="http://localhost:3000/trojanhousing/about.html#">Student Log in</a>
+            <a href="http://localhost:3000/users/landlords/signup.html">Landlord Join</a>
+            <a href="http://localhost:3000/trojanhousing/about.html#">Landlord Log in</a>
+            <!-- Add more navigation links as needed -->
+        </div>
+    </div>
+
+
+
+     
+
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student User</title>
+    <link rel="icon" type="image/x-icon" href="./Trojan Housing_files/trojan-icon.ico">
+    
+    <style>
+        .error-message{
+            color: red;
+            margin-bottom: 10px
+        }
+        .admin-form {
+            width: 800px; /* Adjust the width as needed */
+            height: 450px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page-title{           
+            /* margin-top: 20px; */
+            font-size: 20px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .admin-page-subtitle{           
+            /* margin-top: 20px; */
+            font-size: 15px; /* Increase the font size */
+            color: rgb(255,0,0); /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .input-bar{
+            width: 200px; /* Adjust the width as needed */
+        }
+        .form-submit-button{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC-comic.jpeg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+
+        .display-box {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        #display-box-verti{
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #display-box-hori{
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+        }
+        
+
+        .bio-box {
+            background-color:rgba(243, 239, 235, 0.8);
+            width: 20vw;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5%;
+            text-align: center;
+        }
+
+        .bio-box img {
+            width: 80%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        #block-text {
+            width: 40%;
+            margin: 0 auto; /* Center the block horizontally */
+            padding: 20px;
+            font-size:large;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+
+
+ <div class="whole-page-background-image">
+<div class="whole-page-background-color">
+    <div class="page-title">
+        <br>
+        <h1>About Us</h1>
+    </div>
+    <div class="display-box" id="display-box-verti">
+        <h2 style="color: #990000; font-size: 30px; margin-top: 2px;">Our Motivation</h2><br>
+        <p id="block-text">
+            As a student at the University of Southern California, 
+            finding suitable accommodation can sometimes be challenging, 
+            particularly for non-local students new to the USC area, 
+            due to a lack of reliable information sources.
+            Our goal is to extend a helping hand to every Trojan 
+            in search of a comfortable home while at school. 
+            Creating a seamless and enjoyable experience for all members of the Trojan community.
+        </p>
+    </div>
+    <div class="display-box" id="display-box-hori">
+        <div class="bio-box">
+            <img src="./Trojan Housing_files/USC-trojan-head.png" alt="Person 1" style="max-width: 100px; max-height: 100px;">
+            <h2>Will Durban</h2>
+            <p>Back End Engineer</p>
+        </div>
+        <div class="bio-box">
+            <img src="./Trojan Housing_files/USC-trojan-head.png" alt="Person 2" style="max-width: 100px; max-height: 100px;">
+            <h2>Qingyu Zhou</h2>
+            <p>Front End Engineer</p>
+        </div>
+        <div class="bio-box">
+            <img src="./Trojan Housing_files/USC-trojan-head.png" alt="Person 3" style="max-width: 100px; max-height: 100px;">
+            <h2>Amity Lu</h2>
+            <p>Front End Engineer</p>
+        </div>
+    </div>
+ </div>
+</div>
+
+
+
+
+
+
+
+
+     
+
+
+    
+    <!-- <title>User Information</title> -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+        }
+        .footer {
+            width: 100%;
+            /* background-color: #333; */
+            color: #333;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            font-size: 14px;
+        }
+    </style>
+
+
+
+    <div class="footer">
+        <!-- <p>&copy; 2023 Will Durban, Amity Lu, Qingyu Zhou (listed by the sequency of last name)| EE547 Class</p> -->
+    </div>
+
+
+
+
+    
+  </body><style>
+@media print {
+  #simplifyJobsContainer {
+    display: none;
+  }
+}
+</style><div id="simplifyJobsContainer" style="position: absolute; top: 0px; left: 0px; width: 0px; height: 0px; overflow: visible; z-index: 2147483647;"><span><template shadowrootmode="open"><link rel="stylesheet" href="chrome-extension://pbanhockgagggenencehbnadejlgchfc/css/styles.css"><style>
+  :host {
+    all: initial;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    font-family: Palanquin, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(203, 213, 225, 1) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 1);
+    border-radius: 3px;
+    border: 0;
+  }
+</style><div id="simplifyJobsPortals"></div></template></span></div><script id="simplifyJobsPageScript" src="chrome-extension://pbanhockgagggenencehbnadejlgchfc/js/pageScript.bundle.js"></script><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Player Details</title>
+    <style> 
+        #error-box {
+           color: red;
+           margin-bottom: 10px;
+       }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const url = new URL(window.location.href);
+            const playerId = url.pathname.split('/')[2];
+            console.error("playerId: ",playerId);
+
+             fetch(`/api/player/${playerId}`)
+                .then(r => r.json())
+                .then(data => {
+                    // Populate form fields with data
+                    // document.getElementById('lname').value = data.name;
+                    if(/\s/.test(data.name)){
+                        document.getElementById('fname').value = data.name.split(' ')[0];
+                        document.getElementById('lname').value = data.name.split(' ')[1];
+                    }
+                    document.getElementById('balance_usd_cents').value = data.balance_usd_cents;
+                    document.getElementById('is_active').checked = data.is_active;
+                    
+                   
+                    // Add an event listener to handle form submission
+                    document.getElementById('editForm').addEventListener('submit', (e) => {
+                        e.preventDefault();
+
+                        // Get form data
+                        const fname = document.getElementById('fname').value;
+                        const lname = document.getElementById('lname').value;
+                        const balance_usd_cents = document.getElementById('balance_usd_cents').value;
+                        const is_active = document.getElementById('is_active').checked;
+                        
+                        let formData = {
+                            fname: fname,
+                            lname: lname,
+                            balance_usd_cents:  balance_usd_cents,
+                            is_active:is_active
+                        }
+
+                        // Perform client-side validation
+                        const invalidFieldMessage = validateForm(formData);
+                        // console.log("test in create.ejs: ", jsonBody);
+                        // If the form is not valid, display errors and prevent submission
+                        if (invalidFieldMessage !== '') {
+                            document.getElementById('error-box').innerText = `One or more fields input are invalid. Please check: ${invalidFieldMessage}.`;
+                            return;
+                        }
+
+                        document.getElementById('error-box').innerText = '';
+                        // formData = JSON.stringify(formData);
+                        console.error("formData: ",formData);
+                        console.error("playerId: ",playerId);
+                        console.log("debug Json:",JSON.stringify(formData));
+
+                        // Make a POST request to update the player data
+                        fetch(`/api/player/${playerId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Handle the response after the update
+                            console.log('Player data updated:', data);
+                            // You can display a success message or redirect the user if needed
+                        })
+                        .catch(error => {
+
+                            document.getElementById('flash-message').innerHTML = error;
+                        });
+                    });
+                })
+                .catch(error => {
+                    document.getElementById('flash-message').innerHTML = error;
+                });
+        });
+        function validateForm(inputObj) {
+            let invalidField = '';
+            //varify fname
+            if(!isAlpha(inputObj.fname)){
+                // document.getElementById('error-box').innerText = 'Invalid First Name Input. Try again!';
+               invalidField += 'First Name ';
+            }
+
+            //verify lname
+            if(!isAlpha(inputObj.lname) ){
+                invalidField += 'Last Name ';
+                // document.getElementById('error-box').innerText = 'Invalid Last Name Input. Try again!';
+            }
+
+            //verify handed
+
+            //verify balance
+            if(!isNonNegativeIntegerStr(inputObj.balance_usd_cents)){
+                invalidField += 'Balance ';
+                // document.getElementById('error-box').innerText = 'Invalid Balance Input. Try again!';
+            }
+            return invalidField;
+        }
+    
+    function isAlpha(str) {
+        return /^[a-zA-Z]+$/.test(str);
+    }
+
+    function isNonNegativeIntegerStr(string) {
+        return /^\d+$/.test(string);
+        // return /^\d+$/.test(input) && input !== '0';
+    }
+
+    </script>
+</head>
+<body>
+    <!-- Rest of your HTML content -->
+    <h1>Edit Player Details</h1>
+
+    <!-- Display validation errors here -->
+    <div id="error-box"></div>  
+
+    <form id="editForm" action="/api/player" method="POST">
+        <!-- Your input fields go here -->
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname"><br>
+
+        <label for="lname">Last Name:</label>
+        <input type="text" id="lname" name="lname"><br>
+
+        <label for="balance_usd_cents">Balance(USD):</label>
+        <input type="number" id="balance_usd_cents" name="balance_usd_cents"><br>
+
+        <label for="is_active">Active:</label>
+        <input type="checkbox" id="is_active" name="is_active"><br>
+
+        <!-- Add more input fields as needed -->
+
+        <button type="submit">Save</button>
+    </form>
+
+    <div id="flash-message"></div>
+</body>
+</html>
