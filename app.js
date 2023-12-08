@@ -162,6 +162,34 @@ app.get('/api/student/one', async (req, res) => {
      res.status(500).json({ error: "Internal server error" });
  }
 });
+
+app.get('/api/landlord/one', async (req, res) => {
+  //taken and changed slightly from Will's Homeworks
+ console.log("GET /api/landlord");
+ try {
+     //grab all the students and put them in an array
+     const landlordCollection = client.db(dbConfig.db).collection("landlord");
+
+     let query = {};
+     if (req.query.fname) {
+         query.username = req.query.username; 
+     }
+
+     const landlords = await landlordCollection.findOne(query).toArray();
+
+     if (landlords) {
+         console.log(`got ${landlords.length} landlord`);
+         res.status(200).json(landlords);
+         console.log("test landlords:",landlords)
+     } else {
+         console.log("landlords not found");
+         res.status(404).json({ message: "landlords not found" });
+     }
+ } catch (err) {
+     console.error("failed to get students:", err);
+     res.status(500).json({ error: "Internal server error" });
+ }
+});
 //DONE
 // GET /api/homeinfo
 // Purpose: Retrieve counts of students, properties, and landlords for homepage information.
