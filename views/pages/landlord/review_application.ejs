@@ -1,0 +1,56 @@
+<!-- app.get('/api/property/application/:propertyId', async (req, res) => {
+    console.log("GET /api/property/application/:propertyId");
+    const propertyId = req.params.propertyId;
+    //missing property id
+    if (!propertyId) {
+        return res.status(400).json({ error: "Missing propertyId" });
+    }
+  
+    try {
+        //gets all applications
+        const applicationCollection = client.db(dbConfig.db).collection("application");
+        // gets all the applicaitons for a specifc property
+        const application = await applicationCollection.find({ propertyId: new ObjectId(propertyId) }).toArray();
+        if (application.length > 0) {
+            
+            console.log(`num applications:  ${application.length} for propertyId: ${propertyId}`);
+            res.status(200).json(application);
+        } else {
+            console.log(`no apps found for propertyid: ${propertyId}`);
+            res.status(404).json({ message: "no applications found for given propertyID" });
+        }
+    } catch (err) {
+        console.error(`failed to get applications for ${propertyId}:`, err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+  });
+   -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Property Applications</title>
+  <!-- Add any necessary styles or scripts here -->
+</head>
+<body>
+  <h1>Applications for Property ID: <%= propertyId %></h1>
+  
+  <% if (applications.length > 0) { %>
+    <ul>
+      <% applications.forEach(application => { %>
+        <li>
+          <p>Application ID: <%= application._id %></p>
+          <p>Created At: <%= application.created_at %></p>
+          <p>Student ID: <%= application.studentId %></p>
+          <p>Accepted: <%= application.accepted ? 'Yes' : 'No' %></p>
+        </li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>No applications found for this property ID.</p>
+  <% } %>
+
+  <!-- Add any additional content or scripts here -->
+</body>
+</html>

@@ -50,7 +50,10 @@
 
                     if (response.ok) {
                         // Form submission successful, you can redirect the user
-                        window.location.href = '/users/landlords/list_property.html'
+                        // const landlordId = document.getElementById('landlordId');
+                        // console.log(`propertyId with ID ${propertyId} modified successfully`);
+                        // window.location.href = `/users/${userId}/list_property.html`;
+                        // this has problem
                     } else {
                         const errorData = await response.json();
                         alert(`Server Error: ${errorData.message}`);

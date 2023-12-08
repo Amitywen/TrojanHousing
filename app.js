@@ -338,7 +338,8 @@ app.get('/api/property/application/:propertyId', async (req, res) => {
           res.status(200).json(application);
       } else {
           console.log(`no apps found for propertyid: ${propertyId}`);
-          res.status(404).json({ message: "no applications found for given propertyID" });
+          res.status(200).json({ message: "no applications found for given propertyID" })
+          // res.status(404).json({ message: "no applications found for given propertyID" });
       }
   } catch (err) {
       console.error(`failed to get applications for ${propertyId}:`, err);
@@ -1267,20 +1268,40 @@ app.get('/users/:id/modify_property.html', async (req, res) => {
 });
 
 
-app.get('/users/:id/review_application.html', async (req, res) => {
-  try {
-    res.status(200).set('Content-Type', 'text/html');
-    const render = util.promisify(res.render).bind(res);
-    res.render('layout.ejs', {
-      body: await render('pages/landlord/review_application.ejs')
-    });
-    res.end();
+// Inside your Express route handler
+app.get('/property/:propertyId/applications', async (req, res) => {
+  try{
+  const propertyId = req.params.propertyId;
+  const render = util.promisify(res.render).bind(res);
+  // Fetch applications for the propertyId (You've provided this logic in your API)
 
-  } catch (error) {
-    console.error('Error rendering page:', error);
-    res.status(500).send('Internal Server Error');
+  // Assuming you have fetched the applications successfully
+  console.log(propertyId)
+
+  // Fetch data from the API
+  // const url = '/api/property/application/' + propertyId
+  // console.log(url.toString())
+  const url = 'http://localhost:3000/api/property/application/'+propertyId
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data: ${response.statusText}`);
+  }
+
+  const applications = await response.json()
+
+  res.render('layout.ejs', {
+    body: await render('pages/landlord/review_application.ejs', { propertyId, applications })
+  });
+  res.end();
+  }catch (error) {
+  console.error('Error rendering page:', error);
+  res.status(500).send('Internal Server Error');
   }
 });
+
 
 /** ***********************landlord frontend endpoints end ****************************/
 //error handler from demo handout
