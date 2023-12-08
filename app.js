@@ -1173,7 +1173,7 @@ app.get('/student/:id/apply.html', async (req, res) => {
   try {
     var pid = req.params.id
     console.log(pid)
-    // Fetch data from the API
+    // fetch data from the api
     const response = await fetch('http://localhost:3000/api/property?propertyID=${pid}', {
       method: 'GET',
     });
@@ -1185,11 +1185,11 @@ app.get('/student/:id/apply.html', async (req, res) => {
     const Housinglist = await response.json();
     console.log(Housinglist)
     const property = Housinglist
-    // Now, 'housingData' contai ns the fetched data from the API
+    
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     await render('layout.ejs', {
-      body: await render('pages/student/student_apply3.ejs', {property}), // Pass the data as an object
+      body: await render('pages/student/student_apply3.ejs', {property}), // pass the data as an object
     });
 
     res.end();
@@ -1220,7 +1220,7 @@ app.get('/users/landlords/createproperty.html', async (req, res) => {
 app.get('/users/:id/list_property.html', (req, res) => {
   var pid = req.params.id;
   console.log(pid);
-  // Fetch data from the API
+  // fetch data from the api
   fetch(`http://localhost:3000/api/property?propertyID=${pid}`, {
     method: 'GET',
   })
@@ -1232,7 +1232,7 @@ app.get('/users/:id/list_property.html', (req, res) => {
   })
   .then(Housinglist => {
     console.log(Housinglist);
-    // Render list_student.ejs and then layout.ejs
+    // render list_student.ejs and then layout.ejs
     res.render('pages/student/list_student.ejs', { Housinglist }, (err, html) => {
       if (err) {
         console.error('Error rendering list_student:', err);
