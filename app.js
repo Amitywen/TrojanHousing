@@ -1346,3 +1346,9 @@ console.log(`To look up all student user as manager: http://localhost:3000/admin
 console.log(`To look up all landlord user as manager: http://localhost:3000/admin/landlords.html`);
 
 console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
+console.log('To see the property list from the student end: http://localhost:3000/student/list_property.html')
+console.log('For student to apply: http://localhost:3000/student/:id/apply.html')
+console.log('Landlord creates the property: http://localhost:3000/users/landlords/createproperty.html')
+console.log('To see the property list from the landlord end: http://localhost:3000/users/:id/list_property.html')
+console.log('For landlord to modify the property: http://localhost:3000/users/:id/modify_property.html')
+console.log('For landlord to see the property application http://localhost:3000/property/:propertyId/applications')
