@@ -99,8 +99,8 @@
         document.addEventListener('DOMContentLoaded', async() => {
             console.log( Housinglist)
         });
-
-        document.getElementById('location').addEventListener('change', (event) => {
+        //functionality doesn't work yet
+        document.getElementById('Location').addEventListener('change', (event) => {
             const houseType = document.getElementById('Housetype').value;
 
             const selectedValue = event.target.value;
@@ -118,7 +118,7 @@
                     console.error('Error fetching data:', error);
                 });
         });
-
+    //functionality doesn't work yet
         document.getElementById('nickname').addEventListener('keyup', (event) => {
             const searchQuery = event.target.value
             return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {

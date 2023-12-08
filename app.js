@@ -1143,31 +1143,30 @@ app.get('/admin/managerboard.html', async (req, res) => {
 
 /** ***********************student frontend endpoints****************************/
 /***************************** Student list Page ************************************************************* */
-app.get('/student/list_property.html', async (req, res) => {
-  try {
-    // Fetch data from the API
-    const response = await fetch('http://localhost:3000/api/property', {
-      method: 'GET',
-    });
-
+app.get('/student/list_property.html', (req, res) => {
+  fetch('http://localhost:3000/api/property', {
+    method: 'GET',
+  })
+  .then(response => {
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
-
-    const Housinglist = await response.json();
-    console.log(Housinglist)
-    // Now, 'housingData' contai ns the fetched data from the API
-    res.status(200).set('Content-Type', 'text/html');
-    const render = util.promisify(res.render).bind(res);
-    await render('layout.ejs', {
-      body: await render('pages/student/list_student.ejs', {Housinglist}), // Pass the data as an object
+    return response.json();
+  })
+  .then(Housinglist => {
+    // Render list_student.ejs and then layout.ejs
+    res.render('pages/student/list_student.ejs', { Housinglist }, (err, html) => {
+      if (err) {
+        console.error('Error rendering list_student:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.render('layout.ejs', { body: html });
     });
-
-    res.end();
-  } catch (error) {
-    console.error('Error rendering page:', error.message);
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
     res.status(500).send('Internal Server Error');
-  }
+  });
 });
 
 app.get('/student/:id/apply.html', async (req, res) => {
@@ -1218,35 +1217,36 @@ app.get('/users/landlords/createproperty.html', async (req, res) => {
   }
 });
 
-app.get('/users/:id/list_property.html', async (req, res) => {
-    try {
-      var pid = req.params.id
-      console.log(pid)
-      // Fetch data from the API
-      const response = await fetch('http://localhost:3000/api/property?propertyID=${pid}', {
-        method: 'GET',
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.statusText}`);
+app.get('/users/:id/list_property.html', (req, res) => {
+  var pid = req.params.id;
+  console.log(pid);
+  // Fetch data from the API
+  fetch(`http://localhost:3000/api/property?propertyID=${pid}`, {
+    method: 'GET',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then(Housinglist => {
+    console.log(Housinglist);
+    // Render list_student.ejs and then layout.ejs
+    res.render('pages/student/list_student.ejs', { Housinglist }, (err, html) => {
+      if (err) {
+        console.error('Error rendering list_student:', err);
+        return res.status(500).send('Internal Server Error');
       }
-  
-      const Housinglist = await response.json();
-      console.log(Housinglist)
-      // Now, 'housingData' contai ns the fetched data from the API
-      res.status(200).set('Content-Type', 'text/html');
-      const render = util.promisify(res.render).bind(res);
-      await render('layout.ejs', {
-        body: await render('pages/student/list_student.ejs', { Housinglist }), // Pass the data as an object
-      });
-  
-      res.end();
-
-  } catch (error) {
-    console.error('Error rendering page:', error);
+      res.render('layout.ejs', { body: html });
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
     res.status(500).send('Internal Server Error');
-  }
+  });
 });
+
 
 
 

@@ -76,8 +76,8 @@
                             <th>PropertyId</th>
                             <th>Address</th>
                             <th># of room</th>
-                            <th>nickname</th>
                             <th>Rent(USD)</th>
+                            <th>nickname</th>
                             <th>Location</th>
                             <th>securityDeposit(USD)</th>
                             <th>Apply</th>
@@ -103,10 +103,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
-            console.log( Housinglist)
+            const housingList = document.querySelector('.housing-list');
+            console.log( housingList)
         });
-
-        document.getElementById('location').addEventListener('change', (event) => {
+         //functionality doesn't work yet
+        document.getElementById('Location').addEventListener('change', (event) => {
+            
             const houseType = document.getElementById('Housetype').value;
 
             const selectedValue = event.target.value;
@@ -124,7 +126,7 @@
                     console.error('Error fetching data:', error);
                 });
         });
-
+         //functionality doesn't work yet
         document.getElementById('nickname').addEventListener('keyup', (event) => {
             const searchQuery = event.target.value
             return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
@@ -165,8 +167,8 @@
                 houseRow.innerHTML = `
                     <td>${unit.address}</td>
                     <td>${unit.numberOfRooms}</td>
-                    <td>${unit.rent}</td>
                     <td>${unit.nickname}</td>
+                    <td>${unit.rent}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
                     <td>${unit.taken}</td>
