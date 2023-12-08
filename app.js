@@ -109,8 +109,17 @@ client.connect(err => {
     try {
         //grab all the students and put them in an array
         const studentCollection = client.db(dbConfig.db).collection("student");
-        const students = await studentCollection.find({}).toArray();
-        //if recieved respond the array, otherwise send that there were no students
+
+        let query = {};
+        if (req.query.fname) {
+            query.fname = { $regex: new RegExp(req.query.fname, 'i') }; 
+        }
+        if (req.query.lname) {
+            query.lname = { $regex: new RegExp(req.query.lname, 'i') };
+        }
+
+        const students = await studentCollection.find(query).toArray();
+
         if (students) {
             console.log(`Fetched ${students.length} students`);
             res.status(200).json(students);
@@ -136,9 +145,17 @@ app.get('/api/landlord', async (req, res) => {
      //taken and changed slightly from Will's Homeworks
   try {
     //grab all landlords and put them in array
-      const landlordCollection = await client.db(dbConfig.db).collection("landlord");
+        const landlordCollection = await client.db(dbConfig.db).collection("landlord");
+        
+        let query = {};
+        if (req.query.fname) {
+            query.fname = { $regex: new RegExp(req.query.fname, 'i') }; 
+        }
+        if (req.query.lname) {
+            query.lname = { $regex: new RegExp(req.query.lname, 'i') };
+        }
 
-      const landlords = await landlordCollection.find({}).toArray();
+        const landlords = await landlordCollection.find(query).toArray();
     //if landlords exist, respond, if not respond and say none
       if (landlords) {
           console.log(`got landlords`);
