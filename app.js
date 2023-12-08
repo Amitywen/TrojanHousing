@@ -368,7 +368,7 @@ app.delete('/api/student/:id', async (req, res) => {
 
     try {
         const result = await deleteFromDb(studentId, "student");
-        res.redirect(303, '/student');
+        res.status(200).json({ message: `student deleted with id: ${studentId}`});
     } catch (err) {
         console.error(err.message);
         res.status(500).send({ error: err.message });
@@ -385,7 +385,7 @@ app.delete('/api/landlord/:id', async (req, res) => {
 
     try {
         const result = await deleteFromDb(landlordId, "landlord");
-        res.redirect(303, '/landlord');
+        res.status(200).json({ message: `landlord deleted with id: ${landlordId}`});
     } catch (err) {
         console.error(err.message);
         res.status(500).send({ error: err.message });
@@ -402,7 +402,7 @@ app.delete('/api/property/:id', async (req, res) => {
 
     try {
         const result = await deleteFromDb(propertyId, "property");
-        res.redirect(303, '/property');
+        res.status(200).json({ message: `property deleted with id: ${propertyId}`});
     } catch (err) {
         console.error(err.message);
         res.status(500).send({ error: err.message });
@@ -419,7 +419,7 @@ app.delete('/api/application/:id', async (req, res) => {
 
     try {
         const result = await deleteFromDb(applicationId, "application");
-        res.redirect(303, '/application');
+        res.status(200).json({ message: `application deleted with id: ${applicationId}`});
     } catch (err) {
         console.error(err.message);
         res.status(500).send({ error: err.message });
