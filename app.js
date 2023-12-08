@@ -1206,6 +1206,7 @@ app.get('/student/:id/apply.html', (req, res) => {
 
 
 
+
 /******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
@@ -1253,11 +1254,6 @@ app.get('/users/:id/list_property.html', (req, res) => {
     res.status(500).send('Internal Server Error');
   });
 });
-
-
-
-
-
 
 app.get('/users/:id/modify_property.html', async (req, res) => {
   try {
@@ -1309,7 +1305,20 @@ app.get('/property/:propertyId/applications', async (req, res) => {
   }
 });
 
+app.get('/login.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/trojanhousing/Login.ejs')
+    });
+    res.end();
 
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});  
 /** ***********************landlord frontend endpoints end ****************************/
 //error handler from demo handout
 app.use((err,req,res,next) => {
@@ -1323,6 +1332,7 @@ app.use((err,req,res,next) => {
   res.write(`${err.message}`);
   res.end();
 });
+
 
 
 
