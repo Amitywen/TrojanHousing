@@ -329,7 +329,7 @@ app.post('/api/property', async (req, res) => {
 // Example Input: {"studentId":"STUDENT_ID","propertyId":"PROPERTY_ID"}
 // Example Return: {"message": "app created"}
 app.post('/api/application', async (req, res) => {
-    console.log("post /api/apply.");
+    console.log("post /api/application.");
     const { studentId, propertyId } = req.body;
     //framework taken from wills homework
     //makes sure student and property id were given
