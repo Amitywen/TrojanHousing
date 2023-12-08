@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user List</title>
+    <style>
+         .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC_Village.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .admin-list {
+            width: 1200px; /* Adjust the width as needed */
+            height: 800px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: top;
+        }
+         #search-box {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #search-button {
+            padding: 5px;
+            font-size: 16px;
+        }
+        .styled-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .styled-table th {
+            background-color: #f2f2f2;
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .error-message{           
+            /* margin-top: 20px; */
+            font-size: 15px; /* Increase the font size */
+            color: rgb(255,0,0); /* Set a specific text color */
+            text-align: center; /* Center the text */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        .admin-list {
+            width: 1200px; /* Adjust the width as needed */
+            height: 800px; /* Fixed height to prevent stretching */
+            overflow-y: auto; /* Add a scrollbar if the content overflows vertically */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            flex-direction: column; /* Stack child elements vertically */
+            justify-content: flex-start; /* Align child elements to the start of the container */
+            align-items: center; /* Center child elements horizontally */
+        }
+        .admin-button{
+            width: 200px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+        }
+
+
+       
+    </style>
+    <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
+</head>
+
+<body>
+    <div class="whole-page-background-color">
+
+        <div class="admin-list">
+        <% if (property && property.length > 0) { %>
+            <table id="user-list" class="styled-table">
+                <thread>
+                    <th>Landlord ID</th>
+                    <th>Address</th>
+                    <th>Number of Rooms</th>
+                    <th>Rent</th>
+                    <th>Security Deposit</th>
+                    <th>Summary</th>
+                    <th>Location</th>
+                </thread>
+                <% property.forEach(user => { %>
+                    <tr name="user" style="height: 20px">
+                        <td><%= property.landlordId %></td>
+                        <td><%= property.address %></td>
+                        <td><%= property.numberOfRooms %></td>
+                        <td><%= property.rent %></td>
+                        <td><%= property.securityDeposit %></td>
+                        <td><%= property.summary %></td>
+                        <td><%= property.location %></td>
+                        <!-- <td style="padding-right: 10px"><a href="/user/<%= user.id %>/edit.html">Edit</a></td> -->
+                        <!-- <td><button class="deleteButton" data-student-id="<%= user._id %>">Delete</button></td> -->
+                    </tr>
+                <% }); %>
+            </table>
+        <% } else { %>
+            <p>No property available.</p>
+        <% } %>
+        <!-- create new user link button -->
+        <!-- <button class="admin-button"><a href="/admin/students/create.html">Create New Student User</a></button> -->
+
+        </div>
+    </div>
+    <script>
+    
+
+/** perform delete user and refresh page after deletion success */
+    const deleteButtons = document.querySelectorAll('.deleteButton');
+    // Add event listener for each delete button of each student user
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const studentId = button.getAttribute('data-student-id');
+            console.log("test delete button");
+
+            try {
+                const response = await fetch(`/api/student/${studentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log(`Student with ID ${studentId} deleted successfully`);
+                    document.getElementById('error-message').innerText = `Student User with ID ${studentId} deleted successfully`;
+                    setTimeout(() => {
+                        location.reload();
+                    }, 80);
+                } else {
+                    console.error(`Failed to delete student with ID ${studentId}`);
+                    document.getElementById('error-message').innerText = `Failed to delete student with ID ${studentId}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    
+
+    </script>
+</body>
+
+</html>

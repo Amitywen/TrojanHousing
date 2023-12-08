@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,58 +48,63 @@
 </head>
 
 <body>
-    <!-- <h1>Housing List</h1> -->
+        <h1>Housing List</h1>
+        
+        <% if (Housinglist.length === 0) { %>
+            <p>No property available.</p>
+        <% } else { %>
+            <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
+            <div class = selection>
+                <h4>Location:</h4>
+                <select id="Location">
+                    <option value="downtown">Downtown</option>
+                    <option value="ktown">Ktown</option>
+                    <option value="UPS">UPS area</option>
+                <!-- <option value="false">Unavaliable Housing</option> -->
+                </select><br></br>
+                
+                <h4>nickname:</h4>
+                <input id="nickname" type="text" placeholder="Search by nickname">
+                <!-- <option value="false">Unavaliable Housing</option> -->
+                </select><br></br>
+            </div>
     
-    <% if (players.length === 0) { %>
-        <p>No players available.</p>
-    <% } else { %>
-        <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
-        <div class = selection>
-            <h4>Location</h4>
-            <select id="Location">
-            <option value="downtown">Downtown</option>
-            <option value="ktown">Ktown</option>
-            <option value="UPS">UPS area</option>
-            <!-- <option value="false">Unavaliable Housing</option> -->
-            </select><br></br>
-
-            <h4>House type</h4>
-            <select id="Housetype">
-            <option value="house">House</option>
-            <option value="Townhome">Townhome</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Studio">Studio</option>
-            <!-- <option value="false">Unavaliable Housing</option> -->
-            </select><br></br>
-        </div>
-
-        <div class="container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Location</th>
-                        <th>House type</th>
-                        <th>Price (USD)</th>
-                        <th>Apply</th>
-                    </tr>
-                </thead>
-                <tbody class="housing-list">
-                    <% housings.forEach((unit) => { %>
+            <div class="container">
+                <table>
+                    <thead>
                         <tr>
-                            <td><%= unit.pid %></td>
-                            <td><%= unit.location %></td>
-                            <td><%= unit.housetype %></td>
-                            <td><%= unit.price %></td>
-                            <td><a href="/api/<%= unit.pid %>/apply.html">Apply</a></td>
+                            <th>PropertyId</th>
+                            <th>Address</th>
+                            <th># of room</th>
+                            <th>nickname</th>
+                            <th>Rent(USD)</th>
+                            <th>Location</th>
+                            <th>securityDeposit(USD)</th>
+                            <th>Apply</th>
                         </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-    <% } %>
+                    </thead>
+                    <tbody class="housing-list">
+                        <% Housinglist.forEach((unit) => { %>
+                            <tr>
+                                <td><%= unit._id %></td>
+                                <td><%= unit.address %></td>
+                                <td><%= unit.numberOfRooms %></td>
+                                <td><%= unit.rent %></td>
+                                <td><%= unit.nickname %></td>
+                                <td><%= unit.location %></td>
+                                <td><%= unit.securityDeposit %></td>
+                                <td><a href="/users/<%= unit.pid %>/review_application.html">Apply</a></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
 
     <script>
+        document.addEventListener('DOMContentLoaded', async() => {
+            console.log( Housinglist)
+        });
 
         document.getElementById('location').addEventListener('change', (event) => {
             const houseType = document.getElementById('Housetype').value;
@@ -114,39 +125,55 @@
                 });
         });
 
-        document.getElementById('houseType').addEventListener('change', (event) => {
-            const location = document.getElementById('Location').value;
-
-            const selectedValue = event.target.value;
-            let apiUrl = '/api/property';
-            apiUrl += `?houseType=${selectedValue}`;
-
-            if (location !== '*') {
-            apiUrl += `&location=${location}`;
-            }
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(replaceHousingList)
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+        document.getElementById('nickname').addEventListener('keyup', (event) => {
+            const searchQuery = event.target.value
+            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(replaceHousingList)
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
         });
 
-        function replaceHousingList(housing) {
-            const Housinglist = document.querySelector('.housing-list');
-            Housinglist.innerHTML = ''; // Clear the existing content
+        // document.getElementById('houseType').addEventListener('change', (event) => {
+        //     const location = document.getElementById('Location').value;
 
-            hosuing.forEach((unit) => {
+        //     const selectedValue = event.target.value;
+        //     let apiUrl = '/api/property';
+        //     apiUrl += `?houseType=${selectedValue}`;
+
+        //     if (location !== '*') {
+        //     apiUrl += `&location=${location}`;
+        //     }
+
+        //     fetch(apiUrl)
+        //         .then(response => response.json())
+        //         .then(replaceHousingList)
+        //         .catch(error => {
+        //             console.error('Error fetching data:', error);
+        //         });
+        // });
+
+        function replaceHousingList(housing) {
+            const housingList = document.querySelector('.housing-list');
+            housingList.innerHTML = ''; // Clear the existing content
+            console.log('Received data:', housing); // Log received data
+            housing.forEach((unit) => {
                 const houseRow = document.createElement('tr');
                 houseRow.innerHTML = `
-                    <td>${unit.pid}</td>
+                    <td>${unit.address}</td>
+                    <td>${unit.numberOfRooms}</td>
+                    <td>${unit.rent}</td>
+                    <td>${unit.nickname}</td>
                     <td>${unit.location}</td>
-                    <td>${unit.housetype}</td>
-                    <td>${unit.price}</td>
-                    <td><a href="/api/${unit.pid}/apply.html">Apply</a></td>
+                    <td>${unit.securityDeposit}</td>
+                    <td>${unit.taken}</td>
+                    <td><a href="/users/${unit.pid}/modify_property.html">Edit</a></td>
+                    <td><a href="/users/${unit.pid}/review_application.html">Review</a></td>
                 `;
-                Housinglist.appendChild(houseRow);
+                housingList.appendChild(houseRow);
             });
         }
     </script>

@@ -1144,20 +1144,22 @@ app.get('/admin/managerboard.html', async (req, res) => {
 /***************************** Student list Page ************************************************************* */
 app.get('/student/list_property.html', async (req, res) => {
   try {
-    // Use async/await for the fetch operation
+    // Fetch data from the API
     const response = await fetch('http://localhost:3000/api/property', {
       method: 'GET',
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch students: ${response.statusText}`);
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
-    const list_property = await response.json();
-    // console.log("students:", users);
+
+    const Housinglist = await response.json();
+    console.log(Housinglist)
+    // Now, 'housingData' contai ns the fetched data from the API
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
-    res.render('layout.ejs', {
-      body: await render('pages/student/list_student.ejs', { users }),
+    await render('layout.ejs', {
+      body: await render('pages/student/list_student.ejs', {Housinglist}), // Pass the data as an object
     });
 
     res.end();
@@ -1166,7 +1168,38 @@ app.get('/student/list_property.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-/** ***********************student frontend endpoints as above ****************************/
+
+app.get('/student/:id/apply.html', async (req, res) => {
+  try {
+    var pid = req.params.id
+    console.log(pid)
+    // Fetch data from the API
+    const response = await fetch('http://localhost:3000/api/property?propertyID=${pid}', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+
+    const Housinglist = await response.json();
+    console.log(Housinglist)
+    const property = Housinglist
+    // Now, 'housingData' contai ns the fetched data from the API
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    await render('layout.ejs', {
+      body: await render('pages/student/student_apply3.ejs', {property}), // Pass the data as an object
+    });
+
+    res.end();
+  } catch (error) {
+    console.error('Error rendering page:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
 app.get('/users/landlords/createproperty.html', async (req, res) => {
@@ -1183,12 +1216,47 @@ app.get('/users/landlords/createproperty.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-app.get('/users/landlords/list_property.html', async (req, res) => {
+
+app.get('/users/:id/list_property.html', async (req, res) => {
+    try {
+      var pid = req.params.id
+      console.log(pid)
+      // Fetch data from the API
+      const response = await fetch('http://localhost:3000/api/property?propertyID=${pid}', {
+        method: 'GET',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.statusText}`);
+      }
+  
+      const Housinglist = await response.json();
+      console.log(Housinglist)
+      // Now, 'housingData' contai ns the fetched data from the API
+      res.status(200).set('Content-Type', 'text/html');
+      const render = util.promisify(res.render).bind(res);
+      await render('layout.ejs', {
+        body: await render('pages/student/list_student.ejs', { Housinglist }), // Pass the data as an object
+      });
+  
+      res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
+
+app.get('/users/:id/modify_property.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
-      body: await render('pages/landlord/list_landlord.ejs')
+      body: await render('pages/landlord/housing_edit.ejs')
     });
     res.end();
 
@@ -1197,6 +1265,23 @@ app.get('/users/landlords/list_property.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+app.get('/users/:id/review_application.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/landlord/review_application.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 /** ***********************landlord frontend endpoints end ****************************/
 //error handler from demo handout
 app.use((err,req,res,next) => {

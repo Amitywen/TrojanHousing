@@ -12,7 +12,6 @@ enter the stuff here and making sure
 and enter the studentID and submit it -->
 
 
-<!-- ./public/player/edit.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +23,8 @@ and enter the studentID and submit it -->
         function showing(property){
             const Housinglist = document.querySelector('.property');
             Housinglist.innerHTML = ''; // Clear the existing content
-
+            // console.log(65730bdc3f2ef4e7c7e38df8)
+            
             const houseRow = document.createElement('tr');
             houseRow.innerHTML = `
                 <td>${property.landlordId}</td>
@@ -40,8 +40,8 @@ and enter the studentID and submit it -->
 
         document.addEventListener('DOMContentLoaded', async() => {
             const url = new URL(window.location.href)
-            const propertyId = url.pathname.split('/')[3];
-            const studentId = document.getElementById('studentId');
+            const propertyId = url.pathname.split('/')[2];
+            console.log(propertyId)
 
             try{                    
                 fetch(`/api/property?propertyId=${propertyId}`)
@@ -59,7 +59,9 @@ and enter the studentID and submit it -->
                 event.preventDefault(); // Prevent the default form submission
 
                 // Perform your client-side validation here
-                const propertyId = document.getElementById('propertyId');
+                // const propertyId = document.getElementById('propertyId');
+                const url = new URL(window.location.href)
+                const propertyId = url.pathname.split('/')[2];
                 const studentId = document.getElementById('studentId');
 
                 // Construct the request body
@@ -108,10 +110,17 @@ and enter the studentID and submit it -->
                             <th>rent</th>
                             <th>securityDeposit</th>
                             <th>summary</th>
-                            <th>slocation</th>
+                            <th>location</th>
                         </tr>
                     </thead>
                     <tbody class="property">
+                            <!-- <td><%- landlordId %></td>
+                            <td><%- address %></td>
+                            <td><%- numberOfRooms %></td>
+                            <td><%- rent %></td>
+                            <td><%- securityDeposit %></td>
+                            <td><%- summary %></td>
+                            <td><%- location %></td> -->
                     </tbody>
                 </table>
             </div>

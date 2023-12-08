@@ -8,7 +8,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const url = new URL(window.location.href)
-            const propertyId = url.pathname.split('/')[3];
+            const propertyId = url.pathname.split('/')[2];
             const modifyhousing = document.getElementById('modifyhousing');
 
             modifyhousing.addEventListener('submit', async (event) => {
@@ -97,11 +97,48 @@
             <input type="checkbox" id="taken" name="taken">
             <!-- Other input fields for creating a new property -->
     
-            <button type="submit">Create Housing</button>
         </form>
             <input type="hidden" name="redirect" value="/players.html">
             <button type="submit"> Save Changes </button>
         </form>
+        
+        <button class="deleteButton">Delete</button>
+
+        <script>
+            const deleteButtons = document.querySelectorAll('.deleteButton');
+            // Add event listener for each delete button of each student user
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const propertyId = url.pathname.split('/')[2];
+                    const landlordId = document.getElementById('landlordId');
+                    // const studentId = button.getAttribute('data-student-id');
+                    console.log("test delete button");
+
+                    try {
+                        const response = await fetch(`/api/property/${propertyId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+
+                        if (response.ok) {
+                            console.log(`propertyId with ID ${propertyId} deleted successfully`);
+                            document.getElementById('error-message').innerText = `propertyId User with ID ${propertyId} deleted successfully`;
+                            window.location.href = `/users/${userId}/list_property.html`; // Replace userId with the actual user ID
+                            setTimeout(() => {
+                                location.reload();
+                            }, 80);
+                        } else {
+                            console.error(`Failed to delete student with ID ${studentId}`);
+                            document.getElementById('error-message').innerText = `Failed to delete student with ID ${studentId}`;
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
     
-</body>
+        </script>
+    </body>
 </html>
