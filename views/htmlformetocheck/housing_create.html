@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <style>
+        .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC-Gold-Shield-scaled-1.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.7);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .form-submit-button{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+        </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Create the new property</title>
         <script>
+            console.log(Housinglist)
             document.addEventListener('DOMContentLoaded', () => {
                 const newHousingForm = document.getElementById('newhousing');
 
-                newPlayerForm.addEventListener('submit', async (event) => {
+                newhousing.addEventListener('submit', async (event) => {
                     event.preventDefault(); // Prevent the default form submission
 
                     // Perform your client-side validation here
@@ -34,6 +76,8 @@
                         // redirect: '/players.html', not sure whethe is going?
                     };
 
+                    console.log(requestBody)
+
                     // Send the data to the server using fetch
                     try {
                         const response = await fetch('/api/property', {
@@ -46,7 +90,7 @@
 
                         if (response.ok) {
                             // Form submission successful, you can redirect the user
-                            window.location.href = '/list_landlord.html';
+                            // window.location.href = '/users/landlords/list_property.html';
                         } else {
                             const errorData = await response.json();
                             alert(`Server Error: ${errorData.message}`);
@@ -59,7 +103,10 @@
         </script>
     </head>
     <body>
-        <h1>Create New Housing</h1>
+        <div class="whole-page-background-image">
+            <div class="whole-page-background-color">
+        <!-- <h1>Create New Housing</h1> -->
+        <h1 class="admin-page-title"><br>Create New Housing</h1>
         <form id="newhousing" action="/api/property" method="POST">
             <label for="landlordId">Landlord ID:</label>
             <input type="text" id="landlordId" name="landlordId" required>
@@ -100,5 +147,7 @@
     
             <button type="submit">Create Housing</button>
         </form>
+    </div>
+</div>
     </body>
 </html>
