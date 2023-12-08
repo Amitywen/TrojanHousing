@@ -134,12 +134,17 @@ client.connect(err => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-
+//DONE
+// GET /api/homeinfo
+// Purpose: Retrieve counts of students, properties, and landlords for homepage information.
+// Input Parameters: None
+// Return Format: JSON object with counts of students, landlords, and properties or an error message.
+// Example Return: { "studentCount": 100, "landlordCount": 40, "propertyCount": 200 }
 app.get('/api/homeinfo', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
  console.log("GET /api/homeinfo");
  try {
-     //grab all the students and put them in an array
+     //grabs all students, properties, and landlords and puts their length in an object for frontend
      const studentCollection = client.db(dbConfig.db).collection("student");
      const propertyCollection = client.db(dbConfig.db).collection("property");
      const landlordCollection = client.db(dbConfig.db).collection("landlord");
