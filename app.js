@@ -1064,7 +1064,7 @@ app.get('/admin/students/create.html', async (req, res) => {
     }
   });
 /********************* signup as student user from user side ****************************************************** */
-/**   */ 
+/** by Qingyu  */ 
 app.get('/users/students/signup.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
@@ -1080,7 +1080,7 @@ app.get('/users/students/signup.html', async (req, res) => {
   }
 });
 /********************* signup as landlord user from user side ****************************************************** */
-/**   */
+/** by Qingyu  */
 app.get('/users/landlords/signup.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
@@ -1109,7 +1109,7 @@ app.use((err,req,res,next) => {
   res.end();
 });
 /********************* signup as landlord user from user side ****************************************************** */
-/**   */
+/**  by Qingyu */
 app.get('/users/landlords/signup.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
@@ -1125,12 +1125,29 @@ app.get('/users/landlords/signup.html', async (req, res) => {
   }
 });
 /**************************** admin manager board ************************************************************* */
+/**  by Qingyu */
 app.get('/admin/managerboard.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
       body: await render('pages/admin/manager_board.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/******************************* empty page for up coming page that are developed yet ************************* */
+/**  by Qingyu */
+app.get('/trojanhousing/emptypage.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/trojanhousing/empty.ejs')
     });
     res.end();
 
@@ -1321,11 +1338,15 @@ app.use((err,req,res,next) => {
 
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
+console.log('----------------------------------------------------------------------------------');
 console.log(`To create student user: http://localhost:3000/admin/students/create.html`);
 console.log(`To create landlord user: http://localhost:3000/admin/landlords/create.html`);
 console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
 console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
 console.log(`To look up all student user as manager: http://localhost:3000/admin/students.html`);
 console.log(`To look up all landlord user as manager: http://localhost:3000/admin/landlords.html`);
-
+console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
+console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
+console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
+console.log('----------------------------------------------------------------------------------');
 console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);

@@ -142,50 +142,11 @@
 <body>
  <!-- <div class="whole-page-background-image" id="background-image"> -->
     <div class="whole-page-background-color" >
-    <h1 class="admin-page-title"><br>Administrator Manager Board</h1>
-    <h2 class="admin-page-subtitle" ><div id="greeting-message"></div> Administrator #001 </h2>
-    <p class="block-text">
-        Here are new tasks for you:<br>
-        #1 check new applcations<br>
-        #2 validate new landlords<br>
-        #3 weekly meeting at 3pm<br>
-    </p>
+    <h1 class="admin-page-title"><br>OOPs...</h1>
+    <h2 class="admin-page-subtitle" >Coming Soon!</div> </h2>
+    <img src="/images/oops.jpeg" alt="oops-image" style="max-width: 100px; max-height: 100px;">
+    <button class="admin-button" id="manager-board-button"><a href="/trojanhousing/home.html">Back to home</a></button>
    
-    <div class="display-box" id="display-box-hori">
-        <div class="info-box">
-            <a href="/admin/students.html">
-                <img src="/images/USC-trojan-head.png" alt="student-image" style="max-width: 100px; max-height: 100px;">
-            </a>
-            <br><div id="student-user-num"></div><br>
-            <div>Click to Manage student user</div>
-          
-        </div>
-        <div class="info-box">
-            <a href="/admin/landlords.html">
-                <img src="/images/landlord-circle.webp" alt="landlord-image" style="max-width: 100px; max-height: 100px;">
-            </a>
-            <br><div id="landlord-user-num"></div><br>
-            <div>Click to Manage Landlord User</div>
-            
-        </div>
-        <div class="info-box">
-            <a href="#add manage post link later when it is ready">
-                <img src="/images/Sweet-housing.png" alt="housing-post-image" style="max-width: 100px; max-height: 100px;">
-            </a>
-                <br><div id="housing-num"></div><br>
-            <div>Click to Manage Housing Posts(Coming Soon!)</div>
-        </div>
-        <div class="info-box">
-            <a href="#add manage application link later when it is ready">
-                <img src="/images/application-button.png" alt="housing-image" style="max-width: 100px; max-height: 100px;">
-            </a>
-                <br><div id="housing-num"></div><br>
-            <div>Click to Manage Application(Coming Soon!)</div>
-        </div>
-    </div>
-    <!-- <button class="admin-button" id="manager-board-button"><a href="/trojanhousing/about.html">To learn more about us</a></button> -->
-    
-
 
 
 <!-- 
@@ -218,8 +179,7 @@
         backgroundImage = '/images/USC-trojan.webp';
        
     }
-    //limited the background page for admin manager for a clear view
-    backgroundImage = '/images/USC-Grey-Shield-scaled-1.jpg';
+
     document.getElementById("greeting-message").innerHTML = greetingMsg;
     document.body.style.backgroundImage = `url(${backgroundImage})`;
 
@@ -239,10 +199,12 @@
                 console.log("homeinfo", data);
                 // console.log("homeinfo",response.body);
             //    let student_num = response
-                document.getElementById('student-user-num').innerText = `${data.studentCount} student users in System`;
-                document.getElementById('landlord-user-num').innerText = `${data.landlordCount} landlord users in System`;
-                // document.getElementById('housing-num').innerText = `${data.propertyCount} sweet homes ready for you`;
-                
+                document.getElementById('student-user-num').innerText = `${data.studentCount} students like you have joined us`;
+                document.getElementById('landlord-user-num').innerText = `${data.landlordCount} landlords work with us`;
+                document.getElementById('housing-num').innerText = `${data.propertyCount} sweet homes ready for you`;
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 80);
             } else {
                 console.error(`Failed to fetch data}`);
                 // document.getElementById('error-message').innerText = `Failed to delete student with ID ${studentId}`;
