@@ -42,6 +42,7 @@
                         <th style="padding-right: 15px">Student ID</th>
                         <th style="padding-right: 15px">Status</th>
                         <th style="padding-right: 15px">Accept?</th>
+                        <th style="padding-right: 15px">Delete?</th>
                     </thread>
                     <% let rowCount = 1; %>
                     <% applications.forEach(application => { %>
@@ -52,6 +53,7 @@
                             <td style="padding-right: 15px"><%= application.studentId %></td>
                             <td style="padding-right: 15px"><%= application.accepted ? 'Yes' : 'No' %></td>
                             <td><button class="Accept" application-id="<%= application._id %>">Accept</button></td>
+                            <td><button class="Delete" applicationID ="<%= application._id %>">Delete</button></td>
                         </tr>
                         <% rowCount++; %>
                     <% }); %>
@@ -88,6 +90,38 @@
                 } else {
                     console.error(`Failed to delete landlord with ID ${userId}`);
                     document.getElementById('error-message').innerText = `Failed to accept Application: ${applicationID}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    const deleteButtons = document.querySelectorAll('.Delete');
+    // Add event listener for each delete button of each student user
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const userId = button.getAttribute('applicationID');
+            // console.log("test delete button");
+
+            try {
+                const response = await fetch(`/api/application/${applicationID}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log(`ID ${applicationID}} deleted successfully`);
+                    document.getElementById('error-message').innerText = `ID ${applicationID}} deleted successfully`;
+                    setTimeout(() => {
+                        location.reload();
+                    }, 100);
+                    window.location.href = '/api/property/application/${applicationID}';
+                } else {
+                    console.error(`Failed to delete with ID ${applicationID}`);
+                    document.getElementById('error-message').innerText = `Failed to delete landlord with ID ${userId}`;
                 }
             } catch (error) {
                 console.error('Error:', error);
