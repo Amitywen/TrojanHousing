@@ -93,7 +93,7 @@
                                 <td><%= unit.nickname %></td>
                                 <td><%= unit.location %></td>
                                 <td><%= unit.securityDeposit %></td>
-                                <td><a href="/users/<%= unit.pid %>/review_application.html">Apply</a></td>
+                                <td><a href="/student/<%= unit._id %>/apply.html">Apply</a></td>
                             </tr>
                         <% }) %>
                     </tbody>
@@ -171,9 +171,7 @@
                     <td>${unit.rent}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
-                    <td>${unit.taken}</td>
-                    <td><a href="/users/${unit.pid}/modify_property.html">Edit</a></td>
-                    <td><a href="/users/${unit.pid}/review_application.html">Review</a></td>
+                    <td><a href="/student/${unit.pid}/apply.html">Apply</a></td>
                 `;
                 housingList.appendChild(houseRow);
             });
