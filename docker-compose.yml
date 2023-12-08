@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  mongodb: # mongodb
+    image: mongo:latest # use the latest image.
+    container_name: mongodb
+    restart: unless-stopped #always # unless-stopped
+    # environment: # set required env variables to access mongo
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: password 
+    ports:
+      - 27017:27017
+    volumes: # optional to preserve database after container is deleted.
+      - ./database-data:/data/db 
+
+  # Mongo Express Service 
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    # environment:
+    #   ME_CONFIG_MONGODB_ADMINUSERNAME: root 
+    #   ME_CONFIG_MONGODB_ADMINPASSWORD: password 
+    #   ME_CONFIG_MONGODB_SERVER: mongodb # Use the service name as the server
+  # node:
+  #   image: node:latest
+  #   container_name: node
+  #   working_dir: /hw-testsuite-ee547-233/hw6/hw6p1
+  #   # /hw-testsuite-ee547-233/hw6/hw6p1
+  #   volumes:
+  #     - .:/hw-testsuite-ee547-233/hw6/hw6p1
+
+  #   restart: unless-stopped
+  #   ports:
+  #     - 3000:3000
+  #   command: npm test
+

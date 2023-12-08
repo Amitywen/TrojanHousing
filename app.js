@@ -461,6 +461,7 @@ app.post('/api/landlord', async (req, res) => {
 // Example Return: {"message": "Property added successfully", "propertyId": "PROPERTY_ID"}
 app.post('/api/property', async (req, res) => {
     console.log("post /api/property");
+    console.log(req.body);
     const { landlordId, address, numberOfRooms, rent, securityDeposit, summary,nickname,location } = req.body;
     //basic framework taken from Will's hoemwork
     // Basic input validation, just makes sure the fields exists that need to be there
@@ -1139,6 +1140,64 @@ app.get('/admin/managerboard.html', async (req, res) => {
 });
 /** ***********************admin frontend endpoints as above ****************************/
 
+/** ***********************student frontend endpoints****************************/
+/***************************** Student list Page ************************************************************* */
+app.get('/student/list_property.html', async (req, res) => {
+  try {
+    // Use async/await for the fetch operation
+    const response = await fetch('http://localhost:3000/api/property', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch students: ${response.statusText}`);
+    }
+    const list_property = await response.json();
+    // console.log("students:", users);
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/student/list_student.ejs', { users }),
+    });
+
+    res.end();
+  } catch (error) {
+    console.error('Error rendering page:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/** ***********************student frontend endpoints as above ****************************/
+
+/** ***********************landlord frontend endpoints****************************/
+app.get('/users/landlords/createproperty.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/landlord/housing_create.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+app.get('/users/landlords/list_property.html', async (req, res) => {
+  try {
+    res.status(200).set('Content-Type', 'text/html');
+    const render = util.promisify(res.render).bind(res);
+    res.render('layout.ejs', {
+      body: await render('pages/landlord/list_landlord.ejs')
+    });
+    res.end();
+
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+/** ***********************landlord frontend endpoints end ****************************/
 //error handler from demo handout
 app.use((err,req,res,next) => {
   console.error(err);
@@ -1152,6 +1211,8 @@ app.use((err,req,res,next) => {
   res.end();
 });
 
+
+
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
 console.log(`To create student user: http://localhost:3000/admin/students/create.html`);
@@ -1159,4 +1220,6 @@ console.log(`To create landlord user: http://localhost:3000/admin/landlords/crea
 console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
 console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
 console.log(`To look up all student user as manager: http://localhost:3000/admin/students.html`);
-console.log(`To look up all student user as manager: http://localhost:3000/admin/landlords.html`);
+console.log(`To look up all landlord user as manager: http://localhost:3000/admin/landlords.html`);
+
+console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
