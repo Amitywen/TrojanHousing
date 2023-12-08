@@ -1172,12 +1172,13 @@ app.get('/student/list_property.html', (req, res) => {
 app.get('/student/:id/apply.html', (req, res) => {
   var id = req.params.id;
   console.log('from api',req.params.id);
-
+  
   // fetch data from the api
   fetch(`http://localhost:3000/api/property?propertyId=${id}`, {
     method: 'GET',
   })
   .then(response => {
+    console.log("response",response);
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
@@ -1187,6 +1188,7 @@ app.get('/student/:id/apply.html', (req, res) => {
     console.log(Housinglist);
     const property = Housinglist;
     // Render student_apply3.ejs and then layout.ejs
+    
     res.render('pages/student/student_apply3.ejs', { property }, (err, html) => {
       if (err) {
         console.error('Error rendering student_apply3:', err);
