@@ -72,16 +72,58 @@
     <title>Edit Housing</title>
     <link rel="stylesheet" href="/styles.css">
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded',async () => {
             const url = new URL(window.location.href)
             const propertyId = url.pathname.split('/')[2];
             const modifyhousing = document.getElementById('modifyhousing');
 
+            // const response = await fetch(`/api/property?propertyId=${propertyId}`, {
+            //     method: 'GET',
+            //     headers: {
+            //     'Content-Type': 'application/json',
+            //     }
+            // }).then(response => response.json())
+            // .then(setting)
+            // .catch(error => {
+            //         console.error('Error fetching data:', error);
+            //     });
+
+            // function setting(input){
+            //     console.log('print by setting')
+            //     console.log(input)
+            // }
+            // console.log(responseID)
+            deleteButton.addEventListener('click', async () => {
+            try {
+
+                const response = await fetch(`/api/property/${propertyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log(`Property with ID ${propertyId} deleted successfully`);
+                    // Redirect to a relevant page after deletion
+                    // window.location.href = '/users/${landlordId}/list_property.html';
+                    alert('Deleted')
+                } else {
+                    console.error(`Failed to delete property with ID ${propertyId}`);
+                    // Handle deletion failure
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            });
+
             modifyhousing.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent the default form submission
 
+                const url = new URL(window.location.href)
+                const propertyId = url.pathname.split('/')[2];
+
                 // Perform your client-side validation here
-                const landlordId = document.getElementById('landlordId');
                 const address = document.getElementById('address');
                 const numberOfRooms = document.getElementById('numberOfRooms');
                 const rent = document.getElementById('rent');
@@ -90,10 +132,8 @@
                 const nickname = document.getElementById('nickname');
                 const location = document.getElementById('location' );
                 const taken = document.getElementById('taken');
-
                 // Construct the request body
                 const requestBody = {
-                        landlordId: landlordId.value,
                         address: address.value,
                         numberOfRooms: numberOfRooms.value,
                         rent: rent.value, 
@@ -106,7 +146,7 @@
                     };
                 // Send the data to the server using fetch
                 try {
-                    const response = await fetch(`'/api/property/${propertyId}`, {
+                    const response = await fetch(`/api/property/${propertyId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -120,6 +160,8 @@
                         // console.log(`propertyId with ID ${propertyId} modified successfully`);
                         // window.location.href = `/users/${userId}/list_property.html`;
                         // this has problem
+                        // window.location.href = '/users/${landlordId}/list_property.html';
+                        alert('Modified')
                     } else {
                         const errorData = await response.json();
                         alert(`Server Error: ${errorData.message}`);
@@ -135,94 +177,56 @@
     <div class="whole-page-background-image">
         <div class="whole-page-background-color">
         <h1 class="admin-page-title"><br>Edit Property</h1>
-        <div class = "creating">
-        <form id="modifyhousing">
-            <label for="landlordId">Landlord ID:</label>
-            <input type="text" id="landlordId" name="landlordId" required>
-            <br>
-            <br>
-            <label for="address">address:</label>
-            <input type="text" id="address" name="address" required> 
-            <br>
-            <br>
-            <label for="numberOfRooms">numberOfRooms:</label>
-            <input type="number" id="numberOfRooms" name="numberOfRooms" required>
-            <br>
-            <br>
-            <label for="rent">rent:</label>
-            <input type="number" id="rent" name="rent" required> 
-            <br>
-            <br>
-            <label for="securityDeposit">securityDeposit:</label>
-            <input type="number" id="securityDeposit" name="securityDeposit" required>
-            <br>
-            <br>
-            <label for="summary">summary:</label>
-            <input type="text" id="summary" name="summary" required> 
-            <br>
-            <br>
-            <label for="nickname">nickname:</label>
-            <input type="text" id="nickname" name="nickname" required> 
-            <br>
-            <br>
-            <label for="location">location:</label>
-            <select id="location" name="location" required> 
-                <option value="downtown">Downtown</option>
-                <option value="ktown">Ktown</option>
-                <option value="UPS">UPS area</option>
-            </select>
-            <br>
-            <br>
-            <label for="taken">Taken:</label>
-            <input type="checkbox" id="taken" name="taken">
-            <!-- Other input fields for creating a new property -->
-            <br>
-            <br>
-            <button type="submit"> Save Changes </button>
+                <div class = "creating">
+                <form id="modifyhousing">
+                    <!-- <label for="landlordId">Landlord ID:</label>
+                    <input type="text" id="landlordId" name="landlordId">
+                    <br> -->
+                    <br>
+                    <label for="address">address:</label>
+                    <input type="text" id="address" name="address"> 
+                <br>
+                    <br>
+                    <label for="numberOfRooms">numberOfRooms:</label>
+                    <input type="number" id="numberOfRooms" name="numberOfRooms">
+                    <br>
+                    <br>
+                    <label for="rent">rent:</label>
+                    <input type="number" id="rent" name="rent"> 
+                    <br>
+                    <br>
+                    <label for="securityDeposit">securityDeposit:</label>
+                    <input type="number" id="securityDeposit" name="securityDeposit">
+                    <br>
+                    <br>
+                    <label for="summary">summary:</label>
+                    <input type="text" id="summary" name="summary"> 
+                    <br>
+                    <br>
+                    <label for="nickname">nickname:</label>
+                    <input type="text" id="nickname" name="nickname"> 
+                    <br>
+                    <br>
+                    <label for="location">location:</label>
+                    <select id="location" name="location" > 
+                        <option value="downtown">Downtown</option>
+                        <option value="ktown">Ktown</option>
+                        <option value="UPS">UPS area</option>
+                    </select>
+                    <br>
+                    <br>
+                    <label for="taken">Taken:</label>
+                    <input type="checkbox" id="taken" name="taken">
+                    <!-- Other input fields for creating a new property -->
+                    <br>
+                    <br>
+                    <button type="submit"> Save Changes </button>
 
-            <button class="deleteButton">Delete</button>
-    
-
-    </div>
+                    <button id="deleteButton" class="deleteButton">Delete</button>
+            </div>
         <!-- <button class="deleteButton">Delete</button> -->
+        <!-- <button id="deleteButton" class="deleteButton">Delete</button> -->
     </div>
 </div>
-
-        <script>
-            const deleteButtons = document.querySelectorAll('.deleteButton');
-            // Add event listener for each delete button of each student user
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', async () => {
-                    const propertyId = url.pathname.split('/')[2];
-                    const landlordId = document.getElementById('landlordId');
-                    // const studentId = button.getAttribute('data-student-id');
-                    console.log("test delete button");
-
-                    try {
-                        const response = await fetch(`/api/property/${propertyId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        });
-
-                        if (response.ok) {
-                            console.log(`propertyId with ID ${propertyId} deleted successfully`);
-                            document.getElementById('error-message').innerText = `propertyId User with ID ${propertyId} deleted successfully`;
-                            window.location.href = `/users/${userId}/list_property.html`; // Replace userId with the actual user ID
-                            setTimeout(() => {
-                                location.reload();
-                            }, 80);
-                        } else {
-                            console.error(`Failed to delete student with ID ${studentId}`);
-                            document.getElementById('error-message').innerText = `Failed to delete student with ID ${studentId}`;
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                });
-            });
-    
-        </script>
     </body>
 </html>

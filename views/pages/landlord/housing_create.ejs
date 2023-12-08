@@ -70,12 +70,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Create the new property</title>
-        <script>
-            console.log(Housinglist)
+        <!-- <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const newHousingForm = document.getElementById('newhousing');
 
-                newhousing.addEventListener('submit', async (event) => {
+                newHousingForm.addEventListener('submit', async (event) => {
                     event.preventDefault(); // Prevent the default form submission
 
                     // Perform your client-side validation here
@@ -101,7 +100,7 @@
                         // redirect: '/players.html', not sure whethe is going?
                     };
 
-                    console.log(requestBody)
+                    console.log('fromrequest',requestBody)
 
                     // Send the data to the server using fetch
                     try {
@@ -115,7 +114,61 @@
 
                         if (response.ok) {
                             // Form submission successful, you can redirect the user
-                            // window.location.href = '/users/landlords/list_property.html';
+                            window.location.href = '/users/${landlordId}/list_property.html';
+                        } else {
+                            const errorData = await response.json();
+                            alert(`Server Error: ${errorData.message}`);
+                        }
+                    } catch (error) {
+                        alert('An error occurred while communicating with the server.');
+                    }
+                });
+            });
+        </script> -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const newHousingForm = document.getElementById('newhousing');
+        
+                newHousingForm.addEventListener('submit', async (event) => {
+                    event.preventDefault(); // Prevent the default form submission
+        
+                    // Retrieve form input values
+                    const landlordId = document.getElementById('landlordId');
+                    const address = document.getElementById('address');
+                    const numberOfRooms = document.getElementById('numberOfRooms');
+                    const rent = document.getElementById('rent');
+                    const securityDeposit = document.getElementById('securityDeposit');
+                    const summary = document.getElementById('summary');
+                    const nickname = document.getElementById('nickname');
+                    const location = document.getElementById('location');
+        
+                    // Construct the request body
+                    const requestBody = {
+                        landlordId: landlordId.value,
+                        address: address.value,
+                        numberOfRooms: numberOfRooms.value,
+                        rent: rent.value,
+                        securityDeposit: securityDeposit.value,
+                        summary: summary.value,
+                        nickname: nickname.value,
+                        location: location.value
+                    };
+        
+                    console.log('fromrequest', requestBody);
+        
+                    // Send the data to the server using fetch
+                    try {
+                        const response = await fetch('/api/property', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestBody),
+                        });
+        
+                        if (response.ok) {
+                            // Form submission successful, you can redirect the user
+                            window.location.href = `/users/${requestBody.landlordId}/list_property.html`;
                         } else {
                             const errorData = await response.json();
                             alert(`Server Error: ${errorData.message}`);

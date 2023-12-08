@@ -17,6 +17,17 @@
             height: 100vh; /* Adjust as needed */
             font-family: 'Courier New', Courier, monospace;
         }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
 
         table {
             border-collapse: separate;
@@ -48,8 +59,7 @@
 </head>
 
 <body>
-        <h1>Housing List</h1>
-        
+        <h1 class="admin-page-title"><br>Housing List</h1>
         <% if (Housinglist.length === 0) { %>
             <p>No property available.</p>
         <% } else { %>
