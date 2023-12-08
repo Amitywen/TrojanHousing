@@ -1185,7 +1185,7 @@ app.get('/student/:id/apply.html', (req, res) => {
   .then(Housinglist => {
     console.log(Housinglist);
     const property = Housinglist;
-    // render student_apply3.ejs and then layout.ejs
+    // Render student_apply3.ejs and then layout.ejs
     res.render('pages/student/student_apply3.ejs', { property }, (err, html) => {
       if (err) {
         console.error('Error rendering student_apply3:', err);
@@ -1199,6 +1199,8 @@ app.get('/student/:id/apply.html', (req, res) => {
     res.status(500).send('Internal Server Error');
   });
 });
+
+
 
 
 /******************student frontend endpoints as above ****************************/
