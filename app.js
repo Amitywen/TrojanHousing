@@ -98,6 +98,7 @@ client.connect(err => {
        res.status(500).json({ error: "Internal server error" });
    }
 });
+
 //DONE
 // Purpose: Retrieve all students from the database
 // Input Parameters: None
@@ -700,7 +701,6 @@ app.post('/api/property/:id', async(req, res) => {
 
   
 //Done
-//Needs to be debugged
 /// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
 // Input Parameters: Optional query parameters propertyId and/or landlordId
 // Return Format: JSON object of property(s) or error message
@@ -710,7 +710,8 @@ app.get('/api/property', async (req, res) => {
     console.log("get /api/property");
     //can take propertyiD or landlord ID
     //framework based off will's homework
-    const { propertyId, landlordId } = req.query;
+    const { propertyId, landlordId,numberOfRooms,location} = req.query;
+    console.log(numberOfRooms);
     if(propertyId && landlordId){
         return res.status(422).json({ error: "must only search property or landlordid" });
     }
@@ -721,6 +722,7 @@ app.get('/api/property', async (req, res) => {
         if (propertyId) {
             // get a specifc property for an iD
             const property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
+            
             if (property) {
                 console.log(`got property with ID: ${propertyId}`);
 
@@ -745,7 +747,16 @@ app.get('/api/property', async (req, res) => {
         } else {
 
             // get all the properties
-            const properties = await propertyCollection.find({}).toArray();
+            let query = {};
+            if (location) {
+              query.location = {$regex: new RegExp(req.query.location, 'i') }; 
+            }
+         
+            if (numberOfRooms) {
+              query.numberOfRooms = Number(numberOfRooms);
+            }
+            console.log(query);
+            const properties = await propertyCollection.find(query).toArray();
             if (properties.length > 0) {
                 console.log("got properties");
                 res.status(200).json(properties);
