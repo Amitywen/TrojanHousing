@@ -1239,7 +1239,7 @@ app.get('/users/:id/list_property.html', (req, res) => {
   .then(Housinglist => {
     console.log(Housinglist);
     // render list_student.ejs and then layout.ejs
-    res.render('pages/student/list_student.ejs', { Housinglist }, (err, html) => {
+    res.render('pages/landlord/list_landlord.ejs', { Housinglist }, (err, html) => {
       if (err) {
         console.error('Error rendering list_student:', err);
         return res.status(500).send('Internal Server Error');
@@ -1253,7 +1253,7 @@ app.get('/users/:id/list_property.html', (req, res) => {
   });
 });
 
-app.get('/users/:id/modify_property.html', async (req, res) => {
+app.get('/users/:id/modify_property', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
