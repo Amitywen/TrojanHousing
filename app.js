@@ -122,7 +122,7 @@ client.connect(err => {
         const students = await studentCollection.find(query).toArray();
 
         if (students) {
-            console.log(`Fetched ${students.length} students`);
+            console.log(`got ${students.length} students`);
             res.status(200).json(students);
             console.log("test students:",students)
         } else {
@@ -172,7 +172,37 @@ app.get('/api/homeinfo', async (req, res) => {
      res.status(500).json({ error: "Internal server error" });
  }
 });
+// DONE
+// GET /api/application/:id
+// Purpose: Retrieve application details for a specific student based on their ID.
+// Input Parameters: studentId (as part of the URL path)
+// Return Format: JSON object containing the application details of the specified student, or an error message if not found.
+// Example Return: [{ "applicationId": "12345", "studentId": "67890", "propertyId": "54321", "status": "pending" }]
+app.get('/api/application/:id', async (req, res) => {
+  //taken and changed slightly from Will's Homeworks
+ console.log("GET /api/application/:id");
+ try {
+     //grab all the students and put them in an array
 
+     const studentId = req.params.id;
+     const applicationCollection = client.db(dbConfig.db).collection("application");
+
+     console.log(await applicationCollection.find({}).toArray());
+
+     const application = await applicationCollection.find({ studentId: new ObjectId(studentId) }).toArray();
+      console.log(application);
+     if (application) {
+         console.log(`got ${application.length} applicaitons for ${studentId}`);
+         res.status(200).json(application);
+     } else{
+         console.log("no applicaitons found");
+         res.status(404).json({ message: `applications with student id ${studentId} not found: `});
+     }
+ } catch (err) {
+     console.error("failed to get application:", err);
+     res.status(500).json({ error: "Internal server error" });
+ }
+});
 //DONE
 // Purpose: Retrieve all landlords from the database
 // Input Parameters: None
