@@ -149,7 +149,7 @@
                 if (answer) {
                     var role = document.querySelector('input[name="role"]:checked').value;
                     if(role == "student"){
-                        window.location.href = '/api/student/list_property.html'
+                        window.location.href = '/student/list_property.html'
                     }else if(role =="landlord"){
                         var ID = document.getElementById('username').value;
                         window.location.href = 'users/${ID}/list_property.html'
