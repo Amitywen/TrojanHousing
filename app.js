@@ -1170,10 +1170,11 @@ app.get('/student/list_property.html', (req, res) => {
 });
 
 app.get('/student/:id/apply.html', (req, res) => {
-  var pid = req.params.id;
-  console.log(pid);
+  var id = req.params.id;
+  console.log('from api',req.params.id);
+
   // fetch data from the api
-  fetch(`http://localhost:3000/api/property?propertyID=${pid}`, {
+  fetch(`http://localhost:3000/api/property?propertyId=${id}`, {
     method: 'GET',
   })
   .then(response => {
