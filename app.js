@@ -135,6 +135,38 @@ client.connect(err => {
     }
 });
 
+app.get('/api/homeinfo', async (req, res) => {
+  //taken and changed slightly from Will's Homeworks
+ console.log("GET /api/homeinfo");
+ try {
+     //grab all the students and put them in an array
+     const studentCollection = client.db(dbConfig.db).collection("student");
+     const propertyCollection = client.db(dbConfig.db).collection("property");
+     const landlordCollection = client.db(dbConfig.db).collection("landlord");
+
+     const student = await studentCollection.find({}).toArray();
+     const landlord = await landlordCollection.find({}).toArray();
+     const property = await propertyCollection.find({}).toArray();
+
+    const homepageInfo = {
+      studentCount: student.length,
+      landlordCount: landlord.length,
+      propertyCount: property.length
+    }
+    console.log(homepageInfo);
+
+     if (homepageInfo) {
+         console.log(`Fetched homepage info`);
+         res.status(200).json(homepageInfo);
+     } else {
+         console.log("info not found");
+         res.status(404).json({ message: "failed to get info" });
+     }
+ } catch (err) {
+     console.error("failed to get students:", err);
+     res.status(500).json({ error: "Internal server error" });
+ }
+});
 
 //DONE
 // Purpose: Retrieve all landlords from the database
@@ -171,6 +203,115 @@ app.get('/api/landlord', async (req, res) => {
       res.status(500).json({ error: "Internal server error" });
   }
 });
+
+//Done
+// GET /api/property
+// Purpose: Retrieve properties based on propertyId, landlordId, numberOfRooms, or location.
+// Input Parameters: Optional 'propertyId', 'landlordId', 'numberOfRooms', 'location' in query. Not to be used together: 'propertyId' and 'landlordId'.
+// Return Format: JSON array of property objects or error message.
+// Error Handling: Handles errors for invalid query combinations, non-existent properties, or internal server errors.
+// Example Query: /api/property?propertyId=PROPERTY_ID, /api/property?landlordId=LANDLORD_ID
+// Example Return: [{"_id": "PROPERTY_ID", "landlordId": "LANDLORD_ID", "address": "123 Main St", ...}, ...]
+app.get('/api/property', async (req, res) => {
+  console.log("get /api/property");
+  //can take propertyiD or landlord ID
+  //framework based off will's homework
+  const { propertyId, landlordId,numberOfRooms,location} = req.query;
+  console.log(numberOfRooms);
+  if(propertyId && landlordId){
+      return res.status(422).json({ error: "must only search property or landlordid" });
+  }
+
+  try {
+      const propertyCollection = client.db(dbConfig.db).collection("property");
+
+      if (propertyId) {
+          // get a specifc property for an iD
+          const property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
+          
+          if (property) {
+              console.log(`got property with ID: ${propertyId}`);
+
+              res.status(200).json(property);
+          } else {
+
+              console.log(`specific property not found`);
+              res.status(404).json({ message: `Property with ID ${propertyId} not found` });
+          }
+      } 
+      //Not working yet
+      else if (landlordId) {
+          // get the properties for a landlord
+          const properties = await propertyCollection.find({ landlordId: new ObjectId(landlordId) }).toArray();
+          if (properties.length > 0) {
+              console.log(`got properties for landlord with ID: ${landlordId}`);
+              res.status(200).json(properties);
+          } else {
+              console.log(`No properties found for landlord with ID: ${landlordId}`);
+              res.status(404).json({ message: `No properties found for landlord with ID ${landlordId}` });
+          }
+      } else {
+
+          // get all the properties
+          let query = {};
+          if (location) {
+            query.location = {$regex: new RegExp(req.query.location, 'i') }; 
+          }
+       
+          if (numberOfRooms) {
+            query.numberOfRooms = Number(numberOfRooms);
+          }
+          console.log(query);
+          const properties = await propertyCollection.find(query).toArray();
+          if (properties.length > 0) {
+              console.log("got properties");
+              res.status(200).json(properties);
+          } else {
+              console.log("No properties found");
+              res.status(404).json({ message: "No properties found" });
+          }
+      }
+  } catch (err) {
+      console.error("Failed to retrieve properties:", err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+//Done
+// Purpose: Retrieve all applications for a specific property
+// Input Parameters: propertyId as URL parameter
+// Return Format: JSON array of application objects or error message
+// Example URL: /api/property/application/PROPERTY_ID
+// Example Return: [{"_id": "APPLICATION_ID", "studentId": "STUDENT_ID", "propertyId": "PROPERTY_ID", ...}, ...]
+app.get('/api/property/application/:propertyId', async (req, res) => {
+  console.log("GET /api/property/application/:propertyId");
+  const propertyId = req.params.propertyId;
+  //missing property id
+  if (!propertyId) {
+      return res.status(400).json({ error: "Missing propertyId" });
+  }
+
+  try {
+      //gets all applications
+      const applicationCollection = client.db(dbConfig.db).collection("application");
+      // gets all the applicaitons for a specifc property
+      const application = await applicationCollection.find({ propertyId: new ObjectId(propertyId) }).toArray();
+      if (application.length > 0) {
+          
+          console.log(`num applications:  ${application.length} for propertyId: ${propertyId}`);
+          res.status(200).json(application);
+      } else {
+          console.log(`no apps found for propertyid: ${propertyId}`);
+          res.status(404).json({ message: "no applications found for given propertyID" });
+      }
+  } catch (err) {
+      console.error(`failed to get applications for ${propertyId}:`, err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 //DONE
 // Purpose: Create a new student
@@ -374,6 +515,301 @@ app.post('/api/application', async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+// Purpose: Update student details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for student not found, invalid fields, or update failure.
+// Example Input: /api/student/student_ID with updated details in body.
+// Example Return: Success message with studentId or error message.
+app.post('/api/student/:id', async(req, res) => {
+  //modified endpoint from Will's hoemwork to fit 
+  console.log('POST /student/:id');
+ 
+  //grab current player data ported to MongoDB 
+  const studentId = req.params.id;
+  const studentCollection = client.db(dbConfig.db).collection("student");
+
+  let student = await studentCollection.findOne({ _id: new ObjectId(studentId) });
+ // console.log("Player data fetched:", playersData);
+//check mongo return, if player found
+  if (student.length === 0) {
+      return res.status(404).send({ error: "Player not found" });
+    }
+    //Ported for ease of understanding
+    student = student[0];    
+
+    const { username, fname, lname, password } = req.body;
+  
+
+  //check each for correct formatting
+  const invalidFields = [];
+
+  //push to invalidFields array if incorrect formattign
+  if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
+  if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
+  if (password && password.length < 8) invalidFields.push('password');
+
+  
+//if invalidFields has anything, report error.
+
+  if (invalidFields.length) {
+    return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
+  }
+
+  if (username) student.username = username;
+  if (fname) student.fname = fname;
+  if (lname) student.lname = lname;
+  if (password) student.password = password;
+try {
+  const result = await studentCollection.updateOne({ _id: new ObjectId(studentId) }, { $set: student });
+    //console.log("Player data updated:", result);
+    if (result && result.modifiedCount) {
+        res.status(202).send(`sucessfully modified student with id:${studentId}`);
+    } else {
+        console.error("failed to modify student");
+        return res.status(500).send({ error: "failed to modify student" });
+    }
+} catch (err) {
+    console.error("Failed to update player:", err);
+    return res.status(500).send({ error: "Failed to update player" });
+}
+
+
+});
+
+// POST /api/landlord/:id
+// Purpose: Update landlord details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for landlord not found, invalid fields, or update failure.
+// Example Input: /api/landlord/landlord_ID with updated details in body.
+// Example Return: Success message with landlordId or error message.
+
+app.post('/api/landlord/:id', async(req, res) => {
+  //modified endpoint from Will's hoemwork to fit 
+  console.log('POST /landlord/:id');
+ 
+  //grab current player data ported to MongoDB 
+  const landlordId = req.params.id;
+  const landlordCollection = client.db(dbConfig.db).collection("landlord");
+
+  let landlord = await landlordCollection.findOne({ _id: new ObjectId(landlordId) });
+ // console.log("Player data fetched:", playersData);
+//check mongo return, if player found
+  if (landlord.length === 0) {
+      return res.status(404).send({ error: "Player not found" });
+    }
+    //Ported for ease of understanding
+    landlord = landlord[0];    
+
+    const { username, fname, lname, password } = req.body;
+  
+
+  //check each for correct formatting
+  const invalidFields = [];
+
+  //push to invalidFields array if incorrect formattign
+  if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
+  if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
+  if (password && password.length < 8) invalidFields.push('password');
+
+  
+//if invalidFields has anything, report error.
+
+  if (invalidFields.length) {
+    return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
+  }
+  if (username) landlord.username = username;
+  if (fname) landlord.fname = fname;
+  if (lname) landlord.lname = lname;
+  if (password) landlord.password = password;
+try {
+  const result = await landlordCollection.updateOne({ _id: new ObjectId(landlordId) }, { $set: landlord });
+    //console.log("Player data updated:", result);
+    if (result && result.modifiedCount) {
+        res.status(202).send(`sucessfully modified landlord with id:${landlordId}`);
+    } else {
+        console.error("failed to modify landlord");
+        return res.status(500).send({ error: "failed to modify landlord" });
+    }
+} catch (err) {
+    console.error("Failed to update player:", err);
+    return res.status(500).send({ error: "Failed to update player" });
+}
+
+
+});
+// POST /api/application/:id
+// Purpose: Update application details in the database.
+// Input Parameters: 'id' as a URL parameter; 'studentId', 'propertyId', 'accepted' in request body.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for application not found or update failure.
+// Example Input: /api/application/application_ID with updated details in body.
+// Example Return: Success message with applicationId or error message.
+app.post('/api/application/:id', async(req, res) => {
+  //modified endpoint from Will's hoemwork to fit 
+  console.log('POST /application/:id');
+ 
+  //grab current player data ported to MongoDB 
+  const applicationId = req.params.id;
+  const applicationCollection = client.db(dbConfig.db).collection("application");
+
+  let application = await applicationCollection.findOne({ _id: new ObjectId(applicationId) });
+ // console.log("Player data fetched:", playersData);
+//check mongo return, if player found
+  if (application.length === 0) {
+      return res.status(404).send({ error: "Player not found" });
+    }
+    //Ported for ease of understanding
+    application = application[0];    
+
+    const { studentId, propertyId, accepted } = req.body;
+
+
+ 
+
+  if (studentId) application.studentId = new ObjectId(studentId);
+  if (propertyId) application.propertyId = new ObjectId(propertyId);
+  if (accepted !== undefined) application.accepted = accepted;
+
+try {
+  const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
+    //console.log("Player data updated:", result);
+    if (result && result.modifiedCount) {
+        res.status(202).send(`sucessfully modified application with id:${applicationId}`);
+    } else {
+        console.error("failed to modify application");
+        return res.status(500).send({ error: "failed to modify application" });
+    }
+} catch (err) {
+    console.error("Failed to update player:", err);
+    return res.status(500).send({ error: "Failed to update player" });
+}
+
+
+});
+
+// POST /api/property/:id
+// Purpose: Update property details in the database.
+// Input Parameters: 'id' as a URL parameter; 'landlordId', 'address', 'numberOfRooms', 'rent', 'nickname', 'location', 'securityDeposit', 'summary', 'taken' in request body.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for property not found or update failure.
+// Example Input: /api/property/property_ID with updated details in body.
+// Example Return: Success message with propertyId or error message.
+app.post('/api/property/:id', async(req, res) => {
+  //modified endpoint from Will's hoemwork to fit 
+  console.log('POST /property/:id');
+ 
+  //grab current player data ported to MongoDB 
+  const propertyId = req.params.id;
+  const propertyCollection = client.db(dbConfig.db).collection("property");
+
+  let property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
+ // console.log("Player data fetched:", playersData);
+//check mongo return, if player found
+  if (property.length === 0) {
+      return res.status(404).send({ error: "Player not found" });
+    }
+    //Ported for ease of understanding
+    property = property[0];    
+    const { landlordId, address, numberOfRooms, rent, nickname, location, securityDeposit, summary, taken } = req.body;
+
+ 
+
+    if (landlordId) property.landlordId = new ObjectId(landlordId);
+    if (address) property.address = address;
+    if (numberOfRooms) property.numberOfRooms = numberOfRooms;
+    if (rent) property.rent = rent;
+    if (nickname) property.nickname = nickname;
+    if (location) property.location = location;
+    if (securityDeposit) property.securityDeposit = securityDeposit;
+    if (summary) property.summary = summary;
+    if (taken !== undefined) property.taken = taken;
+
+
+  
+try {
+  const result = await propertyCollection.updateOne({ _id: new ObjectId(propertyId) }, { $set: property });
+    //console.log("Player data updated:", result);
+    if (result && result.modifiedCount) {
+        res.status(202).send(`sucessfully modified property with id:${propertyId}`);
+    } else {
+        console.error("failed to modify property");
+        return res.status(500).send({ error: "failed to modify property" });
+    }
+} catch (err) {
+    console.error("Failed to update player:", err);
+    return res.status(500).send({ error: "Failed to update player" });
+}
+
+
+});
+// POST /api/application/accept/:id
+// Purpose: Accept an application and update the corresponding property status in the database.
+// Input Parameters: 'id' as a URL parameter for the application ID; 'accepted' status in the request query.
+// Return Format: JSON object with a success message including applicationId and propertyId, or an error message.
+// Error Handling: Handles errors for application not found, invalid 'accepted' status, and failures in updating the application or property.
+// Example Input: /api/application/accept/application_ID?accepted=true
+// Example Return: Success message "successfully accepted application with id:application_ID and marked property taken with ID: propertyId" or an error message.
+app.post('/api/application/accept/:id', async(req, res) => {
+  //modified endpoint from Will's hoemwork to fit 
+  console.log('POST /application/accept/:id');
+ 
+  //grab current player data ported to MongoDB 
+  const applicationId = req.params.id;
+  const applicationCollection = client.db(dbConfig.db).collection("application");
+  const propertyCollection = client.db(dbConfig.db).collection("property");
+  let accepted  = req.query.accepted;
+  
+
+  let application = await applicationCollection.findOne({ _id: new ObjectId(applicationId) });
+ 
+ // console.log("Player data fetched:", playersData);
+//check mongo return, if player found
+  if (!application) {
+      return res.status(404).send({ error: "application not found" });
+    }
+    //Ported for ease of understanding
+      
+    
+  if (accepted !== undefined){
+    
+    if(accepted.toLowerCase() === 'true'){
+      accepted = true;
+    }else if(accepted.toLowerCase() === 'false'){
+
+    }else{
+      return res.status(422).send({ error: "accepted query must be either true or false exactly" });
+    }
+    
+  }
+  console.log(application)
+  const propertyId = application.propertyId
+  console.log(propertyId)
+  console.log(typeof accepted)
+
+
+try {
+  const resultApplication = await applicationCollection.updateOne({ _id: application._id }, { $set: {accepted: accepted} });
+  const resultProperty = await propertyCollection.updateOne({ _id: propertyId },{ $set: { taken: accepted } }
+);
+    //console.log("Player data updated:", result);
+    console.log(resultApplication , resultProperty , resultProperty.matchedCount , resultApplication.matchedCount)
+    if (resultApplication && resultProperty && resultProperty.matchedCount && resultApplication.matchedCount) {
+        res.status(202).send(`sucessfully accepted application with id:${applicationId} and marked property taken with ID: ${application.propertyId}`);
+    } else {
+        console.error("failed to modify application or property");
+        return res.status(500).send({ error: "failed to modify application or property" });
+    }
+} catch (err) {
+    console.error("Failed to accept application:", err);
+    return res.status(500).send({ error: "Failed to accept application" });
+}
+
+
+});
 
 // Purpose: Delete a student record
 // Input Parameters: studentId as a URL parameter
@@ -466,342 +902,9 @@ async function deleteFromDb(id, collectionName) {
     }
 }
 
-// Purpose: Update student details in the database.
-// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
-// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
-// Return Format: JSON object with success or error message.
-// Error Handling: Error for student not found, invalid fields, or update failure.
-// Example Input: /api/student/student_ID with updated details in body.
-// Example Return: Success message with studentId or error message.
-app.post('/api/student/:id', async(req, res) => {
-    //modified endpoint from Will's hoemwork to fit 
-    console.log('POST /student/:id');
-   
-    //grab current player data ported to MongoDB 
-    const studentId = req.params.id;
-    const studentCollection = client.db(dbConfig.db).collection("student");
-
-    let student = await studentCollection.findOne({ _id: new ObjectId(studentId) });
-   // console.log("Player data fetched:", playersData);
-  //check mongo return, if player found
-    if (student.length === 0) {
-        return res.status(404).send({ error: "Player not found" });
-      }
-      //Ported for ease of understanding
-      student = student[0];    
- 
-      const { username, fname, lname, password } = req.body;
-    
-  
-    //check each for correct formatting
-    const invalidFields = [];
-  
-    //push to invalidFields array if incorrect formattign
-    if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
-    if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
-    if (password && password.length < 8) invalidFields.push('password');
-  
-    
-  //if invalidFields has anything, report error.
-  
-    if (invalidFields.length) {
-      return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
-    }
-
-    if (username) student.username = username;
-    if (fname) student.fname = fname;
-    if (lname) student.lname = lname;
-    if (password) student.password = password;
-  try {
-    const result = await studentCollection.updateOne({ _id: new ObjectId(studentId) }, { $set: student });
-      //console.log("Player data updated:", result);
-      if (result && result.modifiedCount) {
-          res.status(202).send(`sucessfully modified student with id:${studentId}`);
-      } else {
-          console.error("failed to modify student");
-          return res.status(500).send({ error: "failed to modify student" });
-      }
-  } catch (err) {
-      console.error("Failed to update player:", err);
-      return res.status(500).send({ error: "Failed to update player" });
-  }
-  
-  
-  });
-
-// POST /api/landlord/:id
-// Purpose: Update landlord details in the database.
-// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
-// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
-// Return Format: JSON object with success or error message.
-// Error Handling: Error for landlord not found, invalid fields, or update failure.
-// Example Input: /api/landlord/landlord_ID with updated details in body.
-// Example Return: Success message with landlordId or error message.
-
-app.post('/api/landlord/:id', async(req, res) => {
-    //modified endpoint from Will's hoemwork to fit 
-    console.log('POST /landlord/:id');
-   
-    //grab current player data ported to MongoDB 
-    const landlordId = req.params.id;
-    const landlordCollection = client.db(dbConfig.db).collection("landlord");
-
-    let landlord = await landlordCollection.findOne({ _id: new ObjectId(landlordId) });
-   // console.log("Player data fetched:", playersData);
-  //check mongo return, if player found
-    if (landlord.length === 0) {
-        return res.status(404).send({ error: "Player not found" });
-      }
-      //Ported for ease of understanding
-      landlord = landlord[0];    
- 
-      const { username, fname, lname, password } = req.body;
-    
-  
-    //check each for correct formatting
-    const invalidFields = [];
-  
-    //push to invalidFields array if incorrect formattign
-    if (fname && !/^[a-zA-Z]+$/.test(fname)) invalidFields.push('fname');
-    if (lname && !/^[a-zA-Z]+$/.test(lname)) invalidFields.push('lname');
-    if (password && password.length < 8) invalidFields.push('password');
-  
-    
-  //if invalidFields has anything, report error.
-  
-    if (invalidFields.length) {
-      return res.status(422).send(`invalid fields: ${invalidFields.join(', ')}`);
-    }
-    if (username) landlord.username = username;
-    if (fname) landlord.fname = fname;
-    if (lname) landlord.lname = lname;
-    if (password) landlord.password = password;
-  try {
-    const result = await landlordCollection.updateOne({ _id: new ObjectId(landlordId) }, { $set: landlord });
-      //console.log("Player data updated:", result);
-      if (result && result.modifiedCount) {
-          res.status(202).send(`sucessfully modified landlord with id:${landlordId}`);
-      } else {
-          console.error("failed to modify landlord");
-          return res.status(500).send({ error: "failed to modify landlord" });
-      }
-  } catch (err) {
-      console.error("Failed to update player:", err);
-      return res.status(500).send({ error: "Failed to update player" });
-  }
-  
-  
-  });
-// POST /api/application/:id
-// Purpose: Update application details in the database.
-// Input Parameters: 'id' as a URL parameter; 'studentId', 'propertyId', 'accepted' in request body.
-// Return Format: JSON object with success or error message.
-// Error Handling: Error for application not found or update failure.
-// Example Input: /api/application/application_ID with updated details in body.
-// Example Return: Success message with applicationId or error message.
-app.post('/api/application/:id', async(req, res) => {
-    //modified endpoint from Will's hoemwork to fit 
-    console.log('POST /application/:id');
-   
-    //grab current player data ported to MongoDB 
-    const applicationId = req.params.id;
-    const applicationCollection = client.db(dbConfig.db).collection("application");
-
-    let application = await applicationCollection.findOne({ _id: new ObjectId(applicationId) });
-   // console.log("Player data fetched:", playersData);
-  //check mongo return, if player found
-    if (application.length === 0) {
-        return res.status(404).send({ error: "Player not found" });
-      }
-      //Ported for ease of understanding
-      application = application[0];    
- 
-      const { studentId, propertyId, accepted } = req.body;
 
 
-   
 
-    if (studentId) application.studentId = new ObjectId(studentId);
-    if (propertyId) application.propertyId = new ObjectId(propertyId);
-    if (accepted !== undefined) application.accepted = accepted;
-
-  try {
-    const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
-      //console.log("Player data updated:", result);
-      if (result && result.modifiedCount) {
-          res.status(202).send(`sucessfully modified application with id:${applicationId}`);
-      } else {
-          console.error("failed to modify application");
-          return res.status(500).send({ error: "failed to modify application" });
-      }
-  } catch (err) {
-      console.error("Failed to update player:", err);
-      return res.status(500).send({ error: "Failed to update player" });
-  }
-  
-  
-  });
-
-// POST /api/property/:id
-// Purpose: Update property details in the database.
-// Input Parameters: 'id' as a URL parameter; 'landlordId', 'address', 'numberOfRooms', 'rent', 'nickname', 'location', 'securityDeposit', 'summary', 'taken' in request body.
-// Return Format: JSON object with success or error message.
-// Error Handling: Error for property not found or update failure.
-// Example Input: /api/property/property_ID with updated details in body.
-// Example Return: Success message with propertyId or error message.
-app.post('/api/property/:id', async(req, res) => {
-    //modified endpoint from Will's hoemwork to fit 
-    console.log('POST /property/:id');
-   
-    //grab current player data ported to MongoDB 
-    const propertyId = req.params.id;
-    const propertyCollection = client.db(dbConfig.db).collection("property");
-
-    let property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
-   // console.log("Player data fetched:", playersData);
-  //check mongo return, if player found
-    if (property.length === 0) {
-        return res.status(404).send({ error: "Player not found" });
-      }
-      //Ported for ease of understanding
-      property = property[0];    
-      const { landlordId, address, numberOfRooms, rent, nickname, location, securityDeposit, summary, taken } = req.body;
-
-   
-
-      if (landlordId) property.landlordId = new ObjectId(landlordId);
-      if (address) property.address = address;
-      if (numberOfRooms) property.numberOfRooms = numberOfRooms;
-      if (rent) property.rent = rent;
-      if (nickname) property.nickname = nickname;
-      if (location) property.location = location;
-      if (securityDeposit) property.securityDeposit = securityDeposit;
-      if (summary) property.summary = summary;
-      if (taken !== undefined) property.taken = taken;
-  
-  
-    
-  try {
-    const result = await propertyCollection.updateOne({ _id: new ObjectId(propertyId) }, { $set: property });
-      //console.log("Player data updated:", result);
-      if (result && result.modifiedCount) {
-          res.status(202).send(`sucessfully modified property with id:${propertyId}`);
-      } else {
-          console.error("failed to modify property");
-          return res.status(500).send({ error: "failed to modify property" });
-      }
-  } catch (err) {
-      console.error("Failed to update player:", err);
-      return res.status(500).send({ error: "Failed to update player" });
-  }
-  
-  
-  });
-
-
-  
-//Done
-/// Purpose: Retrieve all properties, a specific property based on propertyId, or all properties for a specific landlord based on landlordId
-// Input Parameters: Optional query parameters propertyId and/or landlordId
-// Return Format: JSON object of property(s) or error message
-// Example Query: /api/property?propertyId=PROPERTY_ID or /api/property?landlordId=LANDLORD_ID
-// Example Return: [{"_id": "PROPERTY_ID", "landlordId": "LANDLORD_ID", "address": "123 Main St", ...}, ...]
-app.get('/api/property', async (req, res) => {
-    console.log("get /api/property");
-    //can take propertyiD or landlord ID
-    //framework based off will's homework
-    const { propertyId, landlordId,numberOfRooms,location} = req.query;
-    console.log(numberOfRooms);
-    if(propertyId && landlordId){
-        return res.status(422).json({ error: "must only search property or landlordid" });
-    }
-
-    try {
-        const propertyCollection = client.db(dbConfig.db).collection("property");
-
-        if (propertyId) {
-            // get a specifc property for an iD
-            const property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
-            
-            if (property) {
-                console.log(`got property with ID: ${propertyId}`);
-
-                res.status(200).json(property);
-            } else {
-
-                console.log(`specific property not found`);
-                res.status(404).json({ message: `Property with ID ${propertyId} not found` });
-            }
-        } 
-        //Not working yet
-        else if (landlordId) {
-            // get the properties for a landlord
-            const properties = await propertyCollection.find({ landlordId: new ObjectId(landlordId) }).toArray();
-            if (properties.length > 0) {
-                console.log(`got properties for landlord with ID: ${landlordId}`);
-                res.status(200).json(properties);
-            } else {
-                console.log(`No properties found for landlord with ID: ${landlordId}`);
-                res.status(404).json({ message: `No properties found for landlord with ID ${landlordId}` });
-            }
-        } else {
-
-            // get all the properties
-            let query = {};
-            if (location) {
-              query.location = {$regex: new RegExp(req.query.location, 'i') }; 
-            }
-         
-            if (numberOfRooms) {
-              query.numberOfRooms = Number(numberOfRooms);
-            }
-            console.log(query);
-            const properties = await propertyCollection.find(query).toArray();
-            if (properties.length > 0) {
-                console.log("got properties");
-                res.status(200).json(properties);
-            } else {
-                console.log("No properties found");
-                res.status(404).json({ message: "No properties found" });
-            }
-        }
-    } catch (err) {
-        console.error("Failed to retrieve properties:", err);
-        res.status(500).json({ error: "Internal server error" });
-    }
-});
-//Done
-// Purpose: Retrieve all applications for a specific property
-// Input Parameters: propertyId as URL parameter
-// Return Format: JSON array of application objects or error message
-// Example URL: /api/property/application/PROPERTY_ID
-// Example Return: [{"_id": "APPLICATION_ID", "studentId": "STUDENT_ID", "propertyId": "PROPERTY_ID", ...}, ...]
-app.get('/api/property/application/:propertyId', async (req, res) => {
-    console.log("GET /api/property/application/:propertyId");
-    const propertyId = req.params.propertyId;
-    //missing property id
-    if (!propertyId) {
-        return res.status(400).json({ error: "Missing propertyId" });
-    }
-
-    try {
-        //gets all applications
-        const applicationCollection = client.db(dbConfig.db).collection("application");
-        // gets all the applicaitons for a specifc property
-        const application = await applicationCollection.find({ propertyId: new ObjectId(propertyId) }).toArray();
-        if (application.length > 0) {
-            
-            console.log(`num applications:  ${application.length} for propertyId: ${propertyId}`);
-            res.status(200).json(application);
-        } else {
-            console.log(`no apps found for propertyid: ${propertyId}`);
-            res.status(404).json({ message: "no applications found for given propertyID" });
-        }
-    } catch (err) {
-        console.error(`failed to get applications for ${propertyId}:`, err);
-        res.status(500).json({ error: "Internal server error" });
-    }
-});
 
 //*************    front end endpoints as below    ************************************************/ 
 /********************** list student users  ***************************************************** */
