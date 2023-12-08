@@ -510,33 +510,24 @@ app.get('/api/property/application/:propertyId', async (req, res) => {
 
 //*************    front end endpoints as below    ************************************************/ 
 /********************** list student users  ***************************************************** */
+/**   */
 app.get('/admin/students.html', async (req, res) => {
   try {
     // Use async/await for the fetch operation
-    const response = await fetch('/api/student', {
+    const response = await fetch('http://localhost:3000/api/student', {
       method: 'GET',
     });
 
     if (!response.ok) {
-      // Handle non-successful responses (e.g., 404, 500)
       throw new Error(`Failed to fetch students: ${response.statusText}`);
     }
-
-    // Parse JSON from the response
-    const students = await response.json();
-
-    console.log("students:", students);
-
-    // Set the content type to HTML
+    const users= await response.json();
+    console.log("students:", users);
     res.status(200).set('Content-Type', 'text/html');
-
-    // Use async/await instead of callbacks
     const render = util.promisify(res.render).bind(res);
-
-    // Assuming you have a layout.ejs file in the 'views' directory
-    // res.render('layout.ejs', {
-    //   body: await render('pages/admin/list_student_user.ejs', { students }),
-    // });
+    res.render('layout.ejs', {
+      body: await render('pages/admin/list_student_user.ejs', { users }),
+    });
 
     res.end();
   } catch (error) {
@@ -547,16 +538,11 @@ app.get('/admin/students.html', async (req, res) => {
 
 
 /********************* create student user from admin side ****************************************************** */
- app.get('/admin/students/create.html', async (req, res) => {
+/**   */ 
+app.get('/admin/students/create.html', async (req, res) => {
     try {
-     
-      // Set the content type to HTML
       res.status(200).set('Content-Type', 'text/html');
-  
-      // use async/await instead of callbacks
       const render = util.promisify(res.render).bind(res);
-  
-      // Assuming you have a layout.ejs file in the 'views' directory
       res.render('layout.ejs', {
         body: await render('pages/admin/create_student_user.ejs')
       });
@@ -566,20 +552,17 @@ app.get('/admin/students.html', async (req, res) => {
       console.error('Error rendering page:', error);
       res.status(500).send('Internal Server Error');
     }
-  });
-
-  
+  });  
   /*****************  trojan home page  ********************************************************** */
-  app.get('/trojanhousing/home.html',async(req,res)=>{
-    res.status(200).json({message: "home page"});
-  })
+  /**   */
+  // app.get('/trojanhousing/home.html',async(req,res)=>{
+  //   res.status(200).json({message: "home page"});
+  // })
   /*****************  trojan about us  ********************************************************** */
+  /**   */
   app.get('/trojanhousing/about.html',async(req,res)=>{
     try {
-      // Set the content type to HTML
       res.status(200).set('Content-Type', 'text/html');
-  
-      // use async/await instead of callbacks
       const render = util.promisify(res.render).bind(res);
       res.render('layout.ejs', {
         body: await render('pages/trojanhousing/about.ejs')
@@ -592,13 +575,10 @@ app.get('/admin/students.html', async (req, res) => {
     }
   })
   /*******************  create landlord user from admin side  ********************************************************************************** */
+  /**   */
   app.get('/admin/landlords/create.html', async (req, res) => {
     try {
-     
-      // Set the content type to HTML
       res.status(200).set('Content-Type', 'text/html');
-  
-      // use async/await instead of callbacks
       const render = util.promisify(res.render).bind(res);
   
       res.render('layout.ejs', {
@@ -612,16 +592,11 @@ app.get('/admin/students.html', async (req, res) => {
     }
   });
 /********************* signup as student user from user side ****************************************************** */
- app.get('/users/students/signup.html', async (req, res) => {
+/**   */ 
+app.get('/users/students/signup.html', async (req, res) => {
   try {
-   
-    // Set the content type to HTML
     res.status(200).set('Content-Type', 'text/html');
-
-    // use async/await instead of callbacks
     const render = util.promisify(res.render).bind(res);
-
-    // Assuming you have a layout.ejs file in the 'views' directory
     res.render('layout.ejs', {
       body: await render('pages/admin/signup_student_user.ejs')
     });
@@ -633,16 +608,11 @@ app.get('/admin/students.html', async (req, res) => {
   }
 });
 /********************* signup as landlord user from user side ****************************************************** */
+/**   */
 app.get('/users/landlords/signup.html', async (req, res) => {
   try {
-   
-    // Set the content type to HTML
     res.status(200).set('Content-Type', 'text/html');
-
-    // use async/await instead of callbacks
     const render = util.promisify(res.render).bind(res);
-
-    // Assuming you have a layout.ejs file in the 'views' directory
     res.render('layout.ejs', {
       body: await render('pages/admin/signup_landlord_user.ejs')
     });

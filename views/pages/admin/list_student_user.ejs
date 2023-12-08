@@ -6,6 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>user List</title>
     <style>
+         .whole-page-background-image{
+            height: 80vh;
+            width: 100vw;
+            background-image: url('/images/USC_Village.jpg');
+            /* background-color: rgba(255,255,255,0.5); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .whole-page-background-color{
+            height: 80vh;
+            width: 100vw;
+            /* background-image: url('/images/USC_great_lawn.jpg'); */
+            background-color: rgba(255,255,255,0.6);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .admin-list {
+            width: 1200px; /* Adjust the width as needed */
+            height: 800px; /* Adjust the height as needed */
+            margin: auto; /* Center the element horizontally */
+            margin-top: 0px; /* Adjust the margin-top to center vertically */
+            border: 2px solid #ffffff; /* Border color (black in this case) */
+            border-radius: 10px; /* Border radius to create a circle */
+            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
+            padding: 5px; /* Adjust the padding as needed */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: top;
+        }
          #search-box {
             padding: 5px;
             font-size: 16px;
@@ -15,41 +47,70 @@
             padding: 5px;
             font-size: 16px;
         }
+        .styled-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .styled-table th {
+            background-color: #f2f2f2;
+        }
+        .admin-page-title{           
+            /* margin-top: 20px; */
+            font-size: 36px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 20px; /* Add some top margin */
+            margin-bottom: 20px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
+       
     </style>
     <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
 </head>
 
 <body>
-    <h1>Current Student User List</h1>
+    <div class="whole-page-background-color">
+   <h1 class="admin-page-title">Current Student User List</h1>
     <!-- <div>
         <label for="search-box">Search: </label>
         <input type="text" id="search-box" name="query" placeholder="Search by keyword in first and last name...">
     </div> -->
-
-    <% if (user && users.length > 0) { %>
-        <table id="user-list">
+    <div class="admin-list">
+    <% if (users && users.length > 0) { %>
+        <table id="user-list" class="styled-table">
             <thread>
-                <th style="padding-right: 10px">#</th>
-                <th style="padding-right: 10px">ID</th>
-                <th style="padding-right: 10px">User Name</th>
-                <th style="padding-right: 10px">First Name</th>
-                <th style="padding-right: 10px">Last Name</th>
-                <th style="padding-right: 10px">Email</th>
-                <th>    </th>
+                <th style="padding-right: 15px">#</th>
+                <th style="padding-right: 15px">ID</th>
+                <th style="padding-right: 15px">User Name</th>
+                <th style="padding-right: 15px">First Name</th>
+                <th style="padding-right: 15px">Last Name</th>
+                <th style="padding-right: 15px">Email</th>
+                <th style="padding-right: 15px"></th>
+                <th style="padding-right: 15px"></th>
             </thread>
             <% let rowCount = 1; %>
             <% users.forEach(user => { %>
                 <tr name="user">
-                    <td style="padding-right: 10px"><%=  rowCount %></td> 
-                    <td style="padding-right: 10px"><%= user._id %></td>
-                    <td style="padding-right: 10px"><%= user.username %></td>
-                    <td style="padding-right: 10px"><%= user.fname %></td>
-                    <td style="padding-right: 10px"><%= user.lname %></td>
-                    <td style="padding-right: 10px"><%= user.email %></td>
+                    <td style="padding-right: 15px"><%=  rowCount %></td> 
+                    <td style="padding-right: 15px"><%= user._id %></td>
+                    <td style="padding-right: 15px"><%= user.username %></td>
+                    <td style="padding-right: 15px"><%= user.fname %></td>
+                    <td style="padding-right: 15px"><%= user.lname %></td>
+                    <td style="padding-right: 15px"><%= user.email %></td>
                     
                     
-                    <td><a href="/user/<%= user.pid %>/edit.html">Edit</a></td>//need to modify after getting the bakend endpoints
-                    <td><a href="/user/<%= user.pid %>/edit.html">Delete</a></td>//need to modify after getting the bakend endpoints
+                    <td style="padding-right: 10px"><a href="/user/<%= user.id %>/edit.html">Edit</a></td>
+                    <td><a href="/api/student/<%= user._id %>">Delete</a></td>
                 </tr>
                 <% rowCount++; %>
             <% }); %>
@@ -58,8 +119,9 @@
         <p>No student user available.</p>
     <% } %>
 
-    <a href="/user/create.html">Create New Student User</a>
-
+        <a href="/user/create.html">Create New Student User</a> 
+    </div>
+    </div>
     <script>
         // Add any additional client-side scripts if needed
         document.getElementById('search-box').addEventListener('keyup', (event) => {
