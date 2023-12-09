@@ -149,6 +149,7 @@
                 if (answer) {
                     var role = document.querySelector('input[name="role"]:checked').value;
                     if(role == "student"){
+                        // var ID = document.getElementById('username').value;
                         window.location.href = '/student/list_property.html'
                     }else if(role =="landlord"){
                         var ID = document.getElementById('username').value;
@@ -156,10 +157,6 @@
                     }else if(role == "admin"){
                         window.location.href = '/admin/students.html'
                     }
-<<<<<<< HEAD
-                   
-=======
->>>>>>> f77dd8e897d0a7cdd94c2eb7f454ca0edaa50829
                 } else {
                     alert('Login failed. Invalid username or password.');
                 }

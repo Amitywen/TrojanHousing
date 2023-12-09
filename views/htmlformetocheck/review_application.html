@@ -53,7 +53,7 @@
                             <td style="padding-right: 15px"><%= application.studentId %></td>
                             <td style="padding-right: 15px"><%= application.accepted ? 'Yes' : 'No' %></td>
                             <td><button class="Accept" application-id="<%= application._id %>">Accept</button></td>
-                            <td><button class="Delete" applicationID ="<%= application._id %>">Delete</button></td>
+                            <td><button class="Delete" application-id ="<%= application._id %>">Delete</button></td>
                         </tr>
                         <% rowCount++; %>
                     <% }); %>
