@@ -165,7 +165,7 @@ app.get('/api/student/one', async (req, res) => {
 
 app.get('/api/landlord/one', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
- console.log("GET /api/landlord");
+ console.log("GET /api/landlord/one");
  try {
      //grab all the students and put them in an array
      const landlordCollection = client.db(dbConfig.db).collection("landlord");
@@ -176,9 +176,9 @@ app.get('/api/landlord/one', async (req, res) => {
      }
 
      const landlords = await landlordCollection.findOne({ username: query.username });
-
+     console.log(landlords);
      if (landlords) {
-         console.log(`got ${landlords.length} landlord`);
+         console.log(`got ${landlords} landlord`);
          res.status(200).json(landlords);
          console.log("test landlords:",landlords)
      } else {
@@ -1283,8 +1283,25 @@ app.get('/student/:id/apply.html', (req, res) => {
 /******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
+// app.get('/users/:id/createproperty.html', async (req, res) => {
+//   try {
+//     var LandlordId = req.params.id;
+//     res.status(200).set('Content-Type', 'text/html');
+//     const render = util.promisify(res.render).bind(res);
+//     res.render('layout.ejs', {
+//       body: await render('pages/landlord/housing_create.ejs',{LandlordId})
+//     });
+//     res.end();
+
+//   } catch (error) {
+//     console.error('Error rendering page:', error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
 app.get('/users/:id/createproperty.html', async (req, res) => {
   try {
+    // 6573a5293c1f51347ee15217
     var LandlordId = req.params.id;
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
@@ -1299,11 +1316,13 @@ app.get('/users/:id/createproperty.html', async (req, res) => {
   }
 });
 
+
 app.get('/users/:id/list_property.html', (req, res) => {
-  console.log(LandlordId);
+  // console.log(LandlordId);
+  // 6573a5293c1f51347ee15217
   var LandlordId = req.params.id;
   // fetch data from the api
-  fetch(`http://localhost:3000/api/property?propertyID=${LandlordId}`, {
+  fetch(`http://localhost:3000/api/property?landlordId=${LandlordId}`, {
     method: 'GET',
   })
   .then(response => {
