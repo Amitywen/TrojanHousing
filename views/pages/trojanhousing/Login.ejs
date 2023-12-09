@@ -149,9 +149,37 @@
                 if (answer) {
                     var role = document.querySelector('input[name="role"]:checked').value;
                     if(role == "student"){
+                        // var ID = document.getElementById('username').value;
                         window.location.href = '/student/list_property.html'
                     }else if(role =="landlord"){
-                        var ID = document.getElementById('username').value;
+                        var username = document.getElementById('username').value;
+
+                        const ID = get_ID(username)
+
+                        async function get_ID(username){
+                            try {
+                            let apiUrl = '/api/landlord/one' //making sure the api
+                            apiUrl += `?username=${username}`;
+
+                            const response = await fetch(apiUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            });
+
+                            if (response.ok) {
+                                // Form submission successful, you can redirect the user
+                                return response._id
+                                // checknig the the href is right or not.
+                            } else {
+                                const errorData = await response.json();
+                                alert(`Server Error: ${errorData.message}`);
+                            }
+                            } catch (error) {
+                            alert('An error occurred while communicating with the server.');
+                            }
+                        }
                         window.location.href = 'users/${ID}/list_property.html'
                     }else if(role == "admin"){
                         window.location.href = '/admin/students.html'
