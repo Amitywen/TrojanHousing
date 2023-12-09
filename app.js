@@ -165,7 +165,7 @@ app.get('/api/student/one', async (req, res) => {
 
 app.get('/api/landlord/one', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
- console.log("GET /api/landlord");
+ console.log("GET /api/landlord/one");
  try {
      //grab all the students and put them in an array
      const landlordCollection = client.db(dbConfig.db).collection("landlord");
@@ -1300,8 +1300,9 @@ app.get('/users/:id/createproperty.html', async (req, res) => {
 });
 
 app.get('/users/:id/list_property.html', (req, res) => {
-  console.log(LandlordId);
-  var LandlordId = req.params.id;
+  // console.log(LandlordId);
+  // var LandlordId = req.params.id;
+  
   // fetch data from the api
   fetch(`http://localhost:3000/api/property?propertyID=${LandlordId}`, {
     method: 'GET',
