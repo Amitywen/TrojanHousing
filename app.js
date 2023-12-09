@@ -1047,7 +1047,7 @@ app.get('/admin/students/create.html', async (req, res) => {
     }
   })
   /*******************  create landlord user from admin side  ********************************************************************************** */
-  /**   */
+  /**  by Qingyu */
   app.get('/admin/landlords/create.html', async (req, res) => {
     try {
       res.status(200).set('Content-Type', 'text/html');
@@ -1365,6 +1365,7 @@ console.log(`To look up all landlord user as manager: http://localhost:3000/admi
 console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
 console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
 console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
+console.log(`empty page for 404:/trojanhousing/emptypage.html`)
 console.log('----------------------------------------------------------------------------------');
 console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
 console.log('To see the property list from the student end: http://localhost:3000/student/list_property.html')
