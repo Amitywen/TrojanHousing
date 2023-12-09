@@ -131,33 +131,36 @@
         
                 newHousingForm.addEventListener('submit', async (event) => {
                     event.preventDefault(); // Prevent the default form submission
-        
-                    // Retrieve form input values
-                    const landlordId = document.getElementById('landlordId');
-                    const address = document.getElementById('address');
-                    const numberOfRooms = document.getElementById('numberOfRooms');
-                    const rent = document.getElementById('rent');
-                    const securityDeposit = document.getElementById('securityDeposit');
-                    const summary = document.getElementById('summary');
-                    const nickname = document.getElementById('nickname');
-                    const location = document.getElementById('location');
-        
-                    // Construct the request body
-                    const requestBody = {
-                        landlordId: landlordId.value,
-                        address: address.value,
-                        numberOfRooms: numberOfRooms.value,
-                        rent: rent.value,
-                        securityDeposit: securityDeposit.value,
-                        summary: summary.value,
-                        nickname: nickname.value,
-                        location: location.value
-                    };
-        
-                    console.log('fromrequest', requestBody);
-        
-                    // Send the data to the server using fetch
                     try {
+        
+                        // Retrieve form input values
+                        const landlordId = '<%= LandlordId %>';
+                        // const landlordId = ${LandlordId}
+                        const address = document.getElementById('address');
+                        const numberOfRooms = document.getElementById('numberOfRooms');
+                        const rent = document.getElementById('rent');
+                        const securityDeposit = document.getElementById('securityDeposit');
+                        const summary = document.getElementById('summary');
+                        const nickname = document.getElementById('nickname');
+                        const location = document.getElementById('location');
+
+                        // Construct the request body
+                        const requestBody = {
+                            landlordId: landlordId,
+                            address: address.value,
+                            numberOfRooms: numberOfRooms.value,
+                            rent: rent.value,
+                            securityDeposit: securityDeposit.value,
+                            summary: summary.value,
+                            nickname: nickname.value,
+                            location: location.value
+                        };
+
+                        console.log('fromrequest', requestBody);
+                        console.log(LandlordId)
+
+                        // Send the data to the server using fetch
+
                         const response = await fetch('/api/property', {
                             method: 'POST',
                             headers: {
@@ -168,7 +171,8 @@
         
                         if (response.ok) {
                             // Form submission successful, you can redirect the user
-                            window.location.href = `/users/${requestBody.landlordId}/list_property.html`;
+                            console.log(LandlordId)
+                            window.location.href = `/users/${LandlordId}/list_property.html`;
                         } else {
                             const errorData = await response.json();
                             alert(`Server Error: ${errorData.message}`);
@@ -186,10 +190,11 @@
         <!-- <h1>Create New Housing</h1> -->
         <h1 class="admin-page-title"><br>Create New Housing</h1>
         <div class = "creating">
-            <form id="newhousing" action="/api/property" method="POST">
-                <label for="landlordId">Landlord ID:</label>
+            <!-- <form id="newhousing" action="/api/property" method="POST"> -->
+            <form id="newhousing"> 
+                <!-- <label for="landlordId">Landlord ID:</label>
                 <input type="text" id="landlordId" name="landlordId" required>
-                <br>
+                <br> -->
                 <label for="address">address:</label>
                 <input type="text" id="address" name="address" required> 
                 <!-- <select id="lnumberOfRooms" name="numberOfRooms">

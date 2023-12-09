@@ -129,6 +129,7 @@
                 .then(response => response.json())
                 .then(replaceHousingList)
                 .catch(error => {
+                    replaceHousingList([])
                     console.error('Error fetching data:', error);
                 });
         });

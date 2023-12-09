@@ -18,12 +18,39 @@
                 // const propertyId = document.getElementById('propertyId');
                 const url = new URL(window.location.href)
                 const propertyId = url.pathname.split('/')[2];
-                const studentId = document.getElementById('studentId');
+                var username = document.getElementById('username').value;
+
+                const studentID = get_studentID(username)
+
+                async function get_studentID(username){
+                    try {
+                    let apiUrl = '/api/student/one' //making sure the api
+                    apiUrl += `?username=${username}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        // Form submission successful, you can redirect the user
+                        return response.studentId
+                        // checknig the the href is right or not.
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Server Error: ${errorData.message}`);
+                    }
+                    } catch (error) {
+                        alert('An error occurred while communicating with the server.');
+                    }
+                    }
 
                 // Construct the request body
                 const requestBody = {
                     propertyId: propertyId.value,
-                    studentId: studentId.value,
+                    studentId: studentID,
                 };
 
                 // Send the data to the server using fetch
@@ -198,8 +225,8 @@
 
         <form id="ApplyForm" action="/api/application" method="POST">
             <p>Please enter your userID and submit it after reviewing.</p>
-            <label for="studentId">studentId:</label>
-            <input type="text" id="studentId" name="studentId" required>
+            <label for="username">username</label>
+            <input type="text" id="username" name="username" required>
             <br>
             <br>
             <!-- <input type="hidden" name="redirect" value="/players.html"> -->

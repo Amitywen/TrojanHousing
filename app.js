@@ -134,6 +134,62 @@ client.connect(err => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+app.get('/api/student/one', async (req, res) => {
+  //taken and changed slightly from Will's Homeworks
+ console.log("GET /api/student");
+ try {
+     //grab all the students and put them in an array
+     const studentCollection = client.db(dbConfig.db).collection("student");
+
+     let query = {};
+     if (req.query.username) {
+         query.username = req.query.username; 
+     }
+
+     const students = await studentCollection.findOne({ username: query.username });
+
+     if (students) {
+         console.log(`got ${students.length} student`);
+         res.status(200).json(students);
+         console.log("test students:",students._id)
+     } else {
+         console.log("students not found");
+         res.status(404).json({ message: "Students not found" });
+     }
+ } catch (err) {
+     console.error("failed to get students:", err);
+     res.status(500).json({ error: "Internal server error" });
+ }
+});
+
+app.get('/api/landlord/one', async (req, res) => {
+  //taken and changed slightly from Will's Homeworks
+ console.log("GET /api/landlord");
+ try {
+     //grab all the students and put them in an array
+     const landlordCollection = client.db(dbConfig.db).collection("landlord");
+
+     let query = {};
+     if (req.query.username) {
+         query.username = req.query.username; 
+     }
+
+     const landlords = await landlordCollection.findOne({ username: query.username });
+
+     if (landlords) {
+         console.log(`got ${landlords.length} landlord`);
+         res.status(200).json(landlords);
+         console.log("test landlords:",landlords)
+     } else {
+         console.log("landlords not found");
+         res.status(404).json({ message: "landlords not found" });
+     }
+ } catch (err) {
+     console.error("failed to get students:", err);
+     res.status(500).json({ error: "Internal server error" });
+ }
+});
 //DONE
 // GET /api/homeinfo
 // Purpose: Retrieve counts of students, properties, and landlords for homepage information.
@@ -1227,12 +1283,13 @@ app.get('/student/:id/apply.html', (req, res) => {
 /******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
-app.get('/users/landlords/createproperty.html', async (req, res) => {
+app.get('/users/:id/createproperty.html', async (req, res) => {
   try {
+    var LandlordId = req.params.id;
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
-      body: await render('pages/landlord/housing_create.ejs')
+      body: await render('pages/landlord/housing_create.ejs',{LandlordId})
     });
     res.end();
 
@@ -1243,22 +1300,23 @@ app.get('/users/landlords/createproperty.html', async (req, res) => {
 });
 
 app.get('/users/:id/list_property.html', (req, res) => {
-  var pid = req.params.id;
-  console.log(pid);
+  console.log(LandlordId);
+  var LandlordId = req.params.id;
   // fetch data from the api
-  fetch(`http://localhost:3000/api/property?propertyID=${pid}`, {
+  fetch(`http://localhost:3000/api/property?propertyID=${LandlordId}`, {
     method: 'GET',
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`);
+      // throw new Error(`Failed to fetch data: ${response.statusText}`);
+      return []
     }
-    return response.json();
   })
   .then(Housinglist => {
     console.log(Housinglist);
+    const LandlordId = req.params.id;
     // render list_student.ejs and then layout.ejs
-    res.render('pages/landlord/list_landlord.ejs', { Housinglist }, (err, html) => {
+    res.render('pages/landlord/list_landlord.ejs', { Housinglist, LandlordId }, (err, html) => {
       if (err) {
         console.error('Error rendering list_student:', err);
         return res.status(500).send('Internal Server Error');
@@ -1274,10 +1332,11 @@ app.get('/users/:id/list_property.html', (req, res) => {
 
 app.get('/users/:id/modify_property', async (req, res) => {
   try {
+    var pid = req.params.id;
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
-      body: await render('pages/landlord/housing_edit.ejs')
+      body: await render('pages/landlord/housing_edit.ejs',{pid})
     });
     res.end();
 
@@ -1286,7 +1345,6 @@ app.get('/users/:id/modify_property', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 // Inside your Express route handler
 app.get('/property/:propertyId/applications', async (req, res) => {
@@ -1337,6 +1395,8 @@ app.get('/login.html', async (req, res) => {
   }
 });  
 /** ***********************landlord frontend endpoints end ****************************/
+
+
 //error handler from demo handout
 app.use((err,req,res,next) => {
   console.error(err);
@@ -1367,10 +1427,10 @@ console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
 console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
 console.log(`empty page for 404:/trojanhousing/emptypage.html`)
 console.log('----------------------------------------------------------------------------------');
-console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
-console.log('To see the property list from the student end: http://localhost:3000/student/list_property.html')
-console.log('For student to apply: http://localhost:3000/student/:id/apply.html')
-console.log('Landlord creates the property: http://localhost:3000/users/landlords/createproperty.html')
-console.log('To see the property list from the landlord end: http://localhost:3000/users/:id/list_property.html')
-console.log('For landlord to modify the property: http://localhost:3000/users/:id/modify_property.html')
-console.log('For landlord to see the property application http://localhost:3000/property/:propertyId/applications')
+// console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
+// console.log('To see the property list from the student end: http://localhost:3000/student/list_property.html')
+// console.log('For student to apply: http://localhost:3000/student/:id/apply.html')
+// console.log('Landlord creates the property: http://localhost:3000/users/landlords/createproperty.html')
+// console.log('To see the property list from the landlord end: http://localhost:3000/users/:id/list_property.html')
+// console.log('For landlord to modify the property: http://localhost:3000/users/:id/modify_property.html')
+// console.log('For landlord to see the property application http://localhost:3000/property/:propertyId/applications')
