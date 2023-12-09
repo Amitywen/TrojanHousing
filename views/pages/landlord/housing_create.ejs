@@ -134,7 +134,8 @@
                     try {
         
                         // Retrieve form input values
-                        const landlordId = '<%= LandlordId %>';
+                        const landlordId = document.getElementById('landlordId');
+                        console.log(landlordId)
                         // const landlordId = ${LandlordId}
                         const address = document.getElementById('address');
                         const numberOfRooms = document.getElementById('numberOfRooms');
@@ -172,7 +173,7 @@
                         if (response.ok) {
                             // Form submission successful, you can redirect the user
                             console.log(LandlordId)
-                            window.location.href = `/users/${LandlordId}/list_property.html`;
+                            // window.location.href = `/users/${LandlordId}/list_property.html`;
                         } else {
                             const errorData = await response.json();
                             alert(`Server Error: ${errorData.message}`);
@@ -192,9 +193,9 @@
         <div class = "creating">
             <!-- <form id="newhousing" action="/api/property" method="POST"> -->
             <form id="newhousing"> 
-                <!-- <label for="landlordId">Landlord ID:</label>
+                <label for="landlordId">Landlord ID:</label>
                 <input type="text" id="landlordId" name="landlordId" required>
-                <br> -->
+                <br>
                 <label for="address">address:</label>
                 <input type="text" id="address" name="address" required> 
                 <!-- <select id="lnumberOfRooms" name="numberOfRooms">
