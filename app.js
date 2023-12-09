@@ -147,12 +147,12 @@ app.get('/api/student/one', async (req, res) => {
          query.username = req.query.username; 
      }
 
-     const students = await studentCollection.findOne(query).toArray();
+     const students = await studentCollection.findOne({ username: query.username });
 
      if (students) {
          console.log(`got ${students.length} student`);
          res.status(200).json(students);
-         console.log("test students:",students)
+         console.log("test students:",students._id)
      } else {
          console.log("students not found");
          res.status(404).json({ message: "Students not found" });
@@ -175,7 +175,7 @@ app.get('/api/landlord/one', async (req, res) => {
          query.username = req.query.username; 
      }
 
-     const landlords = await landlordCollection.findOne(query).toArray();
+     const landlords = await landlordCollection.findOne({ username: query.username });
 
      if (landlords) {
          console.log(`got ${landlords.length} landlord`);
