@@ -58,6 +58,7 @@
        border: 1px solid #dddddd;
        text-align: left;
        padding: 8px;
+       text-align: center;
    }
 
    .styled-table th {
@@ -114,23 +115,126 @@
     <div class="whole-page-background-color">
         <!-- <h1 class="admin-page-title">A Landlord User List</h1> -->
   <h1 class="admin-page-title">Applications for Property ID: <%= propertyId %></h1>
-  
-  <% if (applications.length > 0) { %>
-    <ul>
-      <% applications.forEach(application => { %>
-        <li>
-          <p>Application ID: <%= application._id %></p>
-          <p>Created At: <%= application.created_at %></p>
-          <p>Student ID: <%= application.studentId %></p>
-          <p>Accepted: <%= application.accepted ? 'Yes' : 'No' %></p>
-        </li>
-      <% }); %>
-    </ul>
-  <% } else { %>
-    <p>No applications found for this property ID.</p>
-  <% } %>
+
+
+    <div class="admin-list">
+        <%  if (applications.length > 0) { %>
+            <table id="user-list" class="styled-table">
+                
+                <thread>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Created At</th>
+                        <th>Student ID</th>
+                        <th>Accepted status</th>
+                        <th>Accepted?</th>
+                        <th>Delete?</th>
+                    </tr>
+                </thread>
+                <tbody>
+                <% applications.forEach(application => { %>
+                            <tr>
+                                <td><%= application._id %></td>
+                                <td><%= application.created_at %></td>
+                                <td> <%= application.studentId %></td>
+                                <td><%= application.accepted ? 'Yes' : 'No' %></td>
+                                <td><button id="acceptButton" class="acceptButton" data-property-id="<%= application._id %>">Accept</button></td>
+                                <td><button id="deleteButton" class="deleteButton" data-property-id="<%= application._id %>">Delete</button></td>
+                            </tr>
+                <% }); %>
+            </tbody>
+            </table>
+        <% } else { %>
+            <p>No applications found for this property ID.</p>
+        <% } %>
+            
+        <button id="back" class="back">Back to list</button>
+        </div>
+
+
 </div>
 </div>
-  <!-- Add any additional content or scripts here -->
+    <script>
+            document.getElementById('back').addEventListener('click', async (event) => {
+                event.preventDefault();
+                const url = new URL(window.location.href);
+                const propertyId = url.pathname.split('/')[2];
+                try {
+                    const response = await fetch(`/api/property?propertyId=${propertyId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        const newURL = `/users/${responseData.landlordId}/list_property.html`;
+                        // Navigate to the new URL
+                        window.location.href = newURL;
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(`Server Error: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+
+            })
+            document.getElementById('acceptButton').addEventListener('click', async (event) => {
+                event.preventDefault();
+                const applicationId = document.getElementById('acceptButton').getAttribute('data-property-id');
+                const requestBody = {
+                    accepted: true
+                };
+
+                 console.log('fromrequest',requestBody)
+
+                try {
+                    const response = await fetch(`/api/application/accept/${applicationId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody),
+                    });
+                    if(response.ok){
+                        const response2 = await fetch(`api/application/${applicationId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                        },
+                            body: JSON.stringify(requestBody),
+                        });
+                    }
+                        alert('Accepted');
+                        window.location.reload(); 
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            document.getElementById('deleteButton').addEventListener('click', async (event) => {
+                event.preventDefault();
+                const applicationyId = document.getElementById('deleteButton').getAttribute('data-property-id');
+
+                try {
+                    const response = await fetch(`/api/application/${applicationyId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                        alert('Deleted');
+                        window.location.reload(); 
+                    // } else {
+                    //     console.error(`Failed to delete property with ID ${propertyId}`);
+                    //     // Handle deletion failure
+                    // }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+    </script>
+
 </body>
 </html>

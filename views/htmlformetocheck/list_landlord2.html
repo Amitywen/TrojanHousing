@@ -11,25 +11,11 @@
     <style>
         /* Your existing CSS styles */
         .container {
-            /* display: flex;
-            justify-content: center; */
-            /* align-items: center; */
-            /*height: 100vh; /* Adjust as needed */
-            /* font-family: 'Courier New', Courier, monospace; */
-            width: 1200px; /* Adjust the width as needed */
-            height: 800px; /* Fixed height to prevent stretching */
-            overflow-y: auto; /* Add a scrollbar if the content overflows vertically */
-            margin: auto; /* Center the element horizontally */
-            margin-top: 0px; /* Adjust the margin-top to center vertically */
-            border: 2px solid #ffffff; /* Border color (black in this case) */
-            border-radius: 10px; /* Border radius to create a circle */
-            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
-            padding: 5px; /* Adjust the padding as needed */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
             display: flex;
-            flex-direction: column; /* Stack child elements vertically */
-            justify-content: flex-start; /* Align child elements to the start of the container */
-            align-items: center; /* Center child elements horizontally */
+            justify-content: center;
+            /* align-items: center; */
+            height: 100vh; /* Adjust as needed */
+            font-family: 'Courier New', Courier, monospace;
         }
         .admin-page-title{           
             /* margin-top: 20px; */
@@ -42,35 +28,17 @@
             /* Add more styles as needed */
 
         }
-        .styled-table td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        .styled-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .styled-table th {
-            background-color: #f2f2f2;
-        }
 
         table {
             border-collapse: separate;
             border-spacing: center;
-            margin-top: 5px; /* Adjust top margin as needed */
+            margin-top: 20px; /* Adjust top margin as needed */
             width:100%
-        } 
-        /* .styled-table {
-             border-collapse: collapse;
-            width: 100%;
-        } */
+        }
 
         td, th {
             vertical-align: middle;
-            text-align: center;
         }
-
 
         .selection {
             display: flex;
@@ -99,7 +67,6 @@
             <div class = selection>
                 <h4>Location:</h4>
                 <select id="Location">
-                    <option value="">All</option>
                     <option value="downtown">Downtown</option>
                     <option value="ktown">Ktown</option>
                     <option value="UPS">UPS area</option>
@@ -111,10 +78,9 @@
                 <!-- <option value="false">Unavaliable Housing</option> -->
                 </select><br></br>
             </div>
-            
-            
+    
             <div class="container">
-                <table class="styled-table">
+                <table>
                     <thead>
                         <tr>
                             <th>PropertyId</th>
@@ -150,29 +116,17 @@
             const housingList = document.querySelector('.housing-list');
             console.log( housingList)
         });
-
-        document.getElementById('nickname').addEventListener('keyup', (event) => {
-            const searchQuery = event.target.value
-            const location = document.getElementById('Location').value;
-            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}&location${location}`, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(replaceHousingList)
-            .catch(error => { 
-                console.error('Error fetching data:', error);
-            });
-        });
-
+         //functionality doesn't work yet
         document.getElementById('Location').addEventListener('change', (event) => {
-            const location = document.getElementById('Location').value;
+            
+            const houseType = document.getElementById('Housetype').value;
 
             const selectedValue = event.target.value;
             let apiUrl = '/api/property';
-            apiUrl += `?houseType=${selectedValue}`;
+            apiUrl += `?location=${selectedValue}`;
 
-            if (location !== '*') {
-                apiUrl += `&location=${location}`;
+            if (houseType !== '*') {
+                apiUrl += `&houseType=${houseType}`;
             }
 
             fetch(apiUrl)
@@ -182,6 +136,37 @@
                     console.error('Error fetching data:', error);
                 });
         });
+         //functionality doesn't work yet
+        document.getElementById('nickname').addEventListener('keyup', (event) => {
+            const searchQuery = event.target.value
+            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(replaceHousingList)
+            .catch(error => { 
+                console.error('Error fetching data:', error);
+            });
+        });
+
+        // document.getElementById('houseType').addEventListener('change', (event) => {
+        //     const location = document.getElementById('Location').value;
+
+        //     const selectedValue = event.target.value;
+        //     let apiUrl = '/api/property';
+        //     apiUrl += `?houseType=${selectedValue}`;
+
+        //     if (location !== '*') {
+        //     apiUrl += `&location=${location}`;
+        //     }
+
+        //     fetch(apiUrl)
+        //         .then(response => response.json())
+        //         .then(replaceHousingList)
+        //         .catch(error => {
+        //             console.error('Error fetching data:', error);
+        //         });
+        // });
 
         function replaceHousingList(housing) {
             const housingList = document.querySelector('.housing-list');
@@ -190,7 +175,6 @@
             housing.forEach((unit) => {
                 const houseRow = document.createElement('tr');
                 houseRow.innerHTML = `
-                    <td>${unit._id}</td>
                     <td>${unit.address}</td>
                     <td>${unit.numberOfRooms}</td>
                     <td>${unit.nickname}</td>

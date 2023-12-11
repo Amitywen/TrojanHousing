@@ -67,55 +67,25 @@
             /* Add more styles as needed */
 
         }
+        .deleteButton{
+            width: 100px; /* Adjust the width as needed */
+            height: 30px; /* Adjust the height as needed */
+            background-color: #990000; /* Light beige background color */
+            color:#ffffff;
+            display: block;
+            margin: auto; /* Center the button horizontally */
+            /* justify-content: center;
+            align-items: center; */
+        }
         </style>
     <meta charset="UTF-8">
     <title>Edit Housing</title>
-    <link rel="stylesheet" href="/styles.css">
     <script>
         document.addEventListener('DOMContentLoaded',async () => {
             const url = new URL(window.location.href)
             const propertyId = url.pathname.split('/')[2];
             const modifyhousing = document.getElementById('modifyhousing');
-
-            // const response = await fetch(`/api/property?propertyId=${propertyId}`, {
-            //     method: 'GET',
-            //     headers: {
-            //     'Content-Type': 'application/json',
-            //     }
-            // }).then(response => response.json())
-            // .then(setting)
-            // .catch(error => {
-            //         console.error('Error fetching data:', error);
-            //     });
-
-            // function setting(input){
-            //     console.log('print by setting')
-            //     console.log(input)
-            // }
-            // console.log(responseID)
-            deleteButton.addEventListener('click', async () => {
-            try {
-
-                const response = await fetch(`/api/property/${propertyId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.ok) {
-                    console.log(`Property with ID ${propertyId} deleted successfully`);
-                    // Redirect to a relevant page after deletion
-                    // window.location.href = '/users/${landlordId}/list_property.html';
-                    alert('Deleted')
-                } else {
-                    console.error(`Failed to delete property with ID ${propertyId}`);
-                    // Handle deletion failure
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            });
+            const deleteButton = document.getElementById('deleteButton');
 
             modifyhousing.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent the default form submission
@@ -126,7 +96,7 @@
                 // Perform your client-side validation here
                 const address = document.getElementById('address');
                 const numberOfRooms = document.getElementById('numberOfRooms');
-                const rent = document.getElementById('rent');
+                const rent = document.getElementById('rent')|| '';
                 const securityDeposit= document.getElementById('securityDeposit');
                 const summary = document.getElementById('summary');
                 const nickname = document.getElementById('nickname');
@@ -158,10 +128,14 @@
                         // Form submission successful, you can redirect the user
                         // const landlordId = document.getElementById('landlordId');
                         // console.log(`propertyId with ID ${propertyId} modified successfully`);
-                        // window.location.href = `/users/${userId}/list_property.html`;
-                        // this has problem
-                        // window.location.href = '/users/${landlordId}/list_property.html';
+                        const responseData = await response.json();
+                        console.log(responseData)
                         alert('Modified')
+                        // Construct the URL string with the landlordId
+                        const newURL = `/users/${responseData.landlordId}/list_property.html`;
+
+                        // Navigate to the new URL
+                        window.location.href = newURL;
                     } else {
                         const errorData = await response.json();
                         alert(`Server Error: ${errorData.message}`);
@@ -171,23 +145,22 @@
                 }
             });
         });
+
+
     </script>
 </head>
 <body>
+
     <div class="whole-page-background-image">
         <div class="whole-page-background-color">
-        <h1 class="admin-page-title"><br>Edit Property</h1>
-                <div class = "creating">
+            <h1 class="admin-page-title"><br>Edit Property</h1>
+            <div class="creating">
                 <form id="modifyhousing">
-                    <!-- <label for="landlordId">Landlord ID:</label>
-                    <input type="text" id="landlordId" name="landlordId">
-                    <br> -->
-                    <br>
                     <label for="address">address:</label>
                     <input type="text" id="address" name="address"> 
-                <br>
                     <br>
-                    <label for="numberOfRooms">numberOfRooms:</label>
+                    <br>
+                    <label for="numberOfRooms">number Of Rooms:</label>
                     <input type="number" id="numberOfRooms" name="numberOfRooms">
                     <br>
                     <br>
@@ -195,7 +168,7 @@
                     <input type="number" id="rent" name="rent"> 
                     <br>
                     <br>
-                    <label for="securityDeposit">securityDeposit:</label>
+                    <label for="securityDeposit">security Deposit:</label>
                     <input type="number" id="securityDeposit" name="securityDeposit">
                     <br>
                     <br>
@@ -221,11 +194,14 @@
                     <br>
                     <br>
                     <button type="submit"> Save Changes </button>
-
-                    <button id="deleteButton" class="deleteButton">Delete</button>
+                </form>
             </div>
-        <!-- <button class="deleteButton">Delete</button> -->
-        <!-- <button id="deleteButton" class="deleteButton">Delete</button> -->
+            <!-- <div>
+                <button id="deleteButton" class="deleteButton">Delete</button>
+            </div> -->
+        </div>
+    </div>
+
     </div>
 </div>
     </body>

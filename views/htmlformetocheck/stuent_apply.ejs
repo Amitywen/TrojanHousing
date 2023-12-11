@@ -8,17 +8,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
             const url = new URL(window.location.href)
+            consoel.log('url',url)
             const propertyId = url.pathname.split('/')[2];
-            console.log(propertyId)
+            // console.log(propertyId)
 
             ApplyForm.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent the default form submission
 
                 // Perform your client-side validation here
-                // const propertyId = document.getElementById('propertyId');
                 const url = new URL(window.location.href)
-                const propertyId = url.pathname.split('/')[2];
+                // const propertyId = url.pathname.split('/')[2];
                 var username = document.getElementById('username').value;
+                console.log('username from type in',username)
 
                 const studentID = get_studentID(username)
 
@@ -33,7 +34,7 @@
                             'Content-Type': 'application/json',
                         },
                     });
-
+                    console.log('response from userID',response)
                     if (response.ok) {
                         // Form submission successful, you can redirect the user
                         return response.studentId
@@ -49,7 +50,7 @@
 
                 // Construct the request body
                 const requestBody = {
-                    propertyId: propertyId.value,
+                    propertyId: propertyId,
                     studentId: studentID,
                 };
 
@@ -65,6 +66,7 @@
 
                     if (response.ok) {
                         // Form submission successful, you can redirect the user
+                        alert('apply successful')
                         window.location.href = '/student/list_property.html';
                         // checknig the the href is right or not.
                     } else {

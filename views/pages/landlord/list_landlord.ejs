@@ -5,51 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List_landlord</title>
-    <script>
-        // document.addEventListener('DOMContentLoaded', async() => {
-        //     const url = new URL(window.location.href)
-        //     const propertyId = url.pathname.split('/')[2];
-        //     console.log(propertyId)
-
-        //     ApplyForm.addEventListener('submit', async (event) => {
-        //         event.preventDefault(); // Prevent the default form submission
-
-        //         // Perform your client-side validation here
-        //         // const propertyId = document.getElementById('propertyId');
-        //         const url = new URL(window.location.href)
-        //         const propertyId = url.pathname.split('/')[2];
-        //         const studentId = document.getElementById('studentId');
-
-        //         // Construct the request body
-        //         const requestBody = {
-        //             propertyId: propertyId.value,
-        //             studentId: studentId.value,
-        //         };
-
-        //         // Send the data to the server using fetch
-        //         try {
-        //             const response = await fetch(`/api/application`, {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                 },
-        //                 body: JSON.stringify(requestBody),
-        //             });
-
-        //             if (response.ok) {
-        //                 // Form submission successful, you can redirect the user
-        //                 window.location.href = '/student/list_property.html';
-        //                 // checknig the the href is right or not.
-        //             } else {
-        //                 const errorData = await response.json();
-        //                 alert(`Server Error: ${errorData.message}`);
-        //             }
-        //         } catch (error) {
-        //             alert('An error occurred while communicating with the server.');
-        //         }
-        //     });
-        // });
-    </script>
     <style>
          .whole-page-background-image{
             height: 80vh;
@@ -59,6 +14,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            text-align: center;
         }
         .whole-page-background-color{
             height: 80vh;
@@ -152,8 +108,25 @@
             display: block;
             margin: auto; /* Center the button horizontally */
         }
-
-
+        .selection {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 30%;
+            font-family: 'Courier New', Courier, monospace;
+            /* margin: 10px; */
+        }
+        .create {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 5%;
+            font-family: 'Courier New', Courier, monospace;
+        }
        
     </style>
     <!-- <link rel="stylesheet" href="/styles.css"> Add any additional styles if needed -->
@@ -161,82 +134,99 @@
 
 <body>
     <div class="whole-page-background-color">
+        <div class = selection>
+            <h4>Location:</h4>
+            <select id="Location">
+                <option value="">All</option>
+                <option value="downtown">Downtown</option>
+                <option value="ktown">Ktown</option>
+                <option value="UPS">UPS area</option>
+            <!-- <option value="false">Unavaliable Housing</option> -->
+            </select><br></br>
+            
+            <h4>nickname:</h4>
+            <input id="nickname" type="text" placeholder="Search by nickname">
+            <!-- <option value="false">Unavaliable Housing</option> -->
+            </select><br></br>
+        </div>
+        <div class="create">       
+            <a id="createPropertyLink" href="">Create New Property</a>
+        </div>
         <div class="admin-list">
-            <div class = selection>
-                <h4>Location:</h4>
-                <select id="Location">
-                    <option value="downtown">Downtown</option>
-                    <option value="ktown">Ktown</option>
-                    <option value="UPS">UPS area</option>
-                <!-- <option value="false">Unavaliable Housing</option> -->
-                </select><br></br>
-                
-                <h4>nickname:</h4>
-                <input id="nickname" type="text" placeholder="Search by nickname">
-                <!-- <option value="false">Unavaliable Housing</option> -->
-                </select><br></br>
-            </div>
         <% if (Housinglist && Housinglist.length > 0) { %>
             <table id="user-list" class="styled-table">
                 
                 <thread>
-                    <th>PropertyId</th>
-                    <th>Address</th>
-                    <th># of room</th>
-                    <th>Rent(USD)</th>
-                    <th>nickname</th>
-                    <th>Location</th>
-                    <th>securityDeposit(USD)</th>
-                    <th>Taken</th>
-                    <th>Modiy</th>
-                    <th>Review Application</th>
-                </thread>
-                <% Housinglist.forEach(user => { %>
-                    <tr name="user" style="height: 20px">
-                        <% Housinglist.forEach((unit) => { %>
-                            <tr>
-                                <td><%= unit._id %></td>
-                                <td><%= unit.address %></td>
-                                <td><%= unit.numberOfRooms %></td>
-                                <td><%= unit.rent %></td>
-                                <td><%= unit.nickname %></td>
-                                <td><%= unit.location %></td>
-                                <td><%= unit.securityDeposit %></td>
-                                <td><%= unit.taken %></td>
-                                <td><a href="/users/<%= unit._id %>/modify_property">Edit</a></td>
-                                <td><a href="/property/<%= unit._id %>/applications">Review</a></td>
-                            </tr>
-                        <% }) %>
-                        <!-- <td style="padding-right: 10px"><a href="/user/<%= user.id %>/edit.html">Edit</a></td> -->
-                        <!-- <td><button class="deleteButton" data-student-id="<%= user._id %>">Delete</button></td> -->
+                    <tr>
+                        <th>PropertyId</th>
+                        <th>Address</th>
+                        <th># of room</th>
+                        <th>Rent(USD)</th>
+                        <th>nickname</th>
+                        <th>Location</th>
+                        <th>securityDeposit(USD)</th>
+                        <th>Taken</th>
+                        <th>Modiy</th>
+                        <th>Review Application</th>
+                        <th>Delete</th>
                     </tr>
+                </thread>
+                <tbody>
+                <% Housinglist.forEach(user => { %>
+                            <tr>
+                                <td><%= user._id %></td>
+                                <td><%= user.address %></td>
+                                <td><%= user.numberOfRooms %></td>
+                                <td><%= user.rent %></td>
+                                <td><%= user.nickname %></td>
+                                <td><%= user.location %></td>
+                                <td><%= user.securityDeposit %></td>
+                                <td><%= user.taken %></td>
+                                <td><a href="/users/<%= user._id %>/modify_property">Edit</a></td>
+                                <td><a href="/property/<%= user._id %>/applications">Review</a></td> 
+                                <td><button id="deleteButton" class="deleteButton" data-property-id="<%= user._id %>">Delete</button></td>
+                            </tr>
                 <% }); %>
+            </tbody>
             </table>
         <% } else { %>
             <p>No property available.</p>
-            <a href=/users/${LandlorId}/createproperty.html>Create New Property</a>
         <% } %>
-        <!-- create new user link button -->
-        <!-- <button class="admin-button"><a href="/admin/students/create.html">Create New Student User</a></button> -->
-
+     
         </div>
-        <a href=/users/${LandlordId}/createproperty.html>Create New Property</a>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', async() => {
-            console.log( Housinglist)
-            const Landlord = <% LandlordId %>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const url = new URL(window.location.href);
+            const landlordId = url.pathname.split('/')[2];
+            console.log(landlordId);
+            const createPropertyLink = document.getElementById('createPropertyLink');
+            createPropertyLink.href = `/users/${landlordId}/createproperty.html`;
         });
-        //functionality doesn't work yet
+
+        document.getElementById('nickname').addEventListener('keyup', (event) => {
+            const searchQuery = event.target.value
+            const location = document.getElementById('Location').value;
+            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}&location${location}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(replaceHousingList)
+            .catch(error => { 
+                console.error('Error fetching data:', error);
+            });
+        });
+
         document.getElementById('Location').addEventListener('change', (event) => {
-            const houseType = document.getElementById('Housetype').value;
+            const location = document.getElementById('Location').value;
 
             const selectedValue = event.target.value;
             let apiUrl = '/api/property';
-            apiUrl += `?location=${selectedValue}`;
+            apiUrl += `?houseType=${selectedValue}`;
 
-            if (houseType !== '*') {
-                apiUrl += `&houseType=${houseType}`;
+            if (location !== '*') {
+                apiUrl += `&location=${location}`;
             }
 
             fetch(apiUrl)
@@ -246,37 +236,29 @@
                     console.error('Error fetching data:', error);
                 });
         });
-    //functionality doesn't work yet
-        document.getElementById('nickname').addEventListener('keyup', (event) => {
-            const searchQuery = event.target.value
-            return fetch(`/api/property?nickname=${encodeURIComponent(searchQuery)}`, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(replaceHousingList)
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+
+        document.getElementById('deleteButton').addEventListener('click', async (event) => {
+            event.preventDefault();
+            const propertyId = document.getElementById('deleteButton').getAttribute('data-property-id');
+
+            try {
+                const response = await fetch(`/api/property/${propertyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                    alert('Deleted');
+                    window.location.reload(); 
+                // } else {
+                //     console.error(`Failed to delete property with ID ${propertyId}`);
+                //     // Handle deletion failure
+                // }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
-
-        // document.getElementById('houseType').addEventListener('change', (event) => {
-        //     const location = document.getElementById('Location').value;
-
-        //     const selectedValue = event.target.value;
-        //     let apiUrl = '/api/property';
-        //     apiUrl += `?houseType=${selectedValue}`;
-
-        //     if (location !== '*') {
-        //     apiUrl += `&location=${location}`;
-        //     }
-
-        //     fetch(apiUrl)
-        //         .then(response => response.json())
-        //         .then(replaceHousingList)
-        //         .catch(error => {
-        //             console.error('Error fetching data:', error);
-        //         });
-        // });
 
         function replaceHousingList(housing) {
             const housingList = document.querySelector('.housing-list');
@@ -285,6 +267,7 @@
             housing.forEach((unit) => {
                 const houseRow = document.createElement('tr');
                 houseRow.innerHTML = `
+                     <td>${unit._id}</td>
                     <td>${unit.address}</td>
                     <td>${unit.numberOfRooms}</td>
                     <td>${unit.rent}</td>

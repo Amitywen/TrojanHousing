@@ -126,7 +126,10 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
             var role = document.querySelector('input[name="role"]:checked').value;
-
+            // if(role === null){
+            //     alert('please select the login role')
+            // }
+            
             // Check if the username contains only letters
             if (!/^[a-zA-Z]+$/.test(username)) {
                 alert('Username should only contain letters.');
@@ -140,94 +143,59 @@
 
             fetch(apiUrl)
                 .then(response => response.json())
-                .then(Jumping.loginSucess)
+                .then(Jumping) //(Jumping.loginSucess)
                 .catch(error => {
                     console.error('Error fetching data:', error);
             });
             // Perform basic validation (you can add more robust validation)
-            function Jumping(answer){
+            async function Jumping(answer){
+                console.log('Jumping',role)
                 if (answer) {
                     var role = document.querySelector('input[name="role"]:checked').value;
-                    console.log('Jumping',role)
                     username = document.getElementById('username').value;
 
-                    if(role == 'student'){
+                    if(role == "student"){
                         // var ID = document.getElementById('username').value;
                         window.location.href = '/student/list_property.html'
-                    }else if(role == 'landlord'){
-                            async function get_ID(username) {
-                                try {
-                                    let apiUrl = '/api/landlord/one';
-                                    apiUrl += `?username=${username}`;
+                    }else if(role == "landlord"){
+                        const landlordinfor = await get_ID(username);
 
-                                    const response = await fetch(apiUrl, {
-                                        method: 'GET',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                    });
+                        async function get_ID(username) {
+                            try {
+                                let apiUrl = '/api/landlord/one';
+                                apiUrl += `?username=${username}`;
 
-                                    if (response.ok) {
-                                        const data = await response.json();
-                                        console.error("id",data._id);
-                                        return data._id;
-                                    } else {
-                                        const errorData = await response.json();
-                                        alert(`Server Error: ${errorData.message}`);
-                                    }
-                                } catch (error) {
-                                    alert('An error occurred while communicating with the server.');
+                                const response = await fetch(apiUrl, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                });
+                                if (response.ok) {
+                                    const responseData = await response.json();
+                                    return responseData; // This assumes the data is sent as JSON
+                                } else {
+                                    const errorData = await response.json();
+                                    throw new Error(`Server Error: ${errorData.message}`);
                                 }
+                            } catch (error) {
+                                // Log or handle the error as needed
+                                console.error('An error occurred while fetching data:', error);
+                                throw error;
                             }
+                        }
+                        // const var = 'get landlordinro',landlordinfor)
 
-                            get_ID(username)
-                                .then((ID) => {
-                                    console.log('Received ID:', ID);
-                                    window.location.href = `/users/${ID}/list_property.html`;
-                                })
-                                .catch((error) => {
-                                    console.error('Error getting ID:', error);
-                                })
-                    }
+                        alert('Welcome back  '+landlordinfor.fname)
+                        // window.location.href = 'users/${landlordinfor._id}/list_property.html'
+                        window.location.href = `users/${landlordinfor._id}/list_property.html`;
 
-                        // consoloe.log('go inside to landlord')
-                        //     // vusername = document.getElementById('username').value;
-                        //     async function get_ID(username){
-                        //         try {
-                        //         let apiUrl = '/api/landlord/one' //making sure the api
-                        //         apiUrl += `?username=${username}`;
-
-                        //         const response = await fetch(apiUrl, {
-                        //         method: 'GET',
-                        //         headers: {
-                        //             'Content-Type': 'application/json',
-                        //         },
-                        //         });
-                        //         console.log('response from the userID',response)
-                        //         if (response.ok) {
-                        //             // console.log('response from the userID', response)
-                        //             // Form submission successful, you can redirect the user
-                        //             return response._id
-                        //             // checknig the the href is right or not.
-                        //         } else {
-                        //             const errorData = await response.json();
-                        //             alert(`Server Error: ${errorData.message}`);
-                        //         }
-                        //         } catch (error) {
-                        //         alert('An error occurred while communicating with the server.');
-                        //         }
-                        //     }
-
-                        //     const ID = get_ID(username) 
-                        //     console.log('testing get ID', ID)
-                        //     window.location.href = 'users/${ID}/list_property.html'
-
-                    else if(role == 'admin'){
+                    }   else if(role == "admin"){
                         window.location.href = '/admin/students.html'
                     }
                 } else {
                     alert('Login failed. Invalid username or password.');
-                }s
+                }
             }
         });
     </script>
