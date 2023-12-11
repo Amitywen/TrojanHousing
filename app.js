@@ -1227,7 +1227,8 @@ app.get('/student/list_property.html', (req, res) => {
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`);
+      // throw new Error(`Failed to fetch data: ${response.statusText}`);
+      return [];
     }
     return response.json();
   })
@@ -1424,7 +1425,8 @@ app.get('/trojanhousing/list.html', async (req, res) => {
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`);
+      // throw new Error(`Failed to fetch data: ${response.statusText}`);
+      return [];
     }
     return response.json();
   })
