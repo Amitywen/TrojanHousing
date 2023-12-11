@@ -18,14 +18,72 @@
                 // const propertyId = document.getElementById('propertyId');
                 const url = new URL(window.location.href)
                 const propertyId = url.pathname.split('/')[2];
-                const studentId = document.getElementById('studentId');
+                // const studentId = document.getElementById('studentId');
+                var username = document.getElementById('username').value;
+
+                // const studentID = await get_studentID(username)
+
+                // async function get_studentID(username){
+                //     try {
+                //     let apiUrl = '/api/student/one' //making sure the api
+                //     apiUrl += `?username=${username}`;
+
+                //     const response = await fetch(apiUrl, {
+                //         method: 'GET',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //         },
+                //     });
+                //     console.log('response from userID',response)
+                //     if (response.ok) {
+                //         // Form submission successful, you can redirect the user
+                //         console.log('response from userID',response)
+                //         return response.data
+                //         // checknig the the href is right or not.
+                //     } else {
+                //         const errorData = await response.json();
+                //         alert(`Server Error: ${errorData.message}`);
+                //     }
+                //     } catch (error) {
+                //         alert('An error occurred while communicating with the server.');
+                //     }
+                // }
+                const studentID = await get_studentID(username);
+
+                async function get_studentID(username) {
+                    try {
+                        let apiUrl = '/api/student/one';
+                        apiUrl += `?username=${username}`;
+
+                        const response = await fetch(apiUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+
+                        if (response.ok) {
+                            const responseData = await response.json();
+                            return responseData; // This assumes the data is sent as JSON
+                        } else {
+                            const errorData = await response.json();
+                            throw new Error(`Server Error: ${errorData.message}`);
+                        }
+                    } catch (error) {
+                        // Log or handle the error as needed
+                        console.error('An error occurred while fetching data:', error);
+                        throw error;
+                    }
+                }
+
 
                 // Construct the request body
                 const requestBody = {
-                    propertyId: propertyId.value,
-                    studentId: studentId.value,
+                    propertyId: propertyId,
+                    studentId: studentID,
                 };
 
+                console.log('the request',requestBody)
                 // Send the data to the server using fetch
                 try {
                     const response = await fetch(`/api/application`, {
@@ -38,6 +96,7 @@
 
                     if (response.ok) {
                         // Form submission successful, you can redirect the user
+                        alert('Application submitted successfully!');
                         window.location.href = '/student/list_property.html';
                         // checknig the the href is right or not.
                     } else {
@@ -96,15 +155,16 @@
             border-collapse: collapse;
             width: 100%;
         }
-
         .styled-table th,
         .styled-table td {
             border: 1px solid #dddddd;
-            text-align: left;
+            text-align: center;
             padding: 8px;
+
         }
 
         .styled-table th {
+            text-align: center;
             background-color: #f2f2f2;
         }
         .admin-page-title{           
@@ -198,9 +258,9 @@
 
         <form id="ApplyForm" action="/api/application" method="POST">
             <br>
-            <p>Please enter your userID and submit it after reviewing.</p> 
+            <p>Please enter your username and submit it after reviewing.</p> 
             <label for="studentId">studentId:</label>
-            <input type="text" id="studentId" name="studentId" required>
+            <input type="text" id="username" name="username" required>
             <br>
             <br>
             <!-- <input type="hidden" name="redirect" value="/players.html"> -->

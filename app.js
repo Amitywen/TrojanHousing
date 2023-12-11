@@ -137,9 +137,9 @@ client.connect(err => {
 
 app.get('/api/student/one', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
- console.log("GET /api/student");
  try {
      //grab all the students and put them in an array
+     console.log('api/studnet/one')
      const studentCollection = client.db(dbConfig.db).collection("student");
 
      let query = {};
@@ -148,10 +148,11 @@ app.get('/api/student/one', async (req, res) => {
      }
 
      const students = await studentCollection.findOne({ username: query.username });
+     console.log('find the userID',students)
 
      if (students) {
          console.log(`got ${students.length} student`);
-         res.status(200).json(students);
+         res.status(200).json(students._id);
          console.log("test students:",students._id)
      } else {
          console.log("students not found");
@@ -308,7 +309,7 @@ app.get('/api/property', async (req, res) => {
   //can take propertyiD or landlord ID
   //framework based off will's homework
   const { propertyId, landlordId,numberOfRooms,location} = req.query;
-  console.log(numberOfRooms);
+  console.log(req.query)
   if(propertyId && landlordId){
       return res.status(422).json({ error: "must only search property or landlordid" });
   }
@@ -568,6 +569,8 @@ app.post('/api/application', async (req, res) => {
     const { studentId, propertyId } = req.body;
     //framework taken from wills homework
     //makes sure student and property id were given
+    console.log('in /api/application',studentId,propertyId)
+
     if (!studentId || !propertyId) {
         return res.status(400).json({ error: "missing studentId or propertyId" });
     }
@@ -798,6 +801,7 @@ app.post('/api/property/:id', async(req, res) => {
  
   //grab current player data ported to MongoDB 
   const propertyId = req.params.id;
+  console.log('propertyId',propertyId)
   const propertyCollection = client.db(dbConfig.db).collection("property");
 
   let property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
@@ -806,13 +810,11 @@ app.post('/api/property/:id', async(req, res) => {
   if (property.length === 0) {
       return res.status(404).send({ error: "Player not found" });
     }
-    //Ported for ease of understanding
-    property = property[0];    
+    // modify by Amity
     const { landlordId, address, numberOfRooms, rent, nickname, location, securityDeposit, summary, taken } = req.body;
 
- 
-
-    if (landlordId) property.landlordId = new ObjectId(landlordId);
+    console.log('request from client about edit', req.body)
+    // if (landlordId) property.landlordId = new ObjectId(landlordId);
     if (address) property.address = address;
     if (numberOfRooms) property.numberOfRooms = numberOfRooms;
     if (rent) property.rent = rent;
@@ -828,7 +830,8 @@ try {
   const result = await propertyCollection.updateOne({ _id: new ObjectId(propertyId) }, { $set: property });
     //console.log("Player data updated:", result);
     if (result && result.modifiedCount) {
-        res.status(202).send(`sucessfully modified property with id:${propertyId}`);
+        // res.status(202).send(`sucessfully modified property with id:${propertyId}`)
+        res.status(202).json(property)
     } else {
         console.error("failed to modify property");
         return res.status(500).send({ error: "failed to modify property" });
@@ -948,8 +951,14 @@ app.delete('/api/property/:id', async (req, res) => {
     console.log('DELETE /property/:id');
     const propertyId = req.params.id;
 
+    const propertyCollection = client.db(dbConfig.db).collection("property");
+  
+    let property = await propertyCollection.findOne({ _id: new ObjectId(propertyId) });
+
     try {
         const result = await deleteFromDb(propertyId, "property");
+        console.log(`property deleted with id: ${propertyId}`)
+        // res.status(property)
         res.status(200).json({ message: `property deleted with id: ${propertyId}`});
     } catch (err) {
         console.error(err.message);
@@ -1284,21 +1293,6 @@ app.get('/student/:id/apply.html', (req, res) => {
 /******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
-// app.get('/users/:id/createproperty.html', async (req, res) => {
-//   try {
-//     var LandlordId = req.params.id;
-//     res.status(200).set('Content-Type', 'text/html');
-//     const render = util.promisify(res.render).bind(res);
-//     res.render('layout.ejs', {
-//       body: await render('pages/landlord/housing_create.ejs',{LandlordId})
-//     });
-//     res.end();
-
-//   } catch (error) {
-//     console.error('Error rendering page:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
 
 app.get('/users/:id/createproperty.html', async (req, res) => {
   try {
@@ -1319,44 +1313,47 @@ app.get('/users/:id/createproperty.html', async (req, res) => {
 
 
 app.get('/users/:id/list_property.html', (req, res) => {
-  // console.log(LandlordId);
-  // 6573a5293c1f51347ee15217
-  var LandlordId = req.params.id;
-  // fetch data from the api
-  fetch(`http://localhost:3000/api/property?landlordId=${LandlordId}`, {
-    method: 'GET',
-  })
-  .then(response => {
-    if (!response.ok) {
-      // throw new Error(`Failed to fetch data: ${response.statusText}`);
-      return []
-    }
-  })
-  .then(Housinglist => {
-    console.log(Housinglist);
-    const LandlordId = req.params.id;
-    // render list_student.ejs and then layout.ejs
-    res.render('pages/landlord/list_landlord.ejs', { Housinglist, LandlordId }, (err, html) => {
-      if (err) {
-        console.error('Error rendering list_student:', err);
-        return res.status(500).send('Internal Server Error');
+    var landlordId = req.params.id;
+    console.log('landlordid is',landlordId)
+
+    // fetch data from the api
+    fetch(`http://localhost:3000/api/property?landlordId=${landlordId}`, {
+      method: 'GET',
+    })
+    .then(response => {
+      if (!response.ok) {
+        return []
       }
-      res.render('layout.ejs', { body: html });
+      else{
+        const Housinglist = response.json();
+        return Housinglist; // This assumes the data is sent as JSON
+      }
+    })
+    .then(Housinglist => {
+      console.log(Housinglist);
+      // render list_student.ejs and then layout.ejs
+      res.render('pages/landlord/list_landlord.ejs', { Housinglist, landlordId }, (err, html) => {
+        if (err) {
+          console.error('Error rendering list_student:', err);
+          return res.status(500).send('Internal Server Error');
+        }
+        res.render('layout.ejs', { body: html });
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
     });
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
-  });
 });
 
 app.get('/users/:id/modify_property', async (req, res) => {
   try {
-    var pid = req.params.id;
+    // var landlordId = req.params.id;
+    var propertyId = req.query.id;
     res.status(200).set('Content-Type', 'text/html');
     const render = util.promisify(res.render).bind(res);
     res.render('layout.ejs', {
-      body: await render('pages/landlord/housing_edit.ejs',{pid})
+      body: await render('pages/landlord/housing_edit.ejs',{ propertyId })
     });
     res.end();
 
@@ -1365,6 +1362,7 @@ app.get('/users/:id/modify_property', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Inside your Express route handler
 app.get('/property/:propertyId/applications', async (req, res) => {
