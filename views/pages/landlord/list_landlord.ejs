@@ -75,6 +75,17 @@
             /* Add more styles as needed */
 
         }
+        .ID-title{           
+            /* margin-top: 20px; */
+            font-size: 10px; /* Increase the font size */
+            color: #333; /* Set a specific text color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Convert text to uppercase */
+            margin-top: 5px; /* Add some top margin */
+            margin-bottom: 5px; /* Add some bottom margin */
+            /* Add more styles as needed */
+
+        }
         .error-message{           
             /* margin-top: 20px; */
             font-size: 15px; /* Increase the font size */
@@ -115,7 +126,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 30%;
+            height: 10%;
             font-family: 'Courier New', Courier, monospace;
             /* margin: 10px; */
         }
@@ -135,13 +146,15 @@
 
 <body>
     <div class="whole-page-background-color">
+        <h1 class="admin-page-title"><br> Your housing List</h1>
+        <h3 class="ID-title"><br>LandlordId: <%= landlordId %></h3>
         <div class = selection>
             <h4>Location:</h4>
             <select id="Location">
                 <option value="">All</option>
                 <option value="downtown">Downtown</option>
                 <option value="ktown">Ktown</option>
-                <option value="UPS">UPS area</option>
+                <option value="DPS">DPS area</option>
             <!-- <option value="false">Unavaliable Housing</option> -->
             </select><br></br>
             
@@ -149,6 +162,7 @@
             <input id="nickname" type="text" placeholder="Search by nickname">
             <!-- <option value="false">Unavaliable Housing</option> -->
             </select><br></br>
+
         </div>
         <div class="create">       
             <a id="createPropertyLink" href="">Create New Property</a>
@@ -166,7 +180,7 @@
                         <th>nickname</th>
                         <th>Location</th>
                         <th>securityDeposit(USD)</th>
-                        <th>Taken</th>
+                        <!-- <th>Taken</th> -->
                         <th>Modiy</th>
                         <th>Review Application</th>
                         <th>Delete</th>
@@ -182,7 +196,7 @@
                                 <td><%= user.nickname %></td>
                                 <td><%= user.location %></td>
                                 <td><%= user.securityDeposit %></td>
-                                <td><%= user.taken %></td>
+                                <!-- <td><%= user.taken %></td> -->
                                 <td><a href="/users/<%= user._id %>/modify_property">Edit</a></td>
                                 <td><a href="/property/<%= user._id %>/applications">Review</a></td> 
                                 <td><button id="deleteButton" class="deleteButton" data-property-id="<%= user._id %>">Delete</button></td>
@@ -275,13 +289,13 @@
                     <td>${unit.nickname}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
-                    <td>${unit.taken}</td>
                     <td><a href="/users/${unit._id}/modify_property">Edit</a></td>
                     <td><a href="/property/${unit._id}/applications">Review</a></td>
                 `;
                 housingList.appendChild(houseRow);
             });
         }
+        //                    <td>${unit.taken}</td>
     </script>
 </body>
 

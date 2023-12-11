@@ -98,7 +98,7 @@
 
             <label for="student"><input type="radio" name="role" id="student" value="student"> Student</label>
             <label for="landlord"><input type="radio" name="role" id="landlord" value="landlord"> Landlord</label>
-            <label for="administrator"><input type="radio" name="role" id="admin" value="admin"> Admin</label><br></br>
+            <!-- <label for="administrator"><input type="radio" name="role" id="admin" value="admin"> Admin</label><br></br> -->
 
             <div class = enter>
                 <input type="text" id="username" placeholder="Username" required>
@@ -117,15 +117,6 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
             var role = document.querySelector('input[name="role"]:checked').value;
-            // if(role === null){
-            //     alert('please select the login role')
-            // }
-            
-            // Check if the username contains only letters
-            if (!/^[a-zA-Z]+$/.test(username)) {
-                alert('Username should only contain letters.');
-                return; // Stop form submission if validation fails
-            }
 
             let apiUrl = '/api/login'
             apiUrl += `?username=${username}`;
