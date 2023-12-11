@@ -1,4 +1,4 @@
-<!-- ./public/player/edit.html -->
+<!-- by Amity Lu -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,16 +32,6 @@
             align-items: center; */
         }
         .creating {
-            /* border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
-            width: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; */
-            /* text-align: left; Align text to the left */
             width: 800px; /* Adjust the width as needed */
             height: 450px; /* Adjust the height as needed */
             margin: auto; /* Center the element horizontally */
@@ -93,7 +83,7 @@
                 const url = new URL(window.location.href)
                 const propertyId = url.pathname.split('/')[2];
 
-                // Perform your client-side validation here
+                // Get the value
                 const address = document.getElementById('address');
                 const numberOfRooms = document.getElementById('numberOfRooms');
                 const rent = document.getElementById('rent')|| '';
@@ -125,9 +115,6 @@
                     });
 
                     if (response.ok) {
-                        // Form submission successful, you can redirect the user
-                        // const landlordId = document.getElementById('landlordId');
-                        // console.log(`propertyId with ID ${propertyId} modified successfully`);
                         const responseData = await response.json();
                         console.log(responseData)
                         alert('Modified')
@@ -196,9 +183,6 @@
                     <button type="submit"> Save Changes </button>
                 </form>
             </div>
-            <!-- <div>
-                <button id="deleteButton" class="deleteButton">Delete</button>
-            </div> -->
         </div>
     </div>
 

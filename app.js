@@ -737,13 +737,6 @@ try {
 
 
 });
-// POST /api/application/:id
-// Purpose: Update application details in the database.
-// Input Parameters: 'id' as a URL parameter; 'studentId', 'propertyId', 'accepted' in request body.
-// Return Format: JSON object with success or error message.
-// Error Handling: Error for application not found or update failure.
-// Example Input: /api/application/application_ID with updated details in body.
-// Example Return: Success message with applicationId or error message.
 app.post('/api/application/:id', async(req, res) => {
   //modified endpoint from Will's hoemwork to fit 
   console.log('POST /application/:id');
@@ -759,10 +752,10 @@ app.post('/api/application/:id', async(req, res) => {
       return res.status(404).send({ error: "Player not found" });
     }
     //Ported for ease of understanding
-    //application = application[0];    
-    console.log(req.body)
+    application = application[0];    
+
     const { studentId, propertyId, accepted } = req.body;
-    console.log(typeof accepted)
+
 
  
 
@@ -773,7 +766,6 @@ app.post('/api/application/:id', async(req, res) => {
 try {
   const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
     //console.log("Player data updated:", result);
-    console.log(result)
     if (result && result.modifiedCount) {
         res.status(202).send(`sucessfully modified application with id:${applicationId}`);
     } else {
@@ -1224,15 +1216,19 @@ app.get('/trojanhousing/emptypage.html', async (req, res) => {
 });
 /** ***********************admin frontend endpoints as above ****************************/
 
+
 /** ***********************student frontend endpoints****************************/
-/***************************** Student list Page ************************************************************* */
+// Show up the property list from student end
+// in the .ejs page can apply that property and use filter to find desird house location
+// by Amity Lu
 app.get('/student/list_property.html', (req, res) => {
   fetch('http://localhost:3000/api/property', {
     method: 'GET',
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`);
+      // throw new Error(`Failed to fetch data: ${response.statusText}`);
+      return [];
     }
     return response.json();
   })
@@ -1252,6 +1248,10 @@ app.get('/student/list_property.html', (req, res) => {
   });
 });
 
+// Apply the property with the propertyID
+// enter the username to ensure apply
+// Jump back to list automatically
+// by Amity Lu
 app.get('/student/:id/apply.html', (req, res) => {
   var id = req.params.id;
   console.log('from api',req.params.id);
@@ -1272,9 +1272,9 @@ app.get('/student/:id/apply.html', (req, res) => {
     const property = Housinglist;
     // Render student_apply3.ejs and then layout.ejs
     
-    res.render('pages/student/student_apply3.ejs', { property }, (err, html) => {
+    res.render('pages/student/student_apply.ejs', { property }, (err, html) => {
       if (err) {
-        console.error('Error rendering student_apply3:', err);
+        console.error('Error rendering student_apply:', err);
         return res.status(500).send('Internal Server Error');
       }
       res.render('layout.ejs', { body: html });
@@ -1287,13 +1287,50 @@ app.get('/student/:id/apply.html', (req, res) => {
 });
 
 
-
-
-
 /******************student frontend endpoints as above ****************************/
 
 /** ***********************landlord frontend endpoints****************************/
 
+
+// Show up this landlord's properties by using landlordID
+// by Amity Lu
+app.get('/users/:id/list_property.html', (req, res) => {
+  var landlordId = req.params.id;
+  console.log('landlordid is',landlordId)
+
+  // fetch data from the api
+  fetch(`http://localhost:3000/api/property?landlordId=${landlordId}`, {
+    method: 'GET',
+  })
+  .then(response => {
+    if (!response.ok) {
+      return []
+    }
+    else{
+      const Housinglist = response.json();
+      return Housinglist; // This assumes the data is sent as JSON
+    }
+  })
+  .then(Housinglist => {
+    console.log(Housinglist);
+    // render list_student.ejs and then layout.ejs
+    res.render('pages/landlord/list_landlord.ejs', { Housinglist, landlordId }, (err, html) => {
+      if (err) {
+        console.error('Error rendering list_student:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.render('layout.ejs', { body: html });
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  });
+});
+
+// Create the new property with lnadlordID
+// Jump back to list of landlord's properties
+// by Amity Lu
 app.get('/users/:id/createproperty.html', async (req, res) => {
   try {
     // 6573a5293c1f51347ee15217
@@ -1311,41 +1348,9 @@ app.get('/users/:id/createproperty.html', async (req, res) => {
   }
 });
 
-
-app.get('/users/:id/list_property.html', (req, res) => {
-    var landlordId = req.params.id;
-    console.log('landlordid is',landlordId)
-
-    // fetch data from the api
-    fetch(`http://localhost:3000/api/property?landlordId=${landlordId}`, {
-      method: 'GET',
-    })
-    .then(response => {
-      if (!response.ok) {
-        return []
-      }
-      else{
-        const Housinglist = response.json();
-        return Housinglist; // This assumes the data is sent as JSON
-      }
-    })
-    .then(Housinglist => {
-      console.log(Housinglist);
-      // render list_student.ejs and then layout.ejs
-      res.render('pages/landlord/list_landlord.ejs', { Housinglist, landlordId }, (err, html) => {
-        if (err) {
-          console.error('Error rendering list_student:', err);
-          return res.status(500).send('Internal Server Error');
-        }
-        res.render('layout.ejs', { body: html });
-      });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
-    });
-});
-
+// Edit the property with propertyId
+// Jump back to list of landlord's properties
+// by Amity Lu
 app.get('/users/:id/modify_property', async (req, res) => {
   try {
     // var landlordId = req.params.id;
@@ -1363,41 +1368,42 @@ app.get('/users/:id/modify_property', async (req, res) => {
   }
 });
 
-
-// Inside your Express route handler
+// Review the applications with specific property
+// There is a bottom to redirect to list of landlord's properties
+// by Amity Lu
 app.get('/property/:propertyId/applications', async (req, res) => {
   try{
-  const propertyId = req.params.propertyId;
-  const render = util.promisify(res.render).bind(res);
-  // Fetch applications for the propertyId (You've provided this logic in your API)
+      const propertyId = req.params.propertyId;
+      const render = util.promisify(res.render).bind(res);
 
-  // Assuming you have fetched the applications successfully
-  console.log(propertyId)
+      // console.log(propertyId)  
 
-  // Fetch data from the API
-  // const url = '/api/property/application/' + propertyId
-  // console.log(url.toString())
-  const url = 'http://localhost:3000/api/property/application/'+propertyId
-  const response = await fetch(url, {
-    method: 'GET',
-  });
+      const url = 'http://localhost:3000/api/property/application/'+propertyId
+      const response = await fetch(url, {
+        method: 'GET',
+      });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data: ${response.statusText}`);
-  }
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.statusText}`);
+      }
 
-  const applications = await response.json()
+      const applications = await response.json()
 
-  res.render('layout.ejs', {
-    body: await render('pages/landlord/review_application.ejs', { propertyId, applications })
-  });
-  res.end();
+      res.render('layout.ejs', {
+        body: await render('pages/landlord/review_application.ejs', { propertyId, applications })
+      });
+      res.end();
   }catch (error) {
   console.error('Error rendering page:', error);
   res.status(500).send('Internal Server Error');
   }
 });
 
+/** ***********************landlord frontend endpoints end ****************************/
+
+// Login page
+// select the role and log in with username and password
+// by Amity Lu
 app.get('/login.html', async (req, res) => {
   try {
     res.status(200).set('Content-Type', 'text/html');
@@ -1412,8 +1418,33 @@ app.get('/login.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });  
-/** ***********************landlord frontend endpoints end ****************************/
 
+app.get('/trojanhousing/list.html', async (req, res) => {
+  fetch('http://localhost:3000/api/property', {
+    method: 'GET',
+  })
+  .then(response => {
+    if (!response.ok) {
+      // throw new Error(`Failed to fetch data: ${response.statusText}`);
+      return [];
+    }
+    return response.json();
+  })
+  .then(Housinglist => {
+    // Render list_student.ejs and then layout.ejs
+    res.render('pages/trojanhousing/list.ejs', { Housinglist }, (err, html) => {
+      if (err) {
+        console.error('Error rendering list_student:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.render('layout.ejs', { body: html });
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Internal Server Error');
+  });
+});  
 
 //error handler from demo handout
 app.use((err,req,res,next) => {
@@ -1444,11 +1475,5 @@ console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
 console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
 console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
 console.log(`empty page for 404:/trojanhousing/emptypage.html`)
-console.log('----------------------------------------------------------------------------------');
-// console.log(`To create property: http://localhost:3000/users/landlords/createproperty.html`);
-// console.log('To see the property list from the student end: http://localhost:3000/student/list_property.html')
-// console.log('For student to apply: http://localhost:3000/student/:id/apply.html')
-// console.log('Landlord creates the property: http://localhost:3000/users/landlords/createproperty.html')
-// console.log('To see the property list from the landlord end: http://localhost:3000/users/:id/list_property.html')
-// console.log('For landlord to modify the property: http://localhost:3000/users/:id/modify_property.html')
-// console.log('For landlord to see the property application http://localhost:3000/property/:propertyId/applications')
+console.log('To Login and access rest ot the function: http://localhost:3000/login.html')
+console.log('Access all of the properties: http://localhost:3000/student/list_property.html')

@@ -1,3 +1,4 @@
+<!-- by Amity Lu -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -137,65 +138,7 @@
                 });
             });
         </script>
-        <!-- <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const newHousingForm = document.getElementById('newhousing');
-        
-                newHousingForm.addEventListener('submit', async (event) => {
-                    event.preventDefault(); // Prevent the default form submission
-                    try {
-        
-                        // Retrieve form input values
-                        const landlordId = document.getElementById('landlordId');
-                        console.log(landlordId)
-                        // const landlordId = ${LandlordId}
-                        const address = document.getElementById('address');
-                        const numberOfRooms = document.getElementById('numberOfRooms');
-                        const rent = document.getElementById('rent');
-                        const securityDeposit = document.getElementById('securityDeposit');
-                        const summary = document.getElementById('summary');
-                        const nickname = document.getElementById('nickname');
-                        const location = document.getElementById('location');
 
-                        // Construct the request body
-                        const requestBody = {
-                            landlordId: landlordId,
-                            address: address.value,
-                            numberOfRooms: numberOfRooms.value,
-                            rent: rent.value,
-                            securityDeposit: securityDeposit.value,
-                            summary: summary.value,
-                            nickname: nickname.value,
-                            location: location.value
-                        };
-
-                        console.log('fromrequest', requestBody);
-                        console.log(LandlordId)
-
-                        // Send the data to the server using fetch
-
-                        const response = await fetch('/api/property', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(requestBody),
-                        });
-        
-                        if (response.ok) {
-                            // Form submission successful, you can redirect the user
-                            console.log(LandlordId)
-                            // window.location.href = `/users/${LandlordId}/list_property.html`;
-                        } else {
-                            const errorData = await response.json();
-                            alert(`Server Error: ${errorData.message}`);
-                        }
-                    } catch (error) {
-                        alert('An error occurred while communicating with the server.');
-                    }
-                });
-            });
-        </script> -->
     </head>
     <body>
         <div class="whole-page-background-image">

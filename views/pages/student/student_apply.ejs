@@ -1,3 +1,4 @@
+<!-- by Amity Lu -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,41 +14,10 @@
 
             ApplyForm.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent the default form submission
-
-                // Perform your client-side validation here
-                // const propertyId = document.getElementById('propertyId');
                 const url = new URL(window.location.href)
                 const propertyId = url.pathname.split('/')[2];
-                // const studentId = document.getElementById('studentId');
                 var username = document.getElementById('username').value;
 
-                // const studentID = await get_studentID(username)
-
-                // async function get_studentID(username){
-                //     try {
-                //     let apiUrl = '/api/student/one' //making sure the api
-                //     apiUrl += `?username=${username}`;
-
-                //     const response = await fetch(apiUrl, {
-                //         method: 'GET',
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //         },
-                //     });
-                //     console.log('response from userID',response)
-                //     if (response.ok) {
-                //         // Form submission successful, you can redirect the user
-                //         console.log('response from userID',response)
-                //         return response.data
-                //         // checknig the the href is right or not.
-                //     } else {
-                //         const errorData = await response.json();
-                //         alert(`Server Error: ${errorData.message}`);
-                //     }
-                //     } catch (error) {
-                //         alert('An error occurred while communicating with the server.');
-                //     }
-                // }
                 const studentID = await get_studentID(username);
 
                 async function get_studentID(username) {
@@ -252,10 +222,6 @@
             <p>No property available.</p>
         <% } %>
 
-
-        <!-- create new user link button -->
-        <!-- <button class="admin-button"><a href="/admin/students/create.html">Create New Student User</a></button> -->
-
         <form id="ApplyForm" action="/api/application" method="POST">
             <br>
             <p>Please enter your username and submit it after reviewing.</p> 
@@ -268,12 +234,6 @@
         </form>
         </div>
     </div>
-    <script>
-    
-
-/** perform delete user and refresh page after deletion success */
-
-    </script>
 </body>
 
 </html>
