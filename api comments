@@ -1,0 +1,155 @@
+//Get /api/ping
+// Purpose: Check if the server is running and responsive
+// Input Parameters: None
+// Return Format: HTTP status 204 (No Content)
+
+// GET /api/login
+// Purpose: Authenticate users by username, password, and role.
+// Input Parameters: 'username', 'password', 'role' (query string).
+// Functionality: Validates role, fetches user from database, checks credentials.
+// Return Format: JSON object with login success status.
+// Example Input: /api/login?username=user&password=pass&role=student
+// Example Return: { loginSuccess: true } or { loginSuccess: false }
+// Error Handling: Returns error messages for invalid role, unsuccessful login, or server issues.
+Endpoint: GET /api/student
+// Purpose: Retrieve all students from the database
+// Input Parameters: None
+// Return Format: JSON array of student objects or error message
+// Example Return: [{ "_id": "123", "username": "johndoe", "fname": "John", "lname": "Doe", "email": "johndoe@example.com" }, ...]
+
+// Endpoint: /api/student/one
+// Purpose: Retrieve a single student from the database based on the username.
+// Input Parameters: 'username' (as a query parameter).
+// Return Format: JSON object of the student's data or an error message.
+// Example Return: { "_id": "456", "username": "janedoe", "fname": "Jane", "lname": "Doe", "email": "janedoe@example.com" }
+
+
+// Endpoint: /api/landlord/one
+// Purpose: Retrieve a single landlord from the database based on the username.
+// Input Parameters: 'username' (as a query parameter).
+// Return Format: JSON object of the landlord's data or an error message.
+// Example Return: { "_id": "789", "username": "johnsmith", "fname": "John", "lname": "Smith", "email": "johnsmith@example.com" }
+
+// GET /api/homeinfo
+// Purpose: Retrieve counts of students, properties, and landlords for homepage information.
+// Input Parameters: None
+// Return Format: JSON object with counts of students, landlords, and properties or an error message.
+// Example Return: { "studentCount": 100, "landlordCount": 40, "propertyCount": 200 }
+
+// GET /api/application/:studentId
+// Purpose: Retrieve application details for a specific student based on their ID.
+// Input Parameters: studentId (as part of the URL path)
+// Return Format: JSON object containing the application details of the specified student, or an error message if not found.
+// Example Return: [{ "applicationId": "12345", "studentId": "67890", "propertyId": "54321", "status": "pending" }]
+
+// Purpose: Retrieve all landlords from the database
+// Input Parameters: None
+// Return Format: JSON array of landlord objects or error message
+// Example Return: [{ "_id": "456", "username": "janedoe", "fname": "Jane", "lname": "Doe", "email": "janedoe@example.com", "companyName": "Doe Rentals" }, ...]
+
+// GET /api/property
+// Purpose: Retrieve properties based on propertyId, landlordId, numberOfRooms, or location.
+// Input Parameters: Optional 'propertyId', 'landlordId', 'numberOfRooms', 'location' in query. Not to be used together: 'propertyId' and 'landlordId'.
+// Return Format: JSON array of property objects or error message.
+// Error Handling: Handles errors for invalid query combinations, non-existent properties, or internal server errors.
+// Example Query: /api/property?propertyId=PROPERTY_ID, /api/property?landlordId=LANDLORD_ID
+// Example Return: [{"_id": "PROPERTY_ID", "landlordId": "LANDLORD_ID", "address": "123 Main St", ...}, ...]
+
+Endpoint: GET /api/property/application/:propertyId
+// Purpose: Retrieve all applications for a specific property
+// Input Parameters: propertyId as URL parameter
+// Return Format: JSON array of application objects or error message
+// Example URL: /api/property/application/PROPERTY_ID
+// Example Return: [{"_id": "APPLICATION_ID", "studentId": "STUDENT_ID", "propertyId": "PROPERTY_ID", ...}, ...]
+
+Endpoint: POST /api/student
+// Purpose: Create a new student
+// Input Parameters: JSON object with username, fname, lname, email, and password
+// Return Format: JSON object with success message or error message
+// Example Input: {"username":"johndoe","fname":"John","lname":"Doe","email":"johndoe@example.com","password":"password123"}
+// Example Return: {"message": "Student added"}
+
+Endpoint: POST api/landlord
+// Purpose: Create a new landlord
+// Input Parameters: JSON object with fname, username, lname, email, password, and optional companyName
+// Return Format: JSON object with success message or error message
+// Example Input: {"fname":"Jane","username":"janedoe","lname":"Doe","email":"janedoe@example.com","password":"password123","companyName":"Doe Rentals"}
+// Example Return: {"message": "landlord added"}
+Endpoint: POST /api/property
+// Purpose: Create a new property
+// Input Parameters: JSON object with landlordId, address, numberOfRooms, rent, optional securityDeposit, summary, nickname, and location
+// Return Format: JSON object with success message including propertyId, or error message
+// Example Input: {"landlordId":"LANDLORD_ID","address":"123 Main St","numberOfRooms":3,"rent":1000,"nickname":"Main St Apartment","location":"Downtown","securityDeposit":500,"summary":"A lovely three-bedroom apartment."}
+// Example Return: {"message": "Property added successfully", "propertyId": "PROPERTY_ID"}
+/api/application
+// Purpose: Create a new application for a property
+// Input Parameters: JSON object with studentId and propertyId
+// Return Format: JSON object with success message or error message
+// Example Input: {"studentId":"STUDENT_ID","propertyId":"PROPERTY_ID"}
+// Example Return: {"message": "app created"}
+Endpoint: POST api/student/:id
+// Purpose: Update student details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for student not found, invalid fields, or update failure.
+// Example Input: /api/student/student_ID with updated details in body.
+// Example Return: Success message with studentId or error message.
+
+// POST /api/landlord/:id
+// Purpose: Update landlord details in the database.
+// Input Parameters: 'id' as a URL parameter; 'username', 'fname', 'lname', 'password' in request body.
+// Validation: Checks formatting of 'fname', 'lname', and 'password' length.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for landlord not found, invalid fields, or update failure.
+// Example Input: /api/landlord/landlord_ID with updated details in body.
+// Example Return: Success message with landlordId or error message.
+
+// POST /api/application/:id
+// Purpose: Update application details in the database.
+// Input Parameters: 'id' as a URL parameter; 'studentId', 'propertyId', 'accepted' in request body.
+// Validation: Ensures 'studentId' and 'propertyId' are valid ObjectId strings; 'accepted' is a boolean.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for application not found, invalid fields, or update failure.
+// Example Input: /api/application/application_ID with updated details in body.
+// Example Return: Success message with applicationId or error message.
+
+// POST /api/property/:id
+// Purpose: Update property details in the database.
+// Input Parameters: 'id' as a URL parameter; 'landlordId', 'address', 'numberOfRooms', 'rent', 'nickname', 'location', 'securityDeposit', 'summary', 'taken' in request body.
+// Return Format: JSON object with success or error message.
+// Error Handling: Error for property not found or update failure.
+// Example Input: /api/property/property_ID with updated details in body.
+// Example Return: Success message with propertyId or error message.
+
+// POST /api/application/accept/:id
+// Purpose: Accept an application and update the corresponding property status in the database.
+// Input Parameters: 'id' as a URL parameter for the application ID; 'accepted' status in the request query.
+// Return Format: JSON object with a success message including applicationId and propertyId, or an error message.
+// Error Handling: Handles errors for application not found, invalid 'accepted' status, and failures in updating the application or property.
+// Example Input: /api/application/accept/application_ID?accepted=true
+// Example Return: Success message "successfully accepted application with id:application_ID and marked property taken with ID: propertyId" or an error message.
+Endpoint: DELETE/api/student/:id
+// Purpose: Delete a student record
+// Input Parameters: studentId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with studentId (e.g., /api/student/STUDENT_ID)
+// Example Return: Redirect to '/student' or error message
+Endpoint: DELETE/api/landlord/:id
+// Purpose: Delete a landlord record
+// Input Parameters: landlordId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with landlordId (e.g., /api/landlord/landlord_ID)
+// Example Return: Redirect to '/landlord' or error message
+Endpoint: DELETE/api/property/:id
+// Purpose: Delete a property record
+// Input Parameters: propertyId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with propertyId (e.g., /api/property/property_ID)
+// Example Return: Redirect to '/property' or error message
+Endpoint: DELETE/api/application/:id
+// Purpose: Delete a application record
+// Input Parameters: applicationId as a URL parameter
+// Return Format: JSON object with success or error message
+// Example Input: URL with applicationId (e.g., /api/application/application_ID)
+// Example Return: Redirect to '/application' or error message

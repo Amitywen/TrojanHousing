@@ -5,15 +5,16 @@ TrojanHousing/
 ├── view/
 │   ├── htmlformtocheck/ 
 │   ├── pages/
-│   │   ├── admin/
-│   │   ├── landlord/
-│   │   └── student/
-│   ├── trojanhousing/
-│   ├── partials/
+│   │   ├── admin/: for Admin role uses 
+│   │   ├── landlord/: For Landlord role Uses
+│   │   └── student/: For student role uses
+│   ├── trojanhousing/ General pages for all roles
+│   ├── partials/: header and phooter
 │   ├── public/
-│   │   └── images/
-│   ├── pic/
-│   └── layout.ejs
+│   │   └── images/: Images for different web pages
+|   |       └── Trojan Housing_files: Icons images
+│   ├── pic/: picture for homeage
+│   └── layout.ejs:base ejs for homepage
 └── app.js: Backend Server for API and FrontEND HTML Managment
 
 To start our project,
