@@ -756,10 +756,10 @@ app.post('/api/application/:id', async(req, res) => {
       return res.status(404).send({ error: "Player not found" });
     }
     //Ported for ease of understanding
-    application = application[0];    
-
+    //application = application[0];    
+    console.log(req.body)
     const { studentId, propertyId, accepted } = req.body;
-
+    console.log(typeof accepted)
 
  
 
@@ -770,6 +770,7 @@ app.post('/api/application/:id', async(req, res) => {
 try {
   const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
     //console.log("Player data updated:", result);
+    console.log(result)
     if (result && result.modifiedCount) {
         res.status(202).send(`sucessfully modified application with id:${applicationId}`);
     } else {
