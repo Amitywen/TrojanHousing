@@ -752,10 +752,10 @@ app.post('/api/application/:id', async(req, res) => {
       return res.status(404).send({ error: "Player not found" });
     }
     //Ported for ease of understanding
-    //application = application[0];    
-    console.log(req.body)
+    application = application[0];    
+
     const { studentId, propertyId, accepted } = req.body;
-    console.log(typeof accepted)
+
 
  
 
@@ -766,7 +766,6 @@ app.post('/api/application/:id', async(req, res) => {
 try {
   const result = await applicationCollection.updateOne({ _id: new ObjectId(applicationId) }, { $set: application });
     //console.log("Player data updated:", result);
-    console.log(result)
     if (result && result.modifiedCount) {
         res.status(202).send(`sucessfully modified application with id:${applicationId}`);
     } else {
@@ -1272,9 +1271,9 @@ app.get('/student/:id/apply.html', (req, res) => {
     const property = Housinglist;
     // Render student_apply3.ejs and then layout.ejs
     
-    res.render('pages/student/student_apply3.ejs', { property }, (err, html) => {
+    res.render('pages/student/student_apply.ejs', { property }, (err, html) => {
       if (err) {
-        console.error('Error rendering student_apply3:', err);
+        console.error('Error rendering student_apply:', err);
         return res.status(500).send('Internal Server Error');
       }
       res.render('layout.ejs', { body: html });
@@ -1449,4 +1448,5 @@ console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
 console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
 console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
 console.log(`empty page for 404:/trojanhousing/emptypage.html`)
-console.log('----------------------------------------------------------------------------------');
+console.log('To Login and access rest ot the function: http://localhost:3000/login.html')
+console.log('Access all of the properties: http://localhost:3000/student/list_property.html')
