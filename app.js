@@ -1407,36 +1407,6 @@ app.get('/property/:propertyId/applications', async (req, res) => {
   }
 });
 
-// Review the all applications
-// by Amity Lu
-app.get('/property/application.html', async (req, res) => {
-  try{
-
-      // console.log(propertyId)  
-
-      const url = 'http://localhost:3000/api/property/application/'
-      const response = await fetch(url, {
-        method: 'GET',
-      });
-
-      if (!response.ok) {
-        // throw new Error(`Failed to fetch data: ${response.statusText}`);
-        return []
-      }
-
-      const applications = await response.json()
-
-      res.render('layout.ejs', {
-        body: await render('pages/trojanhousing/application_list.ejs', {applications })
-      });
-      res.end();
-  }catch (error) {
-  console.error('Error rendering page:', error);
-  res.status(500).send('Internal Server Error');
-  }
-});
-
-
 
 /** ***********************landlord frontend endpoints end ****************************/
 
@@ -1504,13 +1474,14 @@ app.use((err,req,res,next) => {
 app.listen(PORT);
 console.log(`Server started, port ${PORT}`);
 console.log('----------------------------------------------------------------------------------');
+console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
+console.log('----------------------------------------------------------------------------------');
 console.log(`To create student user: http://localhost:3000/admin/students/create.html`);
 console.log(`To create landlord user: http://localhost:3000/admin/landlords/create.html`);
 console.log(`To signup as landlord user: http://localhost:3000/users/landlords/signup.html`);
 console.log(`To signup as student user: http://localhost:3000/users/students/signup.html`);
 console.log(`To look up all student user as manager: http://localhost:3000/admin/students.html`);
 console.log(`To look up all landlord user as manager: http://localhost:3000/admin/landlords.html`);
-console.log(`Home: http://localhost:3000/trojanhousing/home.html`);
 console.log(`About us: http://localhost:3000/trojanhousing/about.html`);
 console.log(`Admin manager board: http://localhost:3000/admin/managerboard.html`);
 console.log(`empty page for 404:/trojanhousing/emptypage.html`)

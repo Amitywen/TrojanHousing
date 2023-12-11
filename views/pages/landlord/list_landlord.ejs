@@ -11,7 +11,6 @@
             height: 80vh;
             width: 100vw;
             background-image: url('/images/USC_Village.jpg');
-            /* background-color: rgba(255,255,255,0.5); */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -20,22 +19,21 @@
         .whole-page-background-color{
             height: 80vh;
             width: 100vw;
-            /* background-image: url('/images/USC_great_lawn.jpg'); */
             background-color: rgba(255,255,255,0.6);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
         .admin-list {
-            width: 1200px; /* Adjust the width as needed */
-            height: 800px; /* Adjust the height as needed */
-            margin: auto; /* Center the element horizontally */
-            margin-top: 0px; /* Adjust the margin-top to center vertically */
-            border: 2px solid #ffffff; /* Border color (black in this case) */
-            border-radius: 10px; /* Border radius to create a circle */
-            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
-            padding: 5px; /* Adjust the padding as needed */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            width: 1200px; 
+            height: 800px; 
+            margin: auto;
+            margin-top: 0px; 
+            border: 2px solid #ffffff; 
+            border-radius: 10px; 
+            background-color: rgba(250, 246, 229, 0.8); 
+            padding: 5px; 
+            box-sizing: border-box; 
             display: flex;
             justify-content: center;
             align-items: top;
@@ -65,60 +63,57 @@
             background-color: #f2f2f2;
         }
         .admin-page-title{           
-            /* margin-top: 20px; */
-            font-size: 36px; /* Increase the font size */
-            color: #333; /* Set a specific text color */
-            text-align: center; /* Center the text */
-            text-transform: uppercase; /* Convert text to uppercase */
-            margin-top: 20px; /* Add some top margin */
-            margin-bottom: 20px; /* Add some bottom margin */
-            /* Add more styles as needed */
+            
+            font-size: 36px; 
+            color: #333; 
+            text-align: center; 
+            text-transform: uppercase; 
+            margin-top: 20px; 
+            margin-bottom: 20px; 
+           
 
         }
         .ID-title{           
-            /* margin-top: 20px; */
-            font-size: 10px; /* Increase the font size */
-            color: #333; /* Set a specific text color */
-            text-align: center; /* Center the text */
-            text-transform: uppercase; /* Convert text to uppercase */
-            margin-top: 5px; /* Add some top margin */
-            margin-bottom: 5px; /* Add some bottom margin */
-            /* Add more styles as needed */
+           
+            font-size: 10px; 
+            color: #333; 
+            text-align: center; 
+            text-transform: uppercase;
+            margin-top: 5px; 
+            margin-bottom: 5px; 
 
         }
         .error-message{           
-            /* margin-top: 20px; */
-            font-size: 15px; /* Increase the font size */
-            color: rgb(255,0,0); /* Set a specific text color */
-            text-align: center; /* Center the text */
-            margin-top: 20px; /* Add some top margin */
-            margin-bottom: 20px; /* Add some bottom margin */
-            /* Add more styles as needed */
-
+           
+            font-size: 15px; 
+            color: rgb(255,0,0);
+            text-align: center; 
+            margin-top: 20px; 
+            margin-bottom: 20px; 
         }
         .admin-list {
-            width: 1200px; /* Adjust the width as needed */
-            height: 800px; /* Fixed height to prevent stretching */
-            overflow-y: auto; /* Add a scrollbar if the content overflows vertically */
-            margin: auto; /* Center the element horizontally */
-            margin-top: 0px; /* Adjust the margin-top to center vertically */
-            border: 2px solid #ffffff; /* Border color (black in this case) */
-            border-radius: 10px; /* Border radius to create a circle */
-            background-color: rgba(250, 246, 229, 0.8); /* Light beige background color */
-            padding: 5px; /* Adjust the padding as needed */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            width: 1200px; 
+            height: 800px; 
+            overflow-y: auto; 
+            margin: auto; 
+            margin-top: 0px; 
+            border: 2px solid #ffffff; 
+            border-radius: 10px; 
+            background-color: rgba(250, 246, 229, 0.8); 
+            padding: 5px; 
+            box-sizing: border-box; 
             display: flex;
-            flex-direction: column; /* Stack child elements vertically */
-            justify-content: flex-start; /* Align child elements to the start of the container */
-            align-items: center; /* Center child elements horizontally */
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
         }
         .admin-button{
-            width: 200px; /* Adjust the width as needed */
-            height: 30px; /* Adjust the height as needed */
-            background-color: #990000; /* Light beige background color */
+            width: 200px; 
+            height: 30px; 
+            background-color: #990000; 
             color:#ffffff;
             display: block;
-            margin: auto; /* Center the button horizontally */
+            margin: auto; 
         }
         .selection {
             display: flex;
@@ -180,7 +175,7 @@
                         <th>nickname</th>
                         <th>Location</th>
                         <th>securityDeposit(USD)</th>
-                        <!-- <th>Taken</th> -->
+                        <th>Taken</th>
                         <th>Modiy</th>
                         <th>Review Application</th>
                         <th>Delete</th>
@@ -196,7 +191,7 @@
                                 <td><%= user.nickname %></td>
                                 <td><%= user.location %></td>
                                 <td><%= user.securityDeposit %></td>
-                                <!-- <td><%= user.taken %></td> -->
+                                <td><%= user.taken %></td>
                                 <td><a href="/users/<%= user._id %>/modify_property">Edit</a></td>
                                 <td><a href="/property/<%= user._id %>/applications">Review</a></td> 
                                 <td><button id="deleteButton" class="deleteButton" data-property-id="<%= user._id %>">Delete</button></td>
@@ -266,10 +261,7 @@
 
                     alert('Deleted');
                     window.location.reload(); 
-                // } else {
-                //     console.error(`Failed to delete property with ID ${propertyId}`);
-                //     // Handle deletion failure
-                // }
+              
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -289,6 +281,7 @@
                     <td>${unit.nickname}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
+                    <td>${unit.taken}</td>
                     <td><a href="/users/${unit._id}/modify_property">Edit</a></td>
                     <td><a href="/property/${unit._id}/applications">Review</a></td>
                 `;
