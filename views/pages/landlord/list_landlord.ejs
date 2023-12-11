@@ -180,7 +180,7 @@
                         <th>nickname</th>
                         <th>Location</th>
                         <th>securityDeposit(USD)</th>
-                        <th>Taken</th>
+                        <!-- <th>Taken</th> -->
                         <th>Modiy</th>
                         <th>Review Application</th>
                         <th>Delete</th>
@@ -196,7 +196,7 @@
                                 <td><%= user.nickname %></td>
                                 <td><%= user.location %></td>
                                 <td><%= user.securityDeposit %></td>
-                                <td><%= user.taken %></td>
+                                <!-- <td><%= user.taken %></td> -->
                                 <td><a href="/users/<%= user._id %>/modify_property">Edit</a></td>
                                 <td><a href="/property/<%= user._id %>/applications">Review</a></td> 
                                 <td><button id="deleteButton" class="deleteButton" data-property-id="<%= user._id %>">Delete</button></td>
@@ -289,13 +289,13 @@
                     <td>${unit.nickname}</td>
                     <td>${unit.location}</td>
                     <td>${unit.securityDeposit}</td>
-                    <td>${unit.taken}</td>
                     <td><a href="/users/${unit._id}/modify_property">Edit</a></td>
                     <td><a href="/property/${unit._id}/applications">Review</a></td>
                 `;
                 housingList.appendChild(houseRow);
             });
         }
+        //                    <td>${unit.taken}</td>
     </script>
 </body>
 
