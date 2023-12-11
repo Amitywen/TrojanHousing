@@ -84,16 +84,15 @@
 <body>
         <h1 class="admin-page-title"><br>Housing List</h1>
         <% if (Housinglist.length === 0) { %>
-            <p>No property available.</p>
+            <h3 class="admin-page-title"><br>No property available.</h3>
         <% } else { %>
-            <!-- <input id="search-box" type="text" placeholder="Search by name"> -->
             <div class = selection>
                 <h4>Location:</h4>
                 <select id="Location">
                     <option value="">All</option>
                     <option value="downtown">Downtown</option>
                     <option value="ktown">Ktown</option>
-                    <option value="UPS">UPS area</option>
+                    <option value="DPS">DPS area</option>
                 <!-- <option value="false">Unavaliable Housing</option> -->
                 </select><br></br>
                 
