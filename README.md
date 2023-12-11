@@ -3,7 +3,6 @@
 ```plaintext
 TrojanHousing/
 ├── view/
-│   ├── htmlformtocheck/ 
 │   ├── pages/
 │   │   ├── admin/: for Admin role uses 
 │   │   ├── landlord/: For Landlord role Uses
