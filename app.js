@@ -1407,6 +1407,37 @@ app.get('/property/:propertyId/applications', async (req, res) => {
   }
 });
 
+// Review the all applications
+// by Amity Lu
+app.get('/property/application.html', async (req, res) => {
+  try{
+
+      // console.log(propertyId)  
+
+      const url = 'http://localhost:3000/api/property/application/'
+      const response = await fetch(url, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        // throw new Error(`Failed to fetch data: ${response.statusText}`);
+        return []
+      }
+
+      const applications = await response.json()
+
+      res.render('layout.ejs', {
+        body: await render('pages/trojanhousing/application_list.ejs', {applications })
+      });
+      res.end();
+  }catch (error) {
+  console.error('Error rendering page:', error);
+  res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
 /** ***********************landlord frontend endpoints end ****************************/
 
 // Login page
