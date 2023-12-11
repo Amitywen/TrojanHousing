@@ -134,7 +134,11 @@ client.connect(err => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-
+// Endpoint: /api/student/one
+// Purpose: Retrieve a single student from the database based on the username.
+// Input Parameters: 'username' (as a query parameter).
+// Return Format: JSON object of the student's data or an error message.
+// Example Return: { "_id": "456", "username": "janedoe", "fname": "Jane", "lname": "Doe", "email": "janedoe@example.com" }
 app.get('/api/student/one', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
  try {
@@ -163,7 +167,11 @@ app.get('/api/student/one', async (req, res) => {
      res.status(500).json({ error: "Internal server error" });
  }
 });
-
+// Endpoint: /api/landlord/one
+// Purpose: Retrieve a single landlord from the database based on the username.
+// Input Parameters: 'username' (as a query parameter).
+// Return Format: JSON object of the landlord's data or an error message.
+// Example Return: { "_id": "789", "username": "johnsmith", "fname": "John", "lname": "Smith", "email": "johnsmith@example.com" }
 app.get('/api/landlord/one', async (req, res) => {
   //taken and changed slightly from Will's Homeworks
  console.log("GET /api/landlord/one");
