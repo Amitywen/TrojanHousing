@@ -37,6 +37,7 @@
                             return responseData; // This assumes the data is sent as JSON
                         } else {
                             const errorData = await response.json();
+                            alert('username does not exist')
                             throw new Error(`Server Error: ${errorData.message}`);
                         }
                     } catch (error) {

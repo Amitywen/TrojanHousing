@@ -247,25 +247,28 @@
                 });
         });
 
-        document.getElementById('deleteButton').addEventListener('click', async (event) => {
-            event.preventDefault();
-            const propertyId = document.getElementById('deleteButton').getAttribute('data-property-id');
+        document.querySelectorAll('.deleteButton').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const propertyId = button.getAttribute('data-property-id');
 
-            try {
-                const response = await fetch(`/api/property/${propertyId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+                try {
+                    const response = await fetch(`/api/property/${propertyId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
 
                     alert('Deleted');
                     window.location.reload(); 
-              
-            } catch (error) {
-                console.error('Error:', error);
-            }
+                
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
         });
+
 
         function replaceHousingList(housing) {
             const housingList = document.querySelector('.housing-list');
