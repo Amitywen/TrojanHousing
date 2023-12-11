@@ -1398,6 +1398,7 @@ app.get('/property/:propertyId/applications', async (req, res) => {
   }
 });
 
+/** ***********************landlord frontend endpoints end ****************************/
 
 // Login page
 // select the role and log in with username and password
@@ -1416,8 +1417,32 @@ app.get('/login.html', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });  
-/** ***********************landlord frontend endpoints end ****************************/
 
+app.get('/trojanhousing/list.html', async (req, res) => {
+  fetch('http://localhost:3000/api/property', {
+    method: 'GET',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then(Housinglist => {
+    // Render list_student.ejs and then layout.ejs
+    res.render('pages/trojanhousing/list.ejs', { Housinglist }, (err, html) => {
+      if (err) {
+        console.error('Error rendering list_student:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.render('layout.ejs', { body: html });
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Internal Server Error');
+  });
+});  
 
 //error handler from demo handout
 app.use((err,req,res,next) => {
