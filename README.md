@@ -22,5 +22,4 @@ Open a MongoDB instance on port 27017 (either through docker compose file, docke
 npm start
 go to this like in your browser to begin:http://localhost:3000/trojanhousing/home.html 
 
-To watch our demo:
-https://youtu.be/zDsFq-TgQpk
+To watch our demo: https://youtu.be/zDsFq-TgQpk
